@@ -10,7 +10,11 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
-import moment from "moment-timezone";
+import {
+  detectReservationConflict,
+  buildFinanceRecordFromReservation,
+  computeReservationWindow,
+} from "@businext/shared-core/services";
 import {
   ReservationInput,
   ReservationInputSelect,
@@ -72,52 +76,23 @@ export const ReservationModal = ({
   const watchedDate = watch("reservationStartDate");
   const watchedInCharge = watch("inCharge");
 
-  // Detect conflicts with existing reservations
+  // Detect conflicts with existing reservations (logica pura en shared-core)
   const conflict = useMemo(() => {
-    if (!watchedDate || !watchedInCharge) return null;
-
-    const newStart = moment(watchedDate);
-    if (!newStart.isValid()) return null;
-    const newEnd = moment(newStart).add(30, "minutes");
-
-    const conflicting = allReservations.filter((r) => {
-      // Skip the reservation being edited
-      if (id && r.id === id) return false;
-      // Only check same employee
-      if (r.inCharge !== watchedInCharge) return false;
-      // Only check active reservations
-      if (r.status !== "PENDING" && r.status !== "COMPLETED") return false;
-
-      const rStart = moment(r.reservationStartDate);
-      const rEnd = moment(r.reservationEndDate);
-
-      // Overlap check: newStart < rEnd && newEnd > rStart
-      return newStart.isBefore(rEnd) && newEnd.isAfter(rStart);
+    // Nota: se preserva el comportamiento original, que siempre asume una
+    // duracion de 30 minutos para el chequeo de conflicto (no usa
+    // `data.timePerReservation`). No se corrige aqui para no introducir un
+    // cambio de comportamiento no solicitado; ver issue #17.
+    return detectReservationConflict({
+      newStartDate: watchedDate,
+      durationMinutes: 30,
+      inCharge: watchedInCharge,
+      reservations: allReservations,
+      excludeId: id,
     });
-
-    if (conflicting.length === 0) return null;
-
-    const c = conflicting[0];
-    const startStr = moment(c.reservationStartDate).format("HH:mm");
-    const endStr = moment(c.reservationEndDate).format("HH:mm");
-    return {
-      customerName: c.customerName,
-      time: `${startStr} - ${endStr}`,
-      service: c.service,
-    };
   }, [watchedDate, watchedInCharge, allReservations, id]);
 
   const createFinanceRecord = (data: Reservation) => {
-    const getService = productData.filter((p) => p.name === data.service);
-    const financeRecord = {
-      concept: data.service,
-      amount: getService[0]?.price || 0,
-      type: "INCOME",
-      creator: data.inCharge,
-      reservation_id: data.id,
-      product_id: getService[0]?.id ?? null,
-      customer_name: data.customerName,
-    };
+    const financeRecord = buildFinanceRecordFromReservation(data, productData);
     createFinance(financeRecord);
   };
 
@@ -132,13 +107,10 @@ export const ReservationModal = ({
     setIsSubmitting(true);
     setValidationError("");
     try {
-      const reservationStartDate = moment
-        .utc(data.reservationStartDate)
-        .tz("Europe/Madrid")
-        .format("YYYY-MM-DDTHH:mm:ss");
-      const reservationEndDate = moment(reservationStartDate)
-        .add(data.timePerReservation, "m")
-        .format("YYYY-MM-DDTHH:mm:ss");
+      const { reservationStartDate, reservationEndDate } = computeReservationWindow({
+        startDateTimeISO: data.reservationStartDate,
+        durationMinutes: data.timePerReservation,
+      });
       if (operation === "Crear reserva") {
         data = {
           ...data,

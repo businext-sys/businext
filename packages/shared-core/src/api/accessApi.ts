@@ -1,15 +1,8 @@
 import type { ApiClient } from "./client";
 import { apiClient } from "./client";
+import type { AccessCapabilitiesFull } from "../services/access";
 
-export type AccessCapabilitiesFull = {
-  canAccessApp: boolean;
-  canManageConfiguration: boolean;
-  canManageTeam: boolean;
-  canManageProducts: boolean;
-  canManageFinances: boolean;
-  canManageReservations: boolean;
-  canManageReviews: boolean;
-};
+export type { AccessCapabilitiesFull };
 
 export type UserProfile = {
   displayName: string | null;
