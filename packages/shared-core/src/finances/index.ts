@@ -1,16 +1,6 @@
-export type Finances = {
-  id?: number;
-  concept: string;
-  amount: number;
-  type: string;
-  creator: string;
-  created_at?: string;
-  reservation_id?: number | null;
-  product_id?: number | null;
-  customer_name?: string | null;
-  commission_rate?: number;
-  commission_amount?: number;
-};
+import type { FinancesParsed } from "../schemas/finances";
+
+export type Finances = FinancesParsed;
 
 export const FinancesTypeOptions = {
   INCOME: "Ingreso",

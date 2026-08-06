@@ -17,11 +17,15 @@
     "./employee": "./src/employee/index.ts",
     "./access": "./src/access/index.ts",
     "./intelligence": "./src/intelligence/index.ts",
-    "./google-reviews": "./src/google-reviews/index.ts"
+    "./google-reviews": "./src/google-reviews/index.ts",
+    "./schemas": "./src/schemas/index.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
     "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "typescript": "^5.7.2",

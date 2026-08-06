@@ -1,32 +1,11 @@
-export type BookingRequestStatus =
-  | "REQUESTED"
-  | "ACCEPTED"
-  | "REJECTED"
-  | "EXPIRED";
+import type {
+  BookingRequestParsed,
+  BookingRequestCreateParsed,
+} from "../schemas/booking-request";
 
-export interface BookingRequest {
-  id: number;
-  businessId: string;
-  clientName: string;
-  clientEmail: string;
-  clientPhone: string;
-  employeeName: string | null;
-  service: string;
-  requestedDate: string;
-  status: BookingRequestStatus;
-  expiresAt: string;
-  createdAt: string;
-}
-
-export interface BookingRequestCreate {
-  client_name: string;
-  client_email: string;
-  client_phone: string;
-  employee_name?: string | null;
-  service: string;
-  requested_date: string;
-  location_id?: number | null;
-}
+export type BookingRequestStatus = BookingRequestParsed["status"];
+export type BookingRequest = BookingRequestParsed;
+export type BookingRequestCreate = BookingRequestCreateParsed;
 
 export interface AvailabilitySlot {
   time: string;

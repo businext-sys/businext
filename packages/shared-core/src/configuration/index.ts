@@ -1,8 +1,3 @@
-export type Configuration = {
-  id?: number;
-  businessName: string;
-  businessPhone?: string;
-  businessEmail?: string;
-  commissionProduct?: number;
-  commissionService?: number;
-};
+import type { ConfigurationParsed } from "../schemas/configuration";
+
+export type Configuration = ConfigurationParsed;

@@ -1,19 +1,9 @@
-export type EmployeeRole = "employee" | "manager";
+import type { EmployeeParsed } from "../schemas/employee";
 
+export type EmployeeRole = "employee" | "manager";
 export type AccessRole = EmployeeRole | "owner";
 
-export type Employee = {
-  id?: number;
-  businessId: string;
-  memberUserId: string;
-  displayName: string | null;
-  email: string | null;
-  phone: string | null;
-  role: AccessRole;
-  status: string;
-  locationId?: number | null;
-  createdAt?: string;
-};
+export type Employee = EmployeeParsed;
 
 export type InviteEmployeeInput = {
   displayName: string;
