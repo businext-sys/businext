@@ -1,0 +1,13 @@
+# Dependencias (pnpm workspaces crea node_modules en la raiz y en cada paquete)
+node_modules/
+
+# Builds
+apps/web/.next/
+apps/web/out/
+
+# Logs
+*.log
+
+# Entornos locales
+.env
+.env.local
