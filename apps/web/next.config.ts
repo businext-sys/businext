@@ -4,6 +4,9 @@ import path from "path";
 const nextConfig: NextConfig = {
   outputFileTracingRoot: path.join(__dirname),
   allowedDevOrigins: ["192.168.1.*"],
+  // Permite que Next.js transpile el codigo fuente TS de @businext/shared-core
+  // (paquete de workspace pnpm sin build propio, ver packages/shared-core).
+  transpilePackages: ["@businext/shared-core"],
   // Imágenes externas permitidas - Necesario para Stripe y Supabase
   images: {
     remotePatterns: [

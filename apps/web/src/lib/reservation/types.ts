@@ -1,16 +1,8 @@
 import { UseFormRegister } from "react-hook-form";
+import type { Reservation } from "@businext/shared-core";
 
-export type Reservation = {
-  [x: string]: string | number | boolean | undefined;
-  id?: number;
-  customerName: string;
-  inCharge: string;
-  reservationStartDate: string;
-  reservationEndDate: string;
-  timePerReservation: number;
-  status: string;
-  service: string;
-};
+export type { Reservation };
+export { StatusOptions } from "@businext/shared-core";
 
 export type DeleteModalProps = {
   id: number;
@@ -55,9 +47,4 @@ export type ReservationInputProps = {
   disabled?: boolean;
   options?: { [key: string]: string };
   type?: string;
-};
-
-export const StatusOptions = {
-  PENDING: "Pendiente",
-  COMPLETED: "Completada",
 };

@@ -1,12 +1,7 @@
 import { UseFormRegister } from "react-hook-form";
-export type Product = {
-  id?: number;
-  name: string;
-  price: number;
-  type?: string;
-  imageUrl?: string;
-  seller?: string;
-};
+import type { Product } from "@businext/shared-core";
+
+export type { Product };
 
 export type ProductInputProps = {
   register: UseFormRegister<Product>;

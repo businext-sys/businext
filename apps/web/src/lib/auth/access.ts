@@ -1,27 +1,23 @@
-import { AccessRole } from "@/lib/employee/types";
+import type { AccessRole } from "@/lib/employee/types";
+import type {
+  AccessCapabilities,
+  BackendAccessContext,
+} from "@businext/shared-core/access";
 
 // ---------------------------------------------------------------------------
 // Backend-driven access context
+//
+// Los tipos (AccessCapabilities, BackendAccessContext) viven en
+// @businext/shared-core/access (unica fuente de verdad). Las funciones de
+// este archivo hacen fetch a rutas especificas de la plataforma Next.js
+// (BFF) y por eso permanecen aqui, no en shared-core.
+// Ver specs/001-extraer-core-compartido/research.md (Decision 1, FR-008).
 // ---------------------------------------------------------------------------
 
-export type AccessCapabilities = {
-  canAccessApp: boolean;
-  canManageConfiguration: boolean;
-  canManageProducts: boolean;
-  canManageFinances: boolean;
-  canManageReservations: boolean;
-  canManageReviews: boolean;
-};
-
-export type BackendAccessContext = {
-  userId: string;
-  businessId: string;
-  role: AccessRole;
-  accountType: "owner" | "member";
-  memberStatus: string | null;
-  subscriptionActive: boolean;
-  capabilities: AccessCapabilities;
-};
+export type { AccessCapabilities, BackendAccessContext };
+// Re-exportado por compatibilidad: algunos consumidores importan AccessRole
+// desde este mismo archivo.
+export type { AccessRole };
 
 /**
  * Fetches the access context from the backend using a JWT token.

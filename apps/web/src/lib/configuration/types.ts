@@ -1,12 +1,7 @@
 import { Control, UseFormRegister } from "react-hook-form";
-export type Configuration = {
-  id?: number;
-  businessName: string;
-  businessPhone?: string;
-  businessEmail?: string;
-  commissionProduct?: number;
-  commissionService?: number;
-};
+import type { Configuration } from "@businext/shared-core";
+
+export type { Configuration };
 
 export type InputConfig = {
   inputName: string;
