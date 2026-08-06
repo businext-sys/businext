@@ -8,6 +8,7 @@ import { useEmployee } from "@/hooks/useEmployee";
 import { useConfiguration } from "@/hooks/useConfiguration";
 import { useAccessContext } from "@/hooks/useAccessContext";
 import { useGlobalToast } from "@/context/ToastContext";
+import { convertToJpeg } from "@/lib/image-to-jpeg";
 import { Product } from "@/lib/product/types";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { Card, CardContent } from "@/components/ui/card";
@@ -148,7 +149,8 @@ export function ProductsSection() {
       let imageUrl = form.imageUrl;
 
       if (imageFile) {
-        const uploaded = await uploadProductImage(imageFile);
+        const jpegFile = await convertToJpeg(imageFile);
+        const uploaded = await uploadProductImage(jpegFile);
         if (!uploaded) {
           showToast("error", "No se pudo subir la imagen. Intenta de nuevo.");
           setSaving(false);

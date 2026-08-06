@@ -19,16 +19,23 @@
     "./intelligence": "./src/intelligence/index.ts",
     "./google-reviews": "./src/google-reviews/index.ts",
     "./schemas": "./src/schemas/index.ts",
-    "./mappers": "./src/mappers/index.ts"
+    "./mappers": "./src/mappers/index.ts",
+    "./api": "./src/api/index.ts",
+    "./hooks": "./src/hooks/index.ts"
   },
   "scripts": {
     "type-check": "tsc --noEmit",
     "test": "vitest run"
   },
+  "peerDependencies": {
+    "react": ">=18"
+  },
   "dependencies": {
-    "zod": "^4.1.12"
+    "zod": "^4.1.12",
+    "swr": "^2.4.1"
   },
   "devDependencies": {
+    "@types/react": "^19",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }

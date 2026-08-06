@@ -1,5 +1,10 @@
 const MAX_RETRIES = 3;
 
+/**
+ * Fetch con reintentos (backoff exponencial) para GET. No reintenta errores
+ * 4xx (asume que un reintento no cambiara el resultado).
+ * Movido desde apps/web/src/lib/fetcher.ts (issue #16).
+ */
 export async function fetcher<T>(url: string): Promise<T> {
   let lastError: Error = new Error("Max retries exceeded");
 
