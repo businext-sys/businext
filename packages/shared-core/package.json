@@ -26,7 +26,8 @@
   },
   "scripts": {
     "type-check": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "generate:types": "node scripts/generate-types.mjs"
   },
   "peerDependencies": {
     "react": ">=18"
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@types/react": "^19",
+    "openapi-typescript": "^7.4.4",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }

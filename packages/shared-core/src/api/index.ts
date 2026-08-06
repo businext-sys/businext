@@ -11,3 +11,4 @@ export * from "./weeklySummaryApi";
 export * from "./workingHoursApi";
 export * from "./googleReviewsApi";
 export * from "./accessApi";
+export type { paths, components, operations } from "./generated-types";

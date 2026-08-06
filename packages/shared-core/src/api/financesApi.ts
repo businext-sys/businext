@@ -1,12 +1,15 @@
 import type { ApiClient } from "./client";
 import { apiClient } from "./client";
 import type { Finances, AnualBalances } from "../finances";
+import { mapFinanceFromApi } from "../mappers/finances";
 
 const PATH = "/api/finances";
 
 export const financesApi = {
   list: (client: ApiClient = apiClient): Promise<Finances[]> =>
-    client.get<Finances[]>(PATH),
+    client
+      .get<Record<string, unknown>[]>(PATH)
+      .then((data) => data.map(mapFinanceFromApi)),
 
   listAnual: (year: number, client: ApiClient = apiClient): Promise<AnualBalances[]> =>
     client.get<AnualBalances[]>(`${PATH}/anual/${year}`),

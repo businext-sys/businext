@@ -13,6 +13,7 @@
     "lint:web": "pnpm --filter @businext/web lint",
     "type-check:web": "pnpm --filter @businext/web type-check",
     "test:shared-core": "pnpm --filter @businext/shared-core test",
-    "type-check:shared-core": "pnpm --filter @businext/shared-core type-check"
+    "type-check:shared-core": "pnpm --filter @businext/shared-core type-check",
+    "generate:types": "pnpm --filter @businext/shared-core generate:types"
   }
 }
