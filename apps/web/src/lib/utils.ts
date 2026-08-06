@@ -1,59 +1,9 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Reservation } from "@/lib/reservation/types";
-import { Configuration } from "@/lib/configuration/types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
-export const mapReservationFromApi = (data: Record<string, unknown>): Reservation => ({
-  id: data.id as number | undefined,
-  customerName: data.customer_name as string,
-  inCharge: data.in_charge as string,
-  reservationStartDate: data.reservation_start_date as string,
-  reservationEndDate: data.reservation_end_date as string,
-  timePerReservation: data.time_per_reservation as number,
-  status: data.status as string,
-  service: data.service as string,
-});
-
-export const mapReservationToApi = (reservation: Reservation) => {
-  return {
-    id: reservation.id,
-    customer_name: reservation.customerName,
-    in_charge: reservation.inCharge,
-    reservation_start_date: reservation.reservationStartDate,
-    reservation_end_date: reservation.reservationEndDate,
-    time_per_reservation: reservation.timePerReservation,
-    status: reservation.status,
-    service: reservation.service,
-  };
-};
-
-export const mapConfigurationFromApi = (data: Record<string, unknown>): Configuration => ({
-  id: data.id as number | undefined,
-  businessName: data.business_name as string,
-  businessPhone: (data.business_phone as string) || undefined,
-  businessEmail: (data.business_email as string) || undefined,
-  commissionProduct:
-    typeof data.commission_product === "number"
-      ? (data.commission_product as number)
-      : undefined,
-  commissionService:
-    typeof data.commission_service === "number"
-      ? (data.commission_service as number)
-      : undefined,
-});
-
-export const mapConfigurationToApi = (configuration: Configuration) => ({
-  id: configuration.id,
-  business_name: configuration.businessName,
-  business_phone: configuration.businessPhone ?? null,
-  business_email: configuration.businessEmail ?? null,
-  commission_product: configuration.commissionProduct ?? null,
-  commission_service: configuration.commissionService ?? null,
-});
 
 export const routesWithoutHeader = [
   "/",

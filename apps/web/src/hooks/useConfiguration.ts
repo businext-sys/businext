@@ -2,7 +2,7 @@
 import useSWR from "swr";
 import { Configuration } from "@/lib/configuration/types";
 import { fetcher } from "@/lib/fetcher";
-import { mapConfigurationFromApi } from "@/lib/utils";
+import { mapConfigurationFromApi } from "@businext/shared-core";
 
 const SWR_KEY = "/api/configuration";
 

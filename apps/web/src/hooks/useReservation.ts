@@ -2,7 +2,7 @@
 import useSWR, { useSWRConfig } from "swr";
 import { Reservation } from "@/lib/reservation/types";
 import { fetcher } from "@/lib/fetcher";
-import { mapReservationFromApi, mapReservationToApi } from "@/lib/utils";
+import { mapReservationFromApi, mapReservationToApi } from "@businext/shared-core";
 
 const SWR_KEY = "/api/reservations";
 

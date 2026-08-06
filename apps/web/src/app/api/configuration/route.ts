@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { Configuration } from "@/lib/configuration/types";
-import { mapConfigurationToApi } from "@/lib/utils";
+import { mapConfigurationToApi } from "@businext/shared-core";
 import { getVerifiedServerAccessToken } from "@/lib/auth/server-session";
 
 export async function GET() {

@@ -16,6 +16,7 @@ export * from "./access";
 export * from "./intelligence";
 export * from "./google-reviews";
 export * from "./schemas";
+export * from "./mappers";
 
 // Pendientes de issues siguientes de la Fase 3:
 // - #14 schemas zod
