@@ -60,6 +60,18 @@ export function addMinutesToWallClock(wallClockISO: string, minutes: number): st
   )}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
+/**
+ * Devuelve el instante actual como string "wall-clock" en la hora local del
+ * entorno de ejecucion (navegador/servidor), sin conversion de timezone.
+ * Equivalente a `moment().format("YYYY-MM-DDTHH:mm:ss")` del codigo
+ * original (issue #019, migracion desde moment-timezone — usado por
+ * flujos de "atencion inmediata" que no requieren convertir a un timezone
+ * de negocio especifico, solo registrar la hora local actual).
+ */
+export function nowAsWallClock(): string {
+  return addMinutesToWallClock(new Date().toISOString(), 0);
+}
+
 export type ReservationWindow = {
   reservationStartDate: string;
   reservationEndDate: string;

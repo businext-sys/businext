@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
-import moment from "moment-timezone";
+import { addMinutesToWallClock } from "@businext/shared-core/services";
 
 interface QuickReservationFormProps {
   selectedService: Product | null;
@@ -90,11 +90,11 @@ export function QuickReservationForm({
     const dateStr = `${year}-${month}-${day}`;
     const startDateTimeStr = `${dateStr}T${prefilledSlot}:00`;
 
-    const reservationStartDate = moment(startDateTimeStr)
-      .format("YYYY-MM-DDTHH:mm:ss");
-    const reservationEndDate = moment(reservationStartDate)
-      .add(FIXED_DURATION, "m")
-      .format("YYYY-MM-DDTHH:mm:ss");
+    const reservationStartDate = startDateTimeStr;
+    const reservationEndDate = addMinutesToWallClock(
+      reservationStartDate,
+      FIXED_DURATION
+    );
 
     const reservation: Reservation = {
       customerName: data.customerName,

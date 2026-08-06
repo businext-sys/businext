@@ -15,7 +15,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import moment from "moment-timezone";
+import {
+  nowAsWallClock,
+  addMinutesToWallClock,
+} from "@businext/shared-core/services";
 
 interface WalkInModalProps {
   open: boolean;
@@ -68,15 +71,12 @@ export function WalkInModal({
     if (isSubmitting) return;
     setIsSubmitting(true);
     try {
-      const now = moment();
+      const now = nowAsWallClock();
       const reservation: Reservation = {
         customerName: data.customerName,
         inCharge: data.inCharge,
-        reservationStartDate: now.format("YYYY-MM-DDTHH:mm:ss"),
-        reservationEndDate: now
-          .clone()
-          .add(FIXED_DURATION, "m")
-          .format("YYYY-MM-DDTHH:mm:ss"),
+        reservationStartDate: now,
+        reservationEndDate: addMinutesToWallClock(now, FIXED_DURATION),
         timePerReservation: FIXED_DURATION,
         status: "COMPLETED",
         service: data.service,

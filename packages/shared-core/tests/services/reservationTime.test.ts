@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   toTimezoneWallClock,
   addMinutesToWallClock,
+  nowAsWallClock,
   computeReservationWindow,
   DEFAULT_RESERVATION_TIMEZONE,
 } from "../../src/services/reservationTime";
@@ -37,6 +38,23 @@ describe("addMinutesToWallClock", () => {
     expect(addMinutesToWallClock("2026-08-01T23:45:00", 30)).toBe(
       "2026-08-02T00:15:00"
     );
+  });
+});
+
+describe("nowAsWallClock", () => {
+  it("devuelve un string con formato YYYY-MM-DDTHH:mm:ss", () => {
+    expect(nowAsWallClock()).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/);
+  });
+
+  it("refleja la hora local actual (equivalente a moment().format(...))", () => {
+    const before = new Date();
+    const result = nowAsWallClock();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const expected = `${before.getFullYear()}-${pad(before.getMonth() + 1)}-${pad(
+      before.getDate()
+    )}T${pad(before.getHours())}:${pad(before.getMinutes())}`;
+    // Comparamos solo hasta minutos para evitar flakiness por el segundo exacto.
+    expect(result.slice(0, 16)).toBe(expected);
   });
 });
 
