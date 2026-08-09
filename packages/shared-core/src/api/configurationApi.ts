@@ -6,7 +6,7 @@ import {
   mapConfigurationToApi,
 } from "../mappers/configuration";
 
-const PATH = "/api/configuration";
+const PATH = "/configuration";
 
 export const configurationApi = {
   list: (client: ApiClient = apiClient): Promise<Configuration[]> =>

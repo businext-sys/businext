@@ -2,7 +2,7 @@ import type { ApiClient } from "./client";
 import { apiClient } from "./client";
 import type { LocationData, LocationCreate, LocationUpdate } from "../location";
 
-const PATH = "/api/locations";
+const PATH = "/locations";
 
 export const locationApi = {
   list: (client: ApiClient = apiClient): Promise<LocationData[]> =>

@@ -2,7 +2,7 @@ import type { ApiClient } from "./client";
 import { apiClient } from "./client";
 import type { Product } from "../product";
 
-const PATH = "/api/products";
+const PATH = "/products";
 
 function mapProductFromApi(data: Record<string, unknown>): Product {
   return {
@@ -59,6 +59,14 @@ export const productApi = {
    * Sube la imagen ya convertida a JPEG (la conversion en si —
    * `convertToJpeg`— sigue en apps/web porque usa APIs de Canvas del
    * navegador, no portables a mobile sin una libreria equivalente).
+   *
+   * NOTA (issue #028): esta ruta (`/api/products/upload-image`) es
+   * exclusiva del BFF de apps/web (probablemente sube a Supabase Storage
+   * o similar) — no existe un endpoint equivalente en el backend real
+   * (no aparece en `generated-types.ts`). Mobile necesitara su propio
+   * mecanismo de subida de imagenes (fuera de alcance de esta issue, que
+   * solo pide probar `useAccessContext`); por eso esta ruta se deja
+   * hardcodeada al BFF en vez de usar `apiPrefix`.
    */
   uploadImage: async (
     jpegFile: File | Blob,
@@ -66,7 +74,7 @@ export const productApi = {
   ): Promise<string> => {
     const formData = new FormData();
     formData.append("file", jpegFile);
-    const response = await client.raw("/api/products/upload-image", {
+    const response = await client.raw("/products/upload-image", {
       method: "POST",
       body: formData,
     });

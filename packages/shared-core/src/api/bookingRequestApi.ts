@@ -3,7 +3,7 @@ import { apiClient } from "./client";
 import type { BookingRequest } from "../booking-request";
 import { mapBookingRequestFromApi } from "../mappers/booking-request";
 
-const PATH = "/api/booking-requests";
+const PATH = "/booking-requests";
 
 export const bookingRequestApi = {
   list: (client: ApiClient = apiClient): Promise<BookingRequest[]> =>

@@ -2,7 +2,7 @@ import type { ApiClient } from "./client";
 import { apiClient } from "./client";
 import type { WeeklySummaryData } from "../intelligence";
 
-const PATH = "/api/intelligence/summary";
+const PATH = "/intelligence/summary";
 
 export const weeklySummaryApi = {
   get: (client: ApiClient = apiClient): Promise<WeeklySummaryData> =>

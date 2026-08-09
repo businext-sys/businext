@@ -3,7 +3,7 @@ import { apiClient } from "./client";
 import type { Finances, AnualBalances } from "../finances";
 import { mapFinanceFromApi } from "../mappers/finances";
 
-const PATH = "/api/finances";
+const PATH = "/finances";
 
 export const financesApi = {
   list: (client: ApiClient = apiClient): Promise<Finances[]> =>
@@ -11,8 +11,19 @@ export const financesApi = {
       .get<Record<string, unknown>[]>(PATH)
       .then((data) => data.map(mapFinanceFromApi)),
 
-  listAnual: (year: number, client: ApiClient = apiClient): Promise<AnualBalances[]> =>
-    client.get<AnualBalances[]>(`${PATH}/anual/${year}`),
+  /**
+   * NOTA (issue #028): el sufijo de esta ruta diverge entre el BFF de
+   * apps/web (`/api/finances/anual/{year}`) y el backend real
+   * (`/finances/annual_finances/{year}`) — no es solo el prefijo `/api`,
+   * el nombre del segmento tambien cambia. Se usa `client.apiPrefix` para
+   * distinguir "estoy hablando con el BFF" (truthy, web) de "estoy
+   * hablando con el backend directo" (vacio, mobile) y elegir el sufijo
+   * correcto en cada caso.
+   */
+  listAnual: (year: number, client: ApiClient = apiClient): Promise<AnualBalances[]> => {
+    const suffix = client.apiPrefix ? "anual" : "annual_finances";
+    return client.get<AnualBalances[]>(`${PATH}/${suffix}/${year}`);
+  },
 
   create: (
     finance: Omit<Finances, "id">,

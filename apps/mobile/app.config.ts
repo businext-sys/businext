@@ -33,7 +33,7 @@ const config: ExpoConfig = {
   web: {
     favicon: "./assets/favicon.png",
   },
-  plugins: ["expo-router"],
+  plugins: ["expo-router", "expo-secure-store"],
   extra: {
     // Punto unico de configuracion del baseURL del backend consumido por
     // @businext/shared-core (createApiClient). Ver issue #28.

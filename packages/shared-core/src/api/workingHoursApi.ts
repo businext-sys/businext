@@ -8,8 +8,8 @@ import {
 
 function buildPath(memberUserId?: string | null) {
   return memberUserId
-    ? `/api/working-hours?member_user_id=${memberUserId}`
-    : "/api/working-hours";
+    ? `/working-hours?member_user_id=${memberUserId}`
+    : "/working-hours";
 }
 
 export const workingHoursApi = {

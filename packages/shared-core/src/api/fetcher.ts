@@ -4,6 +4,12 @@ const MAX_RETRIES = 3;
  * Fetch con reintentos (backoff exponencial) para GET. No reintenta errores
  * 4xx (asume que un reintento no cambiara el resultado).
  * Movido desde apps/web/src/lib/fetcher.ts (issue #16).
+ *
+ * Nota (issue #028): `ApiClient.get()` en `./client.ts` YA NO usa esta
+ * funcion internamente (implementa su propia logica de reintentos sobre
+ * `raw()` para poder incluir el header de auth). Esta funcion se
+ * conserva exportada como utilidad standalone para quien necesite un
+ * fetch con reintentos sin pasar por el ApiClient completo.
  */
 export async function fetcher<T>(url: string): Promise<T> {
   let lastError: Error = new Error("Max retries exceeded");

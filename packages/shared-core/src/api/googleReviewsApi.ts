@@ -13,7 +13,7 @@ import {
   mapBusinessSummary,
 } from "../google-reviews";
 
-const PROFILE_PATH = "/api/google-reviews/profile";
+const PROFILE_PATH = "/google-reviews/profile";
 
 export type ReviewsQuery = {
   page: number;
@@ -31,7 +31,7 @@ function buildReviewsPath(query: ReviewsQuery): string {
   });
   if (query.ratingFilter) params.set("rating", String(query.ratingFilter));
   if (query.searchQuery) params.set("search", query.searchQuery);
-  return `/api/google-reviews/reviews?${params.toString()}`;
+  return `/google-reviews/reviews?${params.toString()}`;
 }
 
 export const googleReviewsApi = {
@@ -81,7 +81,7 @@ export const googleReviewsApi = {
   sync: async (
     client: ApiClient = apiClient
   ): Promise<{ ok: true; result: SyncResult } | { ok: false; error: string }> => {
-    const response = await client.raw("/api/google-reviews/sync", { method: "POST" });
+    const response = await client.raw("/google-reviews/sync", { method: "POST" });
     const data = await response.json();
     if (!response.ok) {
       return { ok: false, error: data.error || "Error al sincronizar reseñas" };
@@ -94,7 +94,7 @@ export const googleReviewsApi = {
     client: ApiClient = apiClient
   ): Promise<string | null> => {
     const response = await client.raw(
-      `/api/google-reviews/reviews/generate-response?id=${reviewId}`,
+      `/google-reviews/reviews/generate-response?id=${reviewId}`,
       { method: "POST" }
     );
     if (!response.ok) return null;
@@ -105,7 +105,7 @@ export const googleReviewsApi = {
   generateSummary: async (
     client: ApiClient = apiClient
   ): Promise<BusinessSummary | null> => {
-    const response = await client.raw("/api/google-reviews/summary", { method: "POST" });
+    const response = await client.raw("/google-reviews/summary", { method: "POST" });
     if (!response.ok) return null;
     const data = await response.json();
     return mapBusinessSummary(data);

@@ -21,7 +21,7 @@ export type AccessContext = {
   capabilities: AccessCapabilitiesFull;
 };
 
-export const ACCESS_CONTEXT_PATH = "/api/auth/me";
+export const ACCESS_CONTEXT_PATH = "/auth/me";
 
 export const accessApi = {
   /** Devuelve `null` si es 401 (no autenticado); lanza en otros errores. */
