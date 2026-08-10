@@ -49,6 +49,67 @@ pnpm --filter @businext/mobile lint
 Ver `src/README.md` para el detalle de convenciones (`app/` para rutas
 via Expo Router, `src/components/` para UI compartida).
 
+## Distribucion via EAS Build (issue #033)
+
+`eas.json` ya tiene los 3 perfiles configurados: `development`
+(dev client, para debug con Metro), `preview` (build interno instalable
+via link/QR, apunta a un backend de staging), y `production`
+(autoincrementa version, apunta al backend real).
+
+### ⚠️ Pasos manuales pendientes (requieren una cuenta de Expo real)
+
+Todo lo anterior en este repo (`eas.json`, el workflow
+`.github/workflows/mobile-build.yml`, `expo-updates`/`expo-dev-client`
+instalados, `app.config.ts` preparado para leer un `projectId`) esta
+listo. Lo que **no se puede hacer sin acceso a una cuenta de Expo/Apple
+Developer real** (y por tanto queda pendiente de que el owner del
+proyecto lo haga una vez):
+
+1. Crear una cuenta en [expo.dev](https://expo.dev) (gratis para el
+   volumen de builds de este proyecto).
+2. Desde `apps/mobile/`, correr `npx eas-cli login` y luego
+   `npx eas-cli init` — esto crea el proyecto en expo.dev y escribe su
+   `projectId` real. Como `app.config.ts` lo lee desde la variable de
+   entorno `EAS_PROJECT_ID` (no hardcodeado), despues de `eas init` hay
+   que:
+   - Copiar el `projectId` que devuelve el comando.
+   - Definirlo como `EAS_PROJECT_ID` en tu entorno local y como secret/
+     variable `EAS_PROJECT_ID` en GitHub Actions.
+3. Generar un token de acceso (`npx eas-cli account:login` con un
+   [robot user](https://docs.expo.dev/accounts/programmatic-access/) o
+   `expo whoami --json` para uso en CI) y configurarlo como secret
+   **`EXPO_TOKEN`** en Settings → Secrets → Actions del repo
+   `businext-sys/businext`. Sin este secret, el workflow
+   `mobile-build.yml` falla explicitamente en el paso "Verificar login
+   de EAS" (no falla de forma confusa mas adelante).
+4. Para iOS: se necesita una cuenta de Apple Developer ($99/año) antes
+   de poder generar builds `preview`/`production` para iPhone. Sin ella,
+   se puede seguir usando `--platform android` unicamente.
+5. Correr el primer build manualmente para validar la configuracion:
+   ```bash
+   cd apps/mobile
+   npx eas-cli login
+   npx eas-cli build --platform android --profile preview
+   ```
+   Al terminar, `eas-cli` imprime un link + QR para instalar el build
+   directamente en un dispositivo Android (sin Play Store). Para iOS,
+   el mismo comando con `--platform ios` genera un build instalable via
+   TestFlight interno o un perfil ad-hoc (requiere el dispositivo
+   registrado en el Apple Developer account).
+6. Una vez configurado `EXPO_TOKEN` (y `EAS_PROJECT_ID`) como
+   secrets/variables del repo, el workflow `mobile-build.yml` dispara
+   automaticamente un build `preview` en cada push a `main` que toque
+   `apps/mobile/` o `packages/shared-core/`.
+
+### Verificado en este entorno (sin cuenta real)
+
+- `eas.json` es JSON valido con los 3 perfiles requeridos
+- `npx eas-cli build:configure` confirma que, sin login, EAS pide
+  credenciales de forma explicita (comportamiento esperado, no un bug)
+- `expo-updates` y `expo-dev-client` instalados y `expo-doctor` sigue en
+  20/20 tras anadirlos
+- El bundling con Metro (`expo export`) sigue funcionando sin cambios
+
 ## Uso de `@businext/shared-core`
 
 Este paquete declara `"@businext/shared-core": "workspace:*"` como

@@ -1,0 +1,75 @@
+name: mobile-build
+
+# Genera un build preview de apps/mobile via EAS al mergear a main, y lo
+# publica como preview instalable (issue #033, Fase 5).
+#
+# Requiere el secret EXPO_TOKEN configurado en el repo (token de acceso
+# de una cuenta de Expo con permisos sobre el proyecto). Sin ese secret,
+# este workflow falla explicitamente en el paso de login en vez de
+# fallar de forma confusa mas adelante.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "apps/mobile/**"
+      - "packages/shared-core/**"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/mobile-build.yml"
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: "Perfil de EAS Build (development | preview | production)"
+        required: false
+        default: "preview"
+        type: string
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Setup EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Verificar login de EAS
+        working-directory: apps/mobile
+        run: |
+          if ! npx eas-cli whoami > /dev/null 2>&1; then
+            echo "::error::EAS no esta autenticado. Configura el secret EXPO_TOKEN en Settings > Secrets del repo (ver apps/mobile/README.md)."
+            exit 1
+          fi
+
+      - name: EAS Build (preview)
+        working-directory: apps/mobile
+        run: |
+          npx eas-cli build \
+            --platform all \
+            --profile "${{ inputs.profile || 'preview' }}" \
+            --non-interactive \
+            --no-wait
+
+      - name: Resumen
+        run: |
+          echo "Build de EAS disparado. Revisa el progreso y el link/QR de instalacion en:"
+          echo "https://expo.dev/accounts/[tu-cuenta]/projects/businext-mobile/builds"

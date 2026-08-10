@@ -6,6 +6,14 @@ import type { ExpoConfig } from "expo/config";
  * Bundle identifiers son placeholders — deben confirmarse antes de un
  * build real distribuible (EAS, issue #33).
  */
+
+// Se rellena automaticamente al correr `eas init` (crea el proyecto en
+// expo.dev y escribe este id) o manualmente via la variable de entorno
+// EAS_PROJECT_ID. Mientras este vacio, los builds de EAS y
+// getExpoPushTokenAsync() (#031) no funcionan — ver README para el paso
+// manual pendiente (requiere una cuenta de Expo real).
+const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID ?? "";
+
 const config: ExpoConfig = {
   name: "Businext",
   slug: "businext-mobile",
@@ -46,6 +54,15 @@ const config: ExpoConfig = {
       },
     ],
   ],
+  // OTA updates via expo-updates (issue #033). `url` solo es valido con
+  // un projectId real; con EAS_PROJECT_ID vacio, se omite (Expo Go/dev
+  // sigue funcionando igual, solo no habria OTA updates).
+  ...(EAS_PROJECT_ID
+    ? {
+        runtimeVersion: { policy: "appVersion" as const },
+        updates: { url: `https://u.expo.dev/${EAS_PROJECT_ID}` },
+      }
+    : {}),
   extra: {
     // Punto unico de configuracion del baseURL del backend consumido por
     // @businext/shared-core (createApiClient). Ver issue #28.
@@ -55,11 +72,7 @@ const config: ExpoConfig = {
     // Publicas por diseno (anon key), no son secretas.
     supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL ?? "",
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "",
-    // eas.projectId se agrega automaticamente al correr `eas init`/
-    // `eas build` por primera vez (issue #033, aun no hecho). Hasta
-    // entonces, registerForPushNotificationsAsync() en
-    // src/lib/pushNotifications.ts devuelve `no-project-id` de forma
-    // controlada en vez de fallar.
+    ...(EAS_PROJECT_ID ? { eas: { projectId: EAS_PROJECT_ID } } : {}),
   },
 };
 
