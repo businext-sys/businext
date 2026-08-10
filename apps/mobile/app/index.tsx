@@ -1,100 +1,184 @@
-import { StatusBar } from "expo-status-bar";
+import { useMemo, useState } from "react";
 import {
-  ActivityIndicator,
   Pressable,
-  ScrollView,
+  RefreshControl,
+  SectionList,
   StyleSheet,
   Text,
   View,
 } from "react-native";
-import { useAccessContext } from "@businext/shared-core/hooks";
+import { useReservation } from "@businext/shared-core/hooks";
+import type { Reservation } from "@businext/shared-core";
+import { ReservationListItem } from "@/components/ReservationListItem";
 import { useAuth } from "@/context/AuthContext";
+import {
+  addDays,
+  formatDayLabel,
+  formatHour,
+  isSameDay,
+  isToday,
+} from "@/lib/date";
 
-export default function HomeScreen() {
+type Section = { title: string; data: Reservation[] };
+
+/**
+ * Agenda del dia (issue #030): lista de reservas del dia seleccionado,
+ * agrupadas por hora, con navegacion entre dias y pull-to-refresh.
+ * Usa `useReservation` de shared-core tal cual, sin reescritura (issue #028).
+ */
+export default function AgendaScreen() {
   const { logout } = useAuth();
-  // Smoke test de integracion con shared-core (issue #028/#029): si esto
-  // compila, se ejecuta y hace la peticion HTTP esperada (verificable con
-  // el inspector de red de Expo / Metro), la integracion basica funciona.
-  const { context, loading } = useAccessContext();
+  const [selectedDay, setSelectedDay] = useState(new Date());
+  const { reservationData, loading, getAllReservations } = useReservation();
+
+  const sections = useMemo<Section[]>(() => {
+    const dayReservations = reservationData
+      .filter((r) => isSameDay(r.reservationStartDate, selectedDay))
+      .sort((a, b) => a.reservationStartDate.localeCompare(b.reservationStartDate));
+
+    const groups = new Map<string, Reservation[]>();
+    for (const reservation of dayReservations) {
+      const hour = formatHour(reservation.reservationStartDate);
+      const group = groups.get(hour) ?? [];
+      group.push(reservation);
+      groups.set(hour, group);
+    }
+
+    return Array.from(groups.entries())
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([title, data]) => ({ title, data }));
+  }, [reservationData, selectedDay]);
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Businext</Text>
-      <Text style={styles.subtitle}>
-        App movil en construccion (Fase 5). Sesion iniciada correctamente.
-      </Text>
-
-      <View style={styles.debugBox}>
-        <Text style={styles.debugTitle}>Debug: useAccessContext (#028)</Text>
-        {loading ? (
-          <ActivityIndicator />
-        ) : context ? (
-          <Text style={styles.debugText}>
-            Autenticado como {context.role} en negocio {context.businessId}
-          </Text>
-        ) : (
-          <Text style={styles.debugText}>
-            Sesion sin contexto de negocio (verificar backend/token)
-          </Text>
-        )}
+    <View style={styles.flex}>
+      <View style={styles.titleBar}>
+        <Text style={styles.title}>Agenda</Text>
+        <Pressable onPress={logout}>
+          <Text style={styles.logoutText}>Salir</Text>
+        </Pressable>
       </View>
 
-      <Pressable style={styles.logoutButton} onPress={logout}>
-        <Text style={styles.logoutButtonText}>Cerrar sesion</Text>
-      </Pressable>
+      <View style={styles.header}>
+        <Pressable
+          style={styles.navButton}
+          onPress={() => setSelectedDay((d) => addDays(d, -1))}
+        >
+          <Text style={styles.navButtonText}>{"<"}</Text>
+        </Pressable>
 
-      <StatusBar style="auto" />
-    </ScrollView>
+        <Pressable onPress={() => setSelectedDay(new Date())}>
+          <Text style={styles.dayLabel}>{formatDayLabel(selectedDay)}</Text>
+          {isToday(selectedDay) && <Text style={styles.todayHint}>Hoy</Text>}
+        </Pressable>
+
+        <Pressable
+          style={styles.navButton}
+          onPress={() => setSelectedDay((d) => addDays(d, 1))}
+        >
+          <Text style={styles.navButtonText}>{">"}</Text>
+        </Pressable>
+      </View>
+
+      <SectionList
+        sections={sections}
+        keyExtractor={(item, index) => String(item.id ?? index)}
+        renderItem={({ item }) => <ReservationListItem reservation={item} />}
+        renderSectionHeader={({ section }) => (
+          <Text style={styles.sectionHeader}>{section.title}</Text>
+        )}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={getAllReservations} />
+        }
+        contentContainerStyle={
+          sections.length === 0 ? styles.emptyContainer : styles.listContainer
+        }
+        ListEmptyComponent={
+          !loading ? (
+            <Text style={styles.emptyText}>
+              No hay reservas para este dia.
+            </Text>
+          ) : null
+        }
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    backgroundColor: "#fff",
+  flex: { flex: 1, backgroundColor: "#f5f5f5" },
+  titleBar: {
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    padding: 24,
-    gap: 8,
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingTop: 56,
+    paddingBottom: 8,
+    backgroundColor: "#fff",
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "700",
+    color: "#111",
   },
-  subtitle: {
+  logoutText: {
     fontSize: 14,
-    color: "#666",
-    textAlign: "center",
-  },
-  debugBox: {
-    marginTop: 24,
-    padding: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    width: "100%",
-    gap: 8,
-  },
-  debugTitle: {
-    fontSize: 12,
     fontWeight: "600",
-    color: "#888",
-    textTransform: "uppercase",
+    color: "#c0392b",
   },
-  debugText: {
-    fontSize: 14,
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingTop: 4,
+    paddingBottom: 16,
+    backgroundColor: "#fff",
+    borderBottomWidth: 1,
+    borderBottomColor: "#eee",
+  },
+  navButton: {
+    width: 36,
+    height: 36,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 18,
+    backgroundColor: "#f0f0f0",
+  },
+  navButtonText: {
+    fontSize: 18,
+    fontWeight: "700",
     color: "#333",
   },
-  logoutButton: {
-    marginTop: 24,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: "#c0392b",
+  dayLabel: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#111",
+    textAlign: "center",
   },
-  logoutButtonText: {
-    color: "#c0392b",
-    fontWeight: "600",
+  todayHint: {
+    fontSize: 11,
+    color: "#888",
+    textAlign: "center",
+  },
+  sectionHeader: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#999",
+    backgroundColor: "#f5f5f5",
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 4,
+  },
+  listContainer: {
+    paddingBottom: 24,
+  },
+  emptyContainer: {
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  emptyText: {
+    fontSize: 14,
+    color: "#888",
   },
 });

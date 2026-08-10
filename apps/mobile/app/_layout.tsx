@@ -12,7 +12,12 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <AuthGate>
-        <Stack screenOptions={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen
+            name="reservation/[id]"
+            options={{ headerShown: true, title: "Detalle de reserva" }}
+          />
+        </Stack>
       </AuthGate>
     </AuthProvider>
   );

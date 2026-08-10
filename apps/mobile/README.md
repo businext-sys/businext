@@ -55,9 +55,10 @@ Este paquete declara `"@businext/shared-core": "workspace:*"` como
 dependencia, igual que `apps/web`. Ver `packages/shared-core/README.md`
 para el criterio de que codigo va en `shared-core` vs en `apps/mobile`.
 
-**Estado (issue #29):** login funcional con Supabase Auth (llamadas REST
-directas a GoTrue, sin `@supabase/supabase-js`), sesion persistida en
-SecureStore con refresh automatico de token
-(`src/lib/session.ts`), y `AuthGate` (`src/context/`) que redirige entre
-`/login` y la app segun haya sesion activa. Logout disponible desde la
-pantalla principal.
+**Estado (issue #30):** pantalla de Agenda (`app/index.tsx`) con lista de
+reservas del dia agrupadas por hora, navegacion entre dias, pull-to-refresh
+y detalle de reserva (`app/reservation/[id].tsx`) con acciones reales del
+dominio (Completar / Revertir / Eliminar — el modelo no tiene un estado
+"cancelada" distinto, ver nota en el propio archivo). Usa `useReservation`,
+`useFinances` y `useProduct` de `@businext/shared-core/hooks` sin
+reescritura. Login funcional desde #029.
