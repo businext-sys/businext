@@ -55,9 +55,22 @@ Este paquete declara `"@businext/shared-core": "workspace:*"` como
 dependencia, igual que `apps/web`. Ver `packages/shared-core/README.md`
 para el criterio de que codigo va en `shared-core` vs en `apps/mobile`.
 
-**Estado (issue #30):** pantalla de Agenda (`app/index.tsx`) con lista de
-reservas del dia agrupadas por hora, navegacion entre dias, pull-to-refresh
-y detalle de reserva (`app/reservation/[id].tsx`) con acciones reales del
+**Estado (issue #31):** notificaciones push con Expo Notifications
+(`src/lib/pushNotifications.ts`, `src/hooks/usePushRegistration.ts`):
+registro automatico del token al autenticarse, manejo explicito de
+rechazo de permisos (banner en la Agenda), y deep link basico al tocar
+una notificacion. **Pendiente real de EAS (#033)**: `getExpoPushTokenAsync`
+necesita un `projectId` de EAS que aun no existe en este repo — hasta
+entonces, el registro devuelve `no-project-id` de forma controlada.
+Backend: nuevo endpoint `POST/DELETE /users/{id}/push-tokens` en
+`businext-backend` + envio de notificacion al crear un `BookingRequest`
+(ver commit correspondiente en ese repo) — **la migracion de Alembic
+para la tabla `push_token` sigue pendiente** porque `alembic/versions/`
+esta gitignored en ese repo (hallazgo documentado, no resuelto aqui).
+
+Pantalla de Agenda (`app/index.tsx`, issue #030) con lista de reservas
+del dia agrupadas por hora, navegacion entre dias, pull-to-refresh y
+detalle de reserva (`app/reservation/[id].tsx`) con acciones reales del
 dominio (Completar / Revertir / Eliminar — el modelo no tiene un estado
 "cancelada" distinto, ver nota en el propio archivo). Usa `useReservation`,
 `useFinances` y `useProduct` de `@businext/shared-core/hooks` sin

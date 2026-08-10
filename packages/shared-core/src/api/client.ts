@@ -42,8 +42,8 @@ export type ApiClient = {
   patch<T>(path: string, body?: unknown): Promise<T>;
   /** PUT con body JSON. Si `!response.ok`, lanza un Error generico. */
   put<T>(path: string, body?: unknown): Promise<T>;
-  /** DELETE. Si `!response.ok`, lanza un Error generico. */
-  delete<T = void>(path: string): Promise<T>;
+  /** DELETE. Si `!response.ok`, lanza un Error generico. Acepta body opcional (issue #031: el backend de push-tokens requiere el token en el body para saber cual borrar). */
+  delete<T = void>(path: string, body?: unknown): Promise<T>;
 };
 
 const MAX_GET_RETRIES = 3;
@@ -147,7 +147,7 @@ export function createApiClient(config: ApiClientConfig = {}): ApiClient {
     post: <T>(path: string, body?: unknown) => mutate<T>("POST", path, body),
     patch: <T>(path: string, body?: unknown) => mutate<T>("PATCH", path, body),
     put: <T>(path: string, body?: unknown) => mutate<T>("PUT", path, body),
-    delete: <T = void>(path: string) => mutate<T>("DELETE", path),
+    delete: <T = void>(path: string, body?: unknown) => mutate<T>("DELETE", path, body),
   };
 }
 

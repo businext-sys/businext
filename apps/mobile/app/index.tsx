@@ -11,6 +11,7 @@ import { useReservation } from "@businext/shared-core/hooks";
 import type { Reservation } from "@businext/shared-core";
 import { ReservationListItem } from "@/components/ReservationListItem";
 import { useAuth } from "@/context/AuthContext";
+import { usePushRegistration } from "@/hooks/usePushRegistration";
 import {
   addDays,
   formatDayLabel,
@@ -30,6 +31,7 @@ export default function AgendaScreen() {
   const { logout } = useAuth();
   const [selectedDay, setSelectedDay] = useState(new Date());
   const { reservationData, loading, getAllReservations } = useReservation();
+  const pushState = usePushRegistration();
 
   const sections = useMemo<Section[]>(() => {
     const dayReservations = reservationData
@@ -78,6 +80,12 @@ export default function AgendaScreen() {
           <Text style={styles.navButtonText}>{">"}</Text>
         </Pressable>
       </View>
+
+      {pushState.status === "denied" && (
+        <View style={styles.pushBanner}>
+          <Text style={styles.pushBannerText}>{pushState.message}</Text>
+        </View>
+      )}
 
       <SectionList
         sections={sections}
@@ -180,5 +188,14 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 14,
     color: "#888",
+  },
+  pushBanner: {
+    backgroundColor: "#FEF3C7",
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  pushBannerText: {
+    fontSize: 12,
+    color: "#92400E",
   },
 });

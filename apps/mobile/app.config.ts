@@ -33,7 +33,19 @@ const config: ExpoConfig = {
   web: {
     favicon: "./assets/favicon.png",
   },
-  plugins: ["expo-router", "expo-secure-store"],
+  plugins: [
+    "expo-router",
+    "expo-secure-store",
+    [
+      "expo-notifications",
+      {
+        // Icono/color placeholder para notificaciones Android — ajustar
+        // cuando exista un icono de marca dedicado.
+        icon: "./assets/icon.png",
+        color: "#111111",
+      },
+    ],
+  ],
   extra: {
     // Punto unico de configuracion del baseURL del backend consumido por
     // @businext/shared-core (createApiClient). Ver issue #28.
@@ -43,6 +55,11 @@ const config: ExpoConfig = {
     // Publicas por diseno (anon key), no son secretas.
     supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL ?? "",
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "",
+    // eas.projectId se agrega automaticamente al correr `eas init`/
+    // `eas build` por primera vez (issue #033, aun no hecho). Hasta
+    // entonces, registerForPushNotificationsAsync() en
+    // src/lib/pushNotifications.ts devuelve `no-project-id` de forma
+    // controlada en vez de fallar.
   },
 };
 
