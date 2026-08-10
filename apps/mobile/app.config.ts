@@ -38,6 +38,11 @@ const config: ExpoConfig = {
     // Punto unico de configuracion del baseURL del backend consumido por
     // @businext/shared-core (createApiClient). Ver issue #28.
     apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL ?? "http://localhost:8000",
+    // Credenciales de Supabase Auth (issue #029) — mismo proyecto que usa
+    // apps/web (NEXT_PUBLIC_SUPABASE_URL / NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY).
+    // Publicas por diseno (anon key), no son secretas.
+    supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL ?? "",
+    supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "",
   },
 };
 

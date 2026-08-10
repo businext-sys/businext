@@ -1,5 +1,7 @@
 import { Stack } from "expo-router";
 import { bootstrapApiClient } from "@/lib/bootstrapApiClient";
+import { AuthProvider } from "@/context/AuthContext";
+import { AuthGate } from "@/context/AuthGate";
 
 // Se ejecuta una unica vez, al cargar este modulo (que Expo Router carga
 // antes de montar cualquier pantalla), configurando el apiClient
@@ -7,5 +9,11 @@ import { bootstrapApiClient } from "@/lib/bootstrapApiClient";
 bootstrapApiClient();
 
 export default function RootLayout() {
-  return <Stack />;
+  return (
+    <AuthProvider>
+      <AuthGate>
+        <Stack screenOptions={{ headerShown: false }} />
+      </AuthGate>
+    </AuthProvider>
+  );
 }

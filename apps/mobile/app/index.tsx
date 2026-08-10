@@ -1,22 +1,27 @@
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, ScrollView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { useAccessContext } from "@businext/shared-core/hooks";
+import { useAuth } from "@/context/AuthContext";
 
 export default function HomeScreen() {
-  // Smoke test de integracion con shared-core (issue #028): si esto
+  const { logout } = useAuth();
+  // Smoke test de integracion con shared-core (issue #028/#029): si esto
   // compila, se ejecuta y hace la peticion HTTP esperada (verificable con
   // el inspector de red de Expo / Metro), la integracion basica funciona.
-  // Requiere un backend real accesible en `EXPO_PUBLIC_API_BASE_URL` (o
-  // localhost:8000 por defecto) y un JWT valido guardado en SecureStore
-  // para devolver datos reales — sin eso, mostrara el estado de error/401,
-  // lo cual en si mismo confirma que la llamada llega al backend.
   const { context, loading } = useAccessContext();
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Businext</Text>
       <Text style={styles.subtitle}>
-        App movil en construccion (Fase 5). Hola mundo desde Expo Router.
+        App movil en construccion (Fase 5). Sesion iniciada correctamente.
       </Text>
 
       <View style={styles.debugBox}>
@@ -29,10 +34,14 @@ export default function HomeScreen() {
           </Text>
         ) : (
           <Text style={styles.debugText}>
-            Sin sesion activa (esperado sin login todavia — ver issue #029)
+            Sesion sin contexto de negocio (verificar backend/token)
           </Text>
         )}
       </View>
+
+      <Pressable style={styles.logoutButton} onPress={logout}>
+        <Text style={styles.logoutButtonText}>Cerrar sesion</Text>
+      </Pressable>
 
       <StatusBar style="auto" />
     </ScrollView>
@@ -75,5 +84,17 @@ const styles = StyleSheet.create({
   debugText: {
     fontSize: 14,
     color: "#333",
+  },
+  logoutButton: {
+    marginTop: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#c0392b",
+  },
+  logoutButtonText: {
+    color: "#c0392b",
+    fontWeight: "600",
   },
 });
