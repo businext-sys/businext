@@ -49,3 +49,33 @@ Los features no triviales siguen el flujo de `.specify/` (`/speckit.specify`
 -> `/speckit.plan` -> `/speckit.tasks` -> `/speckit.implement`). Ver
 `specs/001-extraer-core-compartido/` para el detalle de la extraccion de
 logica compartida a `packages/shared-core` (issues #13-#20 del board).
+
+## Integracion con Claude Code Action
+
+El repo usa la GitHub App oficial de Anthropic (`anthropics/claude-code-action`)
+en vez de opencode. Hay 3 workflows en `.github/workflows/`:
+
+- **`claude.yml`**: responde a menciones `@claude` en comentarios de issues,
+  PRs y reviews. Tambien implementa un issue de forma autonoma cuando se le
+  aplica la etiqueta `claude-implement`.
+- **`claude-pr-review.yml`**: revisa automaticamente cada PR (calidad,
+  seguridad, performance, tests, docs) al abrirse o actualizarse, sin
+  necesidad de mencionar `@claude`.
+- **`claude-ci-autofix.yml`**: cuando falla un workflow de CI en un PR, crea
+  una branch con el fix y abre un PR. **Queda inerte hasta que exista un
+  workflow llamado `CI`** (lint/type-check/test) en `.github/workflows/` -
+  hoy no hay ninguno; ver issue de creacion de CI en el board.
+
+### Setup (una sola vez, requiere admin del repo)
+
+1. Instalar la GitHub App en <https://github.com/apps/claude> sobre este
+   repositorio.
+2. Configurar el secret `ANTHROPIC_API_KEY` en Settings -> Secrets and
+   variables -> Actions -> New repository secret.
+
+### Uso
+
+- Comentar `@claude <instruccion>` en cualquier issue o PR.
+- Etiquetar un issue con `claude-implement` para que lo implemente de forma
+  autonoma y abra un PR.
+- Abrir un PR: se revisa automaticamente sin pasos adicionales.
