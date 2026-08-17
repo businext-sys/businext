@@ -80,33 +80,39 @@ listo. Estado actual:
    workflow `mobile-build.yml` ya la referencia
    (`env.EAS_PROJECT_ID: ${{ vars.EAS_PROJECT_ID }}`) para que
    `eas-cli` resuelva `app.config.ts` igual que en local.
-3. ⬜ **Pendiente:** generar un token de acceso (`npx eas-cli
-   account:login` con un [robot
-   user](https://docs.expo.dev/accounts/programmatic-access/) o desde
-   expo.dev → Account settings → Access tokens) y configurarlo como
-   secret **`EXPO_TOKEN`** en Settings → Secrets and variables →
-   Actions → pestaña **Secrets** del repo `businext-sys/businext`. Sin
-   este secret, el workflow `mobile-build.yml` falla explicitamente en
-   el paso "Verificar login de EAS" (no falla de forma confusa mas
-   adelante).
-4. ⬜ Para iOS: se necesita una cuenta de Apple Developer ($99/año) antes
-   de poder generar builds `preview`/`production` para iPhone. Sin ella,
-   se puede seguir usando `--platform android` unicamente.
-5. ⬜ Correr el primer build manualmente para validar la configuracion:
+3. ✅ Token de acceso generado en expo.dev → Account settings → Access
+   tokens, configurado como secret **`EXPO_TOKEN`** en Settings →
+   Secrets and variables → Actions → pestaña **Secrets** del repo
+   `businext-sys/businext`.
+4. ✅ Build de validacion corrido via `workflow_dispatch` en CI
+   (issue #033): `eas whoami` autentica correctamente
+   (`daniflorezm (authenticated using EXPO_TOKEN)`), y el build
+   **Android** se genero y subio a EAS sin problema (keystore remoto
+   creado automaticamente, ver
+   [builds](https://expo.dev/accounts/daniflorezm/projects/businext-mobile/builds)).
+5. ⬜ **Pendiente real:** el build de **iOS** en CI falla con
+   `Failed to set up credentials. You're in non-interactive mode. EAS
+   CLI couldn't find any credentials suitable for internal
+   distribution.` — es el primer build de iOS del proyecto, y EAS no
+   puede generar el certificado/perfil de distribucion en modo no
+   interactivo. Hay que correr una vez, de forma interactiva, con la
+   cuenta de Apple Developer real:
    ```bash
    cd apps/mobile
    npx eas-cli login
-   npx eas-cli build --platform android --profile preview
+   npx eas-cli credentials --platform ios
    ```
-   Al terminar, `eas-cli` imprime un link + QR para instalar el build
-   directamente en un dispositivo Android (sin Play Store). Para iOS,
-   el mismo comando con `--platform ios` genera un build instalable via
-   TestFlight interno o un perfil ad-hoc (requiere el dispositivo
-   registrado en el Apple Developer account).
-6. Una vez configurado el secret `EXPO_TOKEN` y la variable
-   `EAS_PROJECT_ID` del repo, el workflow `mobile-build.yml` dispara
-   automaticamente un build `preview` en cada push a `main` que toque
-   `apps/mobile/` o `packages/shared-core/`.
+   (o simplemente `npx eas-cli build --platform ios --profile preview`
+   sin `--non-interactive`, que genera las credenciales la primera vez
+   si no existen). Una vez creadas, quedan guardadas en el servidor de
+   Expo y los builds de iOS en CI (no interactivos) las reutilizan
+   automaticamente.
+6. Mientras el paso 5 no este resuelto, `mobile-build.yml` usa
+   `--platform android` por defecto (tanto en el push automatico a
+   `main` como en el input `platform` de `workflow_dispatch`, que
+   tambien acepta `ios` o `all` una vez existan credenciales de iOS).
+   Cuando completes el paso 5, cambia el default de `platform` en
+   `.github/workflows/mobile-build.yml` de vuelta a `all`.
 
 ### Verificado en este entorno (sin cuenta real)
 
