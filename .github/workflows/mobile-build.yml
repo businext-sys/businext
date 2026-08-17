@@ -27,6 +27,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # projectId de EAS (no es secreto, ver apps/mobile/README.md). Se
+      # configura como Variable de repo en Settings > Secrets and
+      # variables > Actions > pestaña Variables.
+      EAS_PROJECT_ID: ${{ vars.EAS_PROJECT_ID }}
 
     steps:
       - name: Checkout repo
@@ -72,4 +77,4 @@ jobs:
       - name: Resumen
         run: |
           echo "Build de EAS disparado. Revisa el progreso y el link/QR de instalacion en:"
-          echo "https://expo.dev/accounts/[tu-cuenta]/projects/businext-mobile/builds"
+          echo "https://expo.dev/accounts/daniflorezm/projects/businext-mobile/builds"
