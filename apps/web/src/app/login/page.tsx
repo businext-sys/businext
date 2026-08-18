@@ -30,21 +30,21 @@ const LABEL_STYLE: React.CSSProperties = {
 };
 
 const ERROR_STYLE: React.CSSProperties = {
-  background: "rgba(239,68,68,0.10)",
-  border: "1px solid rgba(239,68,68,0.25)",
+  background: "rgba(244,87,75,0.10)",
+  border: "1px solid rgba(244,87,75,0.25)",
   borderRadius: 8,
   padding: "10px 14px",
-  color: "#fca5a5",
+  color: "#f4574b",
   fontSize: "0.82rem",
   textAlign: "center",
 };
 
 const SUCCESS_STYLE: React.CSSProperties = {
-  background: "rgba(34,197,94,0.10)",
-  border: "1px solid rgba(34,197,94,0.25)",
+  background: "rgba(52,211,153,0.10)",
+  border: "1px solid rgba(52,211,153,0.25)",
   borderRadius: 8,
   padding: "10px 14px",
-  color: "#86efac",
+  color: "#34d399",
   fontSize: "0.82rem",
   textAlign: "center",
 };
@@ -87,8 +87,8 @@ export default function LoginPage() {
 
   const inputStyle = (name: string): React.CSSProperties => ({
     ...INPUT_STYLE,
-    borderColor: focusedField === name ? "rgba(99,102,241,0.70)" : "rgba(255,255,255,0.12)",
-    boxShadow: focusedField === name ? "0 0 0 3px rgba(99,102,241,0.15)" : "none",
+    borderColor: focusedField === name ? "rgba(65,217,214,0.70)" : "rgba(255,255,255,0.12)",
+    boxShadow: focusedField === name ? "0 0 0 3px rgba(65,217,214,0.15)" : "none",
   });
 
   return (
@@ -103,8 +103,8 @@ export default function LoginPage() {
       overflow: "hidden",
     }}>
       {/* Ambient glow */}
-      <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: 600, height: 400, background: "radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: "10%", right: "10%", width: 300, height: 300, background: "radial-gradient(ellipse, rgba(167,139,250,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: 600, height: 400, background: "radial-gradient(ellipse, rgba(65,217,214,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
+      <div style={{ position: "absolute", bottom: "10%", right: "10%", width: 300, height: 300, background: "radial-gradient(ellipse, rgba(34,184,200,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
 
       {/* Card */}
       <div style={{
@@ -150,7 +150,7 @@ export default function LoginPage() {
 
         {/* Headline */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ margin: "0 0 10px", color: "#a78bfa", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}>
+          <p style={{ margin: "0 0 10px", color: "#22b8c8", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}>
             Businext
           </p>
           <h1 style={{
@@ -163,9 +163,9 @@ export default function LoginPage() {
             color: "#f8fafc",
           }}>
             {mode === "login" ? (
-              <>Bienvenido<br /><span style={{ background: "linear-gradient(to right, #3b82f6, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>de vuelta.</span></>
+              <>Bienvenido<br /><span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>de vuelta.</span></>
             ) : (
-              <>Crea tu<br /><span style={{ background: "linear-gradient(to right, #3b82f6, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>cuenta.</span></>
+              <>Crea tu<br /><span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>cuenta.</span></>
             )}
           </h1>
         </div>
@@ -188,7 +188,7 @@ export default function LoginPage() {
               type="button"
               onClick={handleRecovery}
               disabled={recoveryLoading}
-              style={{ background: "linear-gradient(135deg, #3b82f6, #a78bfa)", color: "#fff", border: "none", borderRadius: 10, padding: "12px", fontWeight: 700, fontSize: "0.9rem", cursor: recoveryLoading ? "not-allowed" : "pointer", opacity: recoveryLoading ? 0.7 : 1 }}
+              style={{ background: "var(--gradient-primary)", color: "#fff", border: "none", borderRadius: 10, padding: "12px", fontWeight: 700, fontSize: "0.9rem", cursor: recoveryLoading ? "not-allowed" : "pointer", opacity: recoveryLoading ? 0.7 : 1 }}
             >
               {recoveryLoading ? "Enviando..." : "Enviar correo de recuperación"}
             </button>
@@ -231,7 +231,7 @@ export default function LoginPage() {
               <button
                 type="button"
                 onClick={() => setShowRecovery(true)}
-                style={{ background: "none", border: "none", color: "#818cf8", fontSize: "0.78rem", cursor: "pointer", marginTop: 8, padding: 0, float: "right" }}
+                style={{ background: "none", border: "none", color: "#41d9d6", fontSize: "0.78rem", cursor: "pointer", marginTop: 8, padding: 0, float: "right" }}
               >
                 ¿Olvidaste tu contraseña?
               </button>
@@ -262,7 +262,7 @@ export default function LoginPage() {
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
-              background: formLoading ? "rgba(99,102,241,0.5)" : "linear-gradient(135deg, #3b82f6, #a78bfa)",
+              background: formLoading ? "rgba(65,217,214,0.5)" : "var(--gradient-primary)",
               color: "#fff",
               border: "none",
               borderRadius: 12,
@@ -271,7 +271,7 @@ export default function LoginPage() {
               fontSize: "1rem",
               cursor: formLoading ? "not-allowed" : "pointer",
               letterSpacing: "0.02em",
-              boxShadow: formLoading ? "none" : "0 4px 32px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.20)",
+              boxShadow: formLoading ? "none" : "0 4px 32px rgba(65,217,214,0.35), inset 0 1px 0 rgba(255,255,255,0.20)",
               transition: "opacity 0.2s, box-shadow 0.2s",
             }}
           >
@@ -290,7 +290,7 @@ export default function LoginPage() {
           <button
             type="button"
             onClick={() => setMode(mode === "login" ? "signup" : "login")}
-            style={{ background: "none", border: "none", color: "#818cf8", fontWeight: 600, cursor: "pointer", padding: 0, fontSize: "inherit" }}
+            style={{ background: "none", border: "none", color: "#41d9d6", fontWeight: 600, cursor: "pointer", padding: 0, fontSize: "inherit" }}
           >
             {mode === "login" ? "Regístrate" : "Inicia sesión"}
           </button>
