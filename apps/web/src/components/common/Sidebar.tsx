@@ -122,6 +122,8 @@ export function Sidebar() {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="flex items-center gap-2 px-5 py-5 border-b border-border-subtle">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-bn.png" alt="" width={42} height={28} className="shrink-0" />
         <span className="font-heading text-h4 font-bold text-foreground tracking-tight select-none">
           Businext
         </span>

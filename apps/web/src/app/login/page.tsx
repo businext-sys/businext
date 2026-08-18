@@ -150,9 +150,13 @@ export default function LoginPage() {
 
         {/* Headline */}
         <div style={{ marginBottom: 32 }}>
-          <p style={{ margin: "0 0 10px", color: "#22b8c8", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}>
-            Businext
-          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-bn.png" alt="" width={33} height={22} />
+            <p style={{ margin: 0, color: "#22b8c8", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}>
+              Businext
+            </p>
+          </div>
           <h1 style={{
             margin: 0,
             fontFamily: "var(--font-heading), system-ui, sans-serif",
