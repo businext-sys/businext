@@ -115,6 +115,13 @@
    extiende sin tocar TS. */
 @theme static {
   --gradient-primary: linear-gradient(135deg, #41d9d6, #22b8c8, #123d47);
+  /* Solo primary -> secondary, sin el stop oscuro de accent: pensado para
+     `background-clip: text`. Con --gradient-primary, la cola del texto cae
+     sobre #123d47 (~1.1:1 de contraste contra los fondos oscuros, WCAG pide
+     3:1 minimo) y se vuelve casi invisible. Los dos extremos de este
+     gradiente ya superan 7:1, asi que cualquier punto intermedio queda
+     legible. */
+  --gradient-text: linear-gradient(to right, #41d9d6, #22b8c8);
 
   --color-chart-1: #41d9d6;
   --color-chart-2: #22b8c8;

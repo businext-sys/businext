@@ -167,9 +167,9 @@ export default function LoginPage() {
             color: "#f8fafc",
           }}>
             {mode === "login" ? (
-              <>Bienvenido<br /><span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>de vuelta.</span></>
+              <>Bienvenido<br /><span style={{ background: "var(--gradient-text)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>de vuelta.</span></>
             ) : (
-              <>Crea tu<br /><span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>cuenta.</span></>
+              <>Crea tu<br /><span style={{ background: "var(--gradient-text)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>cuenta.</span></>
             )}
           </h1>
         </div>

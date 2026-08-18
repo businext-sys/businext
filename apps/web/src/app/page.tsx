@@ -92,7 +92,7 @@ export default function Home() {
               color: "#f8fafc",
             }}>
               Todo lo que necesitas{" "}
-              <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              <span style={{ background: "var(--gradient-text)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 saber.
               </span>
             </h2>
@@ -279,7 +279,7 @@ export default function Home() {
             color: "#f8fafc",
           }}>
             Tu negocio.<br />
-            <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            <span style={{ background: "var(--gradient-text)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               Bajo control.
             </span>
           </h2>

@@ -530,7 +530,7 @@ export function VideoScrollHero() {
                 <span style={{ display: "block", marginBottom: "0.1em" }}>{slide.line1}</span>
                 <span style={{
                   display: "block",
-                  background: "var(--gradient-primary)",
+                  background: "var(--gradient-text)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}>{slide.accent}</span>
