@@ -7,7 +7,7 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
 import {
@@ -32,8 +32,7 @@ import {
 } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
-
-const muiDarkTheme = createTheme({ palette: { mode: "dark" } });
+import { muiTheme } from "@/lib/mui-theme";
 
 export const ReservationModal = ({
   handleOpenModal,
@@ -247,7 +246,7 @@ export const ReservationModal = ({
                   <div className="mb-1 text-caption text-foreground-muted">
                     Fecha y hora de la reserva
                   </div>
-                  <ThemeProvider theme={muiDarkTheme}>
+                  <ThemeProvider theme={muiTheme}>
                     <LocalizationProvider
                       dateAdapter={AdapterDayjs}
                       adapterLocale="es"
