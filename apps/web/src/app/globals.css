@@ -52,16 +52,6 @@
   --color-input: #24333f;
   --color-ring: #41d9d6;
 
-  /* ── Chart / Calendar Palette ──
-     Categorica de 5 series, ordenada por prioridad: las dos primeras son los
-     colores de marca, las siguientes se alejan en hue para separar series.
-     Todas >= 4.5:1 sobre #0c1117 y #1b2733. */
-  --color-chart-1: #41d9d6;
-  --color-chart-2: #22b8c8;
-  --color-chart-3: #6c8eff;
-  --color-chart-4: #f5a623;
-  --color-chart-5: #e85d9e;
-
   /* ── Typography ── */
   --font-sans: var(--font-body), system-ui, sans-serif;
   --font-heading: var(--font-heading), system-ui, sans-serif;
@@ -113,11 +103,24 @@
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* ── Gradients ──
-   `static` para que la variable se emita siempre: no pertenece a un namespace
-   de utilidades, asi que Tailwind la eliminaria del CSS mientras nada la use. */
+/* ── Gradients + Chart / Calendar Palette ──
+   `static` para que las variables se emitan siempre, aunque ninguna utilidad
+   las use: el gradiente no pertenece a un namespace de utilidades, y la paleta
+   de charts se consume solo desde JS (Chart.js la lee en runtime con
+   getComputedStyle, ver src/lib/theme-tokens.ts).
+
+   Paleta categorica de 5 series, ordenada por prioridad: las dos primeras son
+   los colores de marca, las siguientes se alejan en hue para separar series.
+   Todas >= 4.5:1 sobre #0c1117 y #1b2733. Anadir --color-chart-6 aqui la
+   extiende sin tocar TS. */
 @theme static {
   --gradient-primary: linear-gradient(135deg, #41d9d6, #22b8c8, #123d47);
+
+  --color-chart-1: #41d9d6;
+  --color-chart-2: #22b8c8;
+  --color-chart-3: #6c8eff;
+  --color-chart-4: #f5a623;
+  --color-chart-5: #e85d9e;
 }
 
 /* ── Skeleton shimmer keyframe ── */
