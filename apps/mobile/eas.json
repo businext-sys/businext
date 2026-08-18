@@ -19,14 +19,14 @@
         "simulator": false
       },
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://api-staging.businext.app"
+        "EXPO_PUBLIC_API_BASE_URL": "https://businext-backend.onrender.com"
       }
     },
     "production": {
       "autoIncrement": true,
       "channel": "production",
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://api.businext.app"
+        "EXPO_PUBLIC_API_BASE_URL": "https://businext-backend.onrender.com"
       }
     }
   },
