@@ -52,9 +52,16 @@ via Expo Router, `src/components/` para UI compartida).
 ## Distribucion via EAS Build (issue #033)
 
 `eas.json` ya tiene los 3 perfiles configurados: `development`
-(dev client, para debug con Metro), `preview` (build interno instalable
-via link/QR, apunta a un backend de staging), y `production`
-(autoincrementa version, apunta al backend real).
+(dev client, para debug con Metro, apunta a `localhost:8000`),
+`preview` (build interno instalable via link/QR) y `production`
+(autoincrementa version). **Nota:** por ahora solo existe un backend
+real desplegado, en Render (`https://businext-backend.onrender.com`),
+asi que tanto `preview` como `production` apuntan a esa misma URL en
+`EXPO_PUBLIC_API_BASE_URL`. Los dominios `api-staging.businext.app` /
+`api.businext.app` que estaban antes en `eas.json` eran placeholders
+que nunca se aprovisionaron (no existe DNS ni nada corriendo ahi) —
+si en el futuro se separan los entornos de staging/produccion en
+Render (o donde sea), actualizar cada perfil con su URL real.
 
 ### ⚠️ Pasos manuales pendientes (requieren una cuenta de Expo real)
 
