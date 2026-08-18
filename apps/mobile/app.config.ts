@@ -54,15 +54,15 @@ const config: ExpoConfig = {
       },
     ],
   ],
+  // runtimeVersion siempre debe resolver igual (depende solo de `version`,
+  // no del projectId) para que todos los builds/updates sean comparables
+  // sin importar si EAS_PROJECT_ID estaba definido al evaluar esta config
+  // (evita el "Runtime version mismatch" de EAS Update).
+  runtimeVersion: { policy: "appVersion" as const },
   // OTA updates via expo-updates (issue #033). `url` solo es valido con
   // un projectId real; con EAS_PROJECT_ID vacio, se omite (Expo Go/dev
   // sigue funcionando igual, solo no habria OTA updates).
-  ...(EAS_PROJECT_ID
-    ? {
-        runtimeVersion: { policy: "appVersion" as const },
-        updates: { url: `https://u.expo.dev/${EAS_PROJECT_ID}` },
-      }
-    : {}),
+  ...(EAS_PROJECT_ID ? { updates: { url: `https://u.expo.dev/${EAS_PROJECT_ID}` } } : {}),
   extra: {
     // Punto unico de configuracion del baseURL del backend consumido por
     // @businext/shared-core (createApiClient). Ver issue #28.

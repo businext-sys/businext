@@ -23,10 +23,20 @@ on:
         required: false
         default: "preview"
         type: string
+      platform:
+        description: "Plataforma de EAS Build (android | ios | all)"
+        required: false
+        default: "android"
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # projectId de EAS (no es secreto, ver apps/mobile/README.md). Se
+      # configura como Variable de repo en Settings > Secrets and
+      # variables > Actions > pestaña Variables.
+      EAS_PROJECT_ID: ${{ vars.EAS_PROJECT_ID }}
 
     steps:
       - name: Checkout repo
@@ -34,8 +44,6 @@ jobs:
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -64,7 +72,7 @@ jobs:
         working-directory: apps/mobile
         run: |
           npx eas-cli build \
-            --platform all \
+            --platform "${{ inputs.platform || 'android' }}" \
             --profile "${{ inputs.profile || 'preview' }}" \
             --non-interactive \
             --no-wait
@@ -72,4 +80,4 @@ jobs:
       - name: Resumen
         run: |
           echo "Build de EAS disparado. Revisa el progreso y el link/QR de instalacion en:"
-          echo "https://expo.dev/accounts/[tu-cuenta]/projects/businext-mobile/builds"
+          echo "https://expo.dev/accounts/daniflorezm/projects/businext-mobile/builds"
