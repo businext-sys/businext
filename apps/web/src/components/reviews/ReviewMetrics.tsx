@@ -5,6 +5,8 @@ import { Star } from "lucide-react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { darkChartOptions } from "@/lib/chartjs-dark-theme";
+import { colorToken } from "@/lib/theme-tokens";
 import type { GoogleBusinessProfile } from "@/lib/google-reviews/types";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -13,25 +15,39 @@ type ReviewMetricsProps = {
   profile: GoogleBusinessProfile;
 };
 
-const STAR_COLORS = [
-  "#F59E0B", // 5 stars - amber
-  "#84CC16", // 4 stars - lime
-  "#3B82F6", // 3 stars - blue
-  "#F97316", // 2 stars - orange
-  "#EF4444", // 1 star - red
-];
+/**
+ * Rampa de la distribucion de estrellas, de 5 a 1.
+ *
+ * No usa la paleta categorica `--color-chart-*` de corrido porque la escala es
+ * ordinal: los tokens de estado dan la direccion bueno -> malo y `chart-1` /
+ * `chart-3` cubren el tramo medio con hues distintos de sus vecinos (las cinco
+ * series de la paleta incluyen dos turquesas casi identicos, ilegibles como
+ * porciones contiguas de un donut).
+ *
+ * Se guardan los nombres de token, no los colores: el canvas los necesita
+ * resueltos (`colorToken`) y el DOM como `var(--color-*)`.
+ */
+const RATING_SCALE_TOKENS = [
+  "success", // 5 estrellas
+  "chart-1", // 4 estrellas
+  "chart-3", // 3 estrellas
+  "warning", // 2 estrellas
+  "danger", // 1 estrella
+] as const;
 
 export function ReviewMetrics({ profile }: ReviewMetricsProps) {
   const scores = profile.reviewsPerScore || {};
   const total = profile.totalReviews || 0;
   const starLevels = [5, 4, 3, 2, 1];
 
+  /* Los tokens se leen dentro de los memos: solo existen en el navegador, y el
+     primer render de cliente (donde se pinta el canvas) ya los resuelve. */
   const chartData = useMemo(() => ({
     labels: starLevels.map((s) => `${s} estrellas`),
     datasets: [
       {
         data: starLevels.map((s) => scores[String(s)] ?? 0),
-        backgroundColor: STAR_COLORS,
+        backgroundColor: RATING_SCALE_TOKENS.map((token) => colorToken(token)),
         borderColor: "transparent",
         borderWidth: 0,
         hoverOffset: 6,
@@ -40,23 +56,19 @@ export function ReviewMetrics({ profile }: ReviewMetricsProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }), [scores]);
 
-  const chartOptions = useMemo(() => ({
-    responsive: true,
-    maintainAspectRatio: false,
-    cutout: "65%",
-    plugins: {
-      legend: { display: false },
-      tooltip: {
-        backgroundColor: "rgba(35, 35, 124, 0.95)",
-        titleColor: "#fbfcff",
-        bodyColor: "#b8b8d4",
-        borderColor: "rgba(74, 74, 170, 0.5)",
-        borderWidth: 1,
-        padding: 10,
-        cornerRadius: 8,
+  const chartOptions = useMemo(() => {
+    const baseOptions = darkChartOptions();
+    return {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: "65%",
+      animation: baseOptions.animation,
+      plugins: {
+        ...baseOptions.plugins,
+        legend: { display: false },
       },
-    },
-  }), []);
+    };
+  }, []);
 
   return (
     <Card className="h-full">
@@ -88,14 +100,14 @@ export function ReviewMetrics({ profile }: ReviewMetricsProps) {
                     <span className="text-body-sm font-semibold text-foreground">
                       {star}
                     </span>
-                    <Star className="w-4 h-4 text-[#F59E0B] fill-[#F59E0B]" />
+                    <Star className="w-4 h-4 text-warning fill-warning" />
                   </div>
                   <div className="flex-1 h-2.5 bg-surface-raised rounded-full overflow-hidden">
                     <div
                       className="h-full rounded-full transition-all duration-300"
                       style={{
                         width: `${pct}%`,
-                        backgroundColor: STAR_COLORS[idx],
+                        backgroundColor: `var(--color-${RATING_SCALE_TOKENS[idx]})`,
                       }}
                     />
                   </div>

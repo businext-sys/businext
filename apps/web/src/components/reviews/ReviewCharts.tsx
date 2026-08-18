@@ -16,6 +16,8 @@ import {
 } from "chart.js";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TrendingUp, BarChart3 } from "lucide-react";
+import { darkChartOptions } from "@/lib/chartjs-dark-theme";
+import { colorToken, withAlpha } from "@/lib/theme-tokens";
 import type { GoogleReview } from "@/lib/google-reviews/types";
 
 ChartJS.register(
@@ -96,34 +98,16 @@ function groupByMonth(reviews: GoogleReview[], cutoff: Date | null): MonthData[]
     });
 }
 
-const baseChartOptions = {
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { display: false },
-    tooltip: {
-      backgroundColor: "rgba(35, 35, 124, 0.95)",
-      titleColor: "#fbfcff",
-      bodyColor: "#b8b8d4",
-      borderColor: "rgba(74, 74, 170, 0.5)",
-      borderWidth: 1,
-      padding: 12,
-      cornerRadius: 8,
-      titleFont: { size: 13, weight: 600 as const },
-      bodyFont: { size: 12 },
-    },
-  },
-  scales: {
-    x: {
-      grid: { color: "rgba(255,255,255,0.04)" },
-      ticks: { color: "rgba(255,255,255,0.45)", font: { size: 11 } },
-    },
-    y: {
-      grid: { color: "rgba(255,255,255,0.04)" },
-      ticks: { color: "rgba(255,255,255,0.45)", font: { size: 11 } },
-    },
-  },
-};
+/* Series de la paleta `--color-chart-*` (ver globals.css). Se nombran en vez de
+   usar `paletteColor(i)` porque son series fijas: la tendencia de rating lleva
+   el turquesa de marca por ser la metrica principal de la pagina y el volumen
+   el azul de chart-3, lejos en hue para leerse como otra serie.
+
+   Al cambiarlos hay que actualizar tambien las clases `text-chart-*` de los
+   iconos de cada chart: Tailwind solo ve literales al escanear, asi que la
+   clase no puede derivarse de estas constantes. */
+const RATING_TOKEN = "chart-1";
+const VOLUME_TOKEN = "chart-3";
 
 export function ReviewCharts({ reviews }: ReviewChartsProps) {
   const [range, setRange] = useState<TimeRange>("all");
@@ -148,17 +132,28 @@ export function ReviewCharts({ reviews }: ReviewChartsProps) {
 
   const labels = monthData.map((d) => d.label);
 
+  /* Los tokens del theme solo existen en el navegador, asi que los colores y
+     las opciones se resuelven en cada render y no en constantes de modulo. */
+  const ratingColor = colorToken(RATING_TOKEN);
+  const volumeColor = colorToken(VOLUME_TOKEN);
+
+  const baseOptions = darkChartOptions();
+  const chartOptions = {
+    ...baseOptions,
+    plugins: { ...baseOptions.plugins, legend: { display: false } },
+  };
+
   const ratingData = {
     labels,
     datasets: [
       {
         data: monthData.map((d) => parseFloat(d.avgRating.toFixed(2))),
-        borderColor: "#F59E0B",
-        backgroundColor: "rgba(245, 158, 11, 0.1)",
+        borderColor: ratingColor,
+        backgroundColor: withAlpha(ratingColor, 0.1),
         fill: true,
         tension: 0.4,
         pointRadius: 4,
-        pointBackgroundColor: "#F59E0B",
+        pointBackgroundColor: ratingColor,
         pointBorderColor: "transparent",
       },
     ],
@@ -169,18 +164,18 @@ export function ReviewCharts({ reviews }: ReviewChartsProps) {
     datasets: [
       {
         data: monthData.map((d) => d.count),
-        backgroundColor: "rgba(59, 130, 246, 0.6)",
-        hoverBackgroundColor: "rgba(59, 130, 246, 0.85)",
+        backgroundColor: withAlpha(volumeColor, 0.6),
+        hoverBackgroundColor: withAlpha(volumeColor, 0.85),
         borderRadius: 6,
       },
     ],
   };
 
   const ratingOptions = {
-    ...baseChartOptions,
+    ...chartOptions,
     scales: {
-      ...baseChartOptions.scales,
-      y: { ...baseChartOptions.scales.y, min: 1, max: 5 },
+      ...chartOptions.scales,
+      y: { ...chartOptions.scales.y, min: 1, max: 5 },
     },
   };
 
@@ -212,7 +207,7 @@ export function ReviewCharts({ reviews }: ReviewChartsProps) {
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <TrendingUp className="w-4 h-4 text-[#F59E0B]" />
+              <TrendingUp className="w-4 h-4 text-chart-1" />
               <p className="text-body-sm font-semibold text-foreground">
                 Calificación promedio
               </p>
@@ -223,13 +218,13 @@ export function ReviewCharts({ reviews }: ReviewChartsProps) {
           </div>
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <BarChart3 className="w-4 h-4 text-blue-400" />
+              <BarChart3 className="w-4 h-4 text-chart-3" />
               <p className="text-body-sm font-semibold text-foreground">
                 Volumen por mes
               </p>
             </div>
             <div className="h-48">
-              <Bar data={volumeData} options={baseChartOptions} />
+              <Bar data={volumeData} options={chartOptions} />
             </div>
           </div>
         </div>
