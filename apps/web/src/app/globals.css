@@ -19,34 +19,34 @@
   --color-*: initial;
 
   /* ── Semantic Colors ── */
-  --color-background: #0f172a;
-  --color-surface: #1e1b4b;
-  --color-surface-raised: #312e81;
-  --color-surface-overlay: rgba(15, 23, 42, 0.95);
-  --color-primary: #3b82f6;
-  --color-primary-hover: #60a5fa;
-  --color-primary-foreground: #f8fafc;
-  --color-secondary: #a78bfa;
-  --color-secondary-hover: #c4b5fd;
-  --color-secondary-foreground: #0f172a;
-  --color-accent: #22d3ee;
-  --color-accent-hover: #67e8f9;
-  --color-accent-foreground: #0f172a;
-  --color-foreground: #f8fafc;
-  --color-foreground-muted: #b0bec5;
-  --color-foreground-subtle: #8494a7;
-  --color-border: #334155;
-  --color-border-subtle: #1e293b;
+  --color-background: #0c1117;
+  --color-surface: #1b2733;
+  --color-surface-raised: #24333f;
+  --color-surface-overlay: rgba(12, 17, 23, 0.95);
+  --color-primary: #41d9d6;
+  --color-primary-hover: #6be5e2;
+  --color-primary-foreground: #0c1117;
+  --color-secondary: #22b8c8;
+  --color-secondary-hover: #3fcddb;
+  --color-secondary-foreground: #0c1117;
+  --color-accent: #123d47;
+  --color-accent-hover: #1a5765;
+  --color-accent-foreground: #f5fafc;
+  --color-foreground: #f5fafc;
+  --color-foreground-muted: #c3d5dc;
+  --color-foreground-subtle: #7e97a1;
+  --color-border: #24333f;
+  --color-border-subtle: #16202a;
   --color-success: #34d399;
-  --color-success-foreground: #0f172a;
+  --color-success-foreground: #0c1117;
   --color-danger: #f87171;
-  --color-danger-foreground: #0f172a;
+  --color-danger-foreground: #0c1117;
   --color-warning: #fbbf24;
   --color-highlight: #f97316;
-  --color-muted: #1e293b;
-  --color-muted-foreground: #64748b;
-  --color-input: #334155;
-  --color-ring: #3b82f6;
+  --color-muted: #16202a;
+  --color-muted-foreground: #9eb6bf;
+  --color-input: #24333f;
+  --color-ring: #41d9d6;
 
   /* ── Chart / Calendar Palette ── */
   --color-chart-1: #7c3aed;
@@ -97,13 +97,20 @@
   --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
   --shadow-md: 0 4px 8px -1px rgb(0 0 0 / 0.4);
   --shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.5);
-  --shadow-glow-primary: 0 0 20px rgba(59, 130, 246, 0.3);
-  --shadow-glow-accent: 0 0 20px rgba(34, 211, 238, 0.2);
+  --shadow-glow-primary: 0 0 20px rgba(65, 217, 214, 0.3);
+  --shadow-glow-accent: 0 0 20px rgba(34, 184, 200, 0.25);
 
   /* ── Easing ── */
   --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
   --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
   --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ── Gradients ──
+   `static` para que la variable se emita siempre: no pertenece a un namespace
+   de utilidades, asi que Tailwind la eliminaria del CSS mientras nada la use. */
+@theme static {
+  --gradient-primary: linear-gradient(135deg, #41d9d6, #22b8c8, #123d47);
 }
 
 /* ── Skeleton shimmer keyframe ── */
@@ -176,8 +183,8 @@ h4 {
 }
 .form-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  border-color: #41d9d6;
+  box-shadow: 0 0 0 3px rgba(65, 217, 214, 0.18);
 }
 
 /* ── Hide scrollbar for date carousel ── */
