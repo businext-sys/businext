@@ -11,7 +11,7 @@ export const buttonVariants = cva(
         primary:
           "bg-primary text-primary-foreground hover:bg-primary-hover active:scale-[0.98]",
         secondary:
-          "bg-surface-raised border border-border text-foreground hover:bg-surface hover:border-primary/50 active:scale-[0.98]",
+          "bg-transparent border border-primary text-primary hover:bg-primary/10 active:scale-[0.98]",
         danger:
           "bg-danger text-danger-foreground hover:bg-danger/90 active:scale-[0.98]",
         ghost:
@@ -19,7 +19,7 @@ export const buttonVariants = cva(
         accent:
           "bg-accent text-accent-foreground hover:bg-accent-hover active:scale-[0.98]",
         gradient:
-          "bg-gradient-to-r from-primary to-accent text-white hover:brightness-110 active:scale-[0.98]",
+          "bg-gradient-to-r from-primary to-accent text-foreground hover:brightness-110 active:scale-[0.98]",
       },
       size: {
         sm: "h-8 rounded-md px-3 text-caption",

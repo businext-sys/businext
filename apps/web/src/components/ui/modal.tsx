@@ -31,7 +31,7 @@ export function Modal({ open, onClose, children, className }: ModalProps) {
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/60" aria-hidden="true" />
+          <div className="fixed inset-0 bg-background/60" aria-hidden="true" />
         </TransitionChild>
 
         {/* Panel */}
@@ -47,7 +47,7 @@ export function Modal({ open, onClose, children, className }: ModalProps) {
           >
             <DialogPanel
               className={cn(
-                "w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-xl bg-surface border border-border shadow-lg",
+                "w-full max-w-lg max-h-[85vh] overflow-y-auto rounded-xl bg-surface border border-accent shadow-lg",
                 className
               )}
             >

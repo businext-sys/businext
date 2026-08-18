@@ -40,7 +40,7 @@ export function Drawer({
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <div className="fixed inset-0 bg-black/60" aria-hidden="true" />
+          <div className="fixed inset-0 bg-background/60" aria-hidden="true" />
         </TransitionChild>
 
         {/* Panel */}
@@ -61,7 +61,7 @@ export function Drawer({
           >
             <DialogPanel
               className={cn(
-                "w-full max-w-sm bg-surface border-border shadow-lg overflow-y-auto",
+                "w-full max-w-sm bg-surface border-accent shadow-lg overflow-y-auto",
                 isLeft ? "border-r" : "border-l",
                 className
               )}
