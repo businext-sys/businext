@@ -426,9 +426,9 @@ export function VideoScrollSection({ framePath, frameCount, slides, pxPerFrame =
             display: "inline-block",
             padding: "0.35rem 1.1rem",
             borderRadius: "999px",
-            border: "1px solid rgba(167,139,250,0.35)",
-            background: "rgba(167,139,250,0.10)",
-            color: "#c4b5fd",
+            border: "1px solid rgba(34,184,200,0.35)",
+            background: "rgba(34,184,200,0.10)",
+            color: "#3fcddb",
             fontSize: "0.78rem",
             fontWeight: 600,
             letterSpacing: "0.08em",
@@ -452,7 +452,7 @@ export function VideoScrollSection({ framePath, frameCount, slides, pxPerFrame =
               WebkitFontSmoothing: "antialiased",
             }}>
               Todo lo que necesita{" "}
-              <span style={{ background: "linear-gradient(to right, #3b82f6, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 tu negocio
               </span>
             </h2>
@@ -491,12 +491,12 @@ export function VideoScrollSection({ framePath, frameCount, slides, pxPerFrame =
                   width: 48,
                   height: 48,
                   borderRadius: "14px",
-                  background: "linear-gradient(135deg, rgba(59,130,246,0.20), rgba(167,139,250,0.20))",
-                  border: "1px solid rgba(167,139,250,0.25)",
+                  background: "linear-gradient(135deg, rgba(65,217,214,0.20), rgba(34,184,200,0.20))",
+                  border: "1px solid rgba(34,184,200,0.25)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  color: "#a78bfa",
+                  color: "#22b8c8",
                   flexShrink: 0,
                 }}>
                   {FEATURE_ICONS[i % FEATURE_ICONS.length]}
@@ -514,7 +514,7 @@ export function VideoScrollSection({ framePath, frameCount, slides, pxPerFrame =
                   WebkitFontSmoothing: "antialiased",
                 }}>
                   {slide.line1}{" "}
-                  <span style={{ background: "linear-gradient(to right, #3b82f6, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                     {slide.accent}
                   </span>
                 </h3>
@@ -616,7 +616,7 @@ export function VideoScrollSection({ framePath, frameCount, slides, pxPerFrame =
                 <span style={{ display: "block", marginBottom: "0.1em" }}>{slide.line1}</span>
                 <span style={{
                   display: "block",
-                  background: "linear-gradient(to right, #3b82f6, #a78bfa)",
+                  background: "var(--gradient-primary)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}>{slide.accent}</span>
@@ -651,7 +651,7 @@ export function VideoScrollSection({ framePath, frameCount, slides, pxPerFrame =
         {/* Progress bar — solo en móvil */}
         {!isDesktop && (
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "rgba(255,255,255,0.07)", zIndex: 20 }}>
-            <div ref={progressBarRef} style={{ height: "100%", width: "0%", background: "linear-gradient(to right, #3b82f6, #a78bfa)", transition: "none" }} />
+            <div ref={progressBarRef} style={{ height: "100%", width: "0%", background: "var(--gradient-primary)", transition: "none" }} />
           </div>
         )}
       </div>
