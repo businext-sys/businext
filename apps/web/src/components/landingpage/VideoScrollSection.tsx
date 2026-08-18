@@ -452,7 +452,7 @@ export function VideoScrollSection({ framePath, frameCount, slides, pxPerFrame =
               WebkitFontSmoothing: "antialiased",
             }}>
               Todo lo que necesita{" "}
-              <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              <span style={{ background: "var(--gradient-text)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 tu negocio
               </span>
             </h2>
@@ -514,7 +514,7 @@ export function VideoScrollSection({ framePath, frameCount, slides, pxPerFrame =
                   WebkitFontSmoothing: "antialiased",
                 }}>
                   {slide.line1}{" "}
-                  <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  <span style={{ background: "var(--gradient-text)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                     {slide.accent}
                   </span>
                 </h3>
@@ -616,7 +616,7 @@ export function VideoScrollSection({ framePath, frameCount, slides, pxPerFrame =
                 <span style={{ display: "block", marginBottom: "0.1em" }}>{slide.line1}</span>
                 <span style={{
                   display: "block",
-                  background: "var(--gradient-primary)",
+                  background: "var(--gradient-text)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}>{slide.accent}</span>
