@@ -24,7 +24,15 @@ import {
 } from "lucide-react";
 
 /* ── Sparkline SVG ─────────────────────────────────────────────────── */
-function Sparkline({ data, color }: { data: number[]; color: string }) {
+/**
+ * `accentToken` es el nombre de un token de color (ej. "chart-1"), no un hex.
+ *
+ * El color se aplica con `style` y no con los atributos de presentacion de SVG
+ * (`stroke=`, `fill=`): `var()` no se sustituye en un atributo, si en una
+ * declaracion inline. Y a diferencia de leer el token con `colorToken()`, esto
+ * tambien resuelve en SSR, asi que no hay salto de color al hidratar.
+ */
+function Sparkline({ data, accentToken }: { data: number[]; accentToken: string }) {
   if (!data || data.length === 0 || data.every((v) => v === 0)) return null;
 
   const width = 80;
@@ -47,23 +55,28 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
   const lastPoint = points[points.length - 1];
   const areaD = `${pathD} L ${lastPoint.split(",")[0]},${height} L ${firstPoint.split(",")[0]},${height} Z`;
 
+  const accent = `var(--color-${accentToken})`;
+  /* El id sale del token (un slug valido) para que sea estable entre servidor y
+     cliente: cada KPI usa un accent distinto, asi que no colisionan. */
+  const gradientId = `sparkline-${accentToken}`;
+
   return (
     <svg width={width} height={height} className="shrink-0 opacity-60 group-hover:opacity-90 transition-opacity duration-300">
       <defs>
-        <linearGradient id={`grad-${color}`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={color} stopOpacity="0.3" />
-          <stop offset="100%" stopColor={color} stopOpacity="0" />
+        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" style={{ stopColor: accent, stopOpacity: 0.3 }} />
+          <stop offset="100%" style={{ stopColor: accent, stopOpacity: 0 }} />
         </linearGradient>
       </defs>
-      <path d={areaD} fill={`url(#grad-${color})`} />
-      <path d={pathD} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d={areaD} fill={`url(#${gradientId})`} />
+      <path d={pathD} fill="none" style={{ stroke: accent }} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       {/* Current day dot */}
       {data.length > 0 && (
         <circle
           cx={padding + ((data.length - 1) / (data.length - 1)) * (width - padding * 2)}
           cy={height - padding - ((data[data.length - 1] - min) / range) * (height - padding * 2)}
           r="2.5"
-          fill={color}
+          style={{ fill: accent }}
         />
       )}
     </svg>
@@ -76,14 +89,15 @@ function KPICard({
   value,
   change,
   icon,
-  accentHex,
+  accentToken,
   sparklineData,
 }: {
   label: string;
   value: string;
   change: number;
   icon: React.ReactNode;
-  accentHex: string;
+  /** Nombre de un token de color del theme, ej. "chart-1". */
+  accentToken: string;
   sparklineData?: number[];
 }) {
   const isPositive = change > 0;
@@ -94,7 +108,7 @@ function KPICard({
       {/* Subtle corner glow */}
       <div
         className="absolute -top-8 -right-8 w-24 h-24 rounded-full blur-2xl opacity-[0.06] group-hover:opacity-[0.1] transition-opacity duration-300 pointer-events-none"
-        style={{ backgroundColor: accentHex }}
+        style={{ backgroundColor: `var(--color-${accentToken})` }}
       />
 
       <div className="relative">
@@ -108,7 +122,7 @@ function KPICard({
               {label}
             </span>
           </div>
-          {sparklineData && <Sparkline data={sparklineData} color={accentHex} />}
+          {sparklineData && <Sparkline data={sparklineData} accentToken={accentToken} />}
         </div>
 
         {/* Value + change */}
@@ -119,7 +133,7 @@ function KPICard({
           <span
             className={`inline-flex items-center gap-1 text-[14px] font-semibold px-2 py-0.5 rounded-full ${
               isNeutral
-                ? "text-foreground-muted/60 bg-[#64748b]/5"
+                ? "text-foreground-muted/60 bg-foreground-muted/5"
                 : isPositive
                 ? "text-success bg-success/8"
                 : "text-danger bg-danger/8"
@@ -187,14 +201,16 @@ export function SummaryPulse({
         <p className="text-[14px] text-danger mb-4">{genError}</p>
       )}
 
-      {/* KPI cards */}
+      {/* KPI cards — tres series de `--color-chart-*`. Se cogen 1/3/5
+          (turquesa, azul, rosa) y no 1/2/3: chart-2 es un turquesa casi igual
+          que chart-1 y las tres tarjetas se leen en paralelo. */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <KPICard
           label="Ingresos"
           value={`${kpis.total_income.toLocaleString("es-ES", { minimumFractionDigits: 2 })}€`}
           change={kpis.income_change_pct}
           icon={<Euro className="h-4.5 w-4.5" />}
-          accentHex="#34d399"
+          accentToken="chart-1"
           sparklineData={kpis.daily_income}
         />
         <KPICard
@@ -202,7 +218,7 @@ export function SummaryPulse({
           value={String(kpis.total_reservations)}
           change={kpis.reservations_change_pct}
           icon={<CalendarDays className="h-4.5 w-4.5" />}
-          accentHex="#3b82f6"
+          accentToken="chart-3"
           sparklineData={kpis.daily_reservations}
         />
         <KPICard
@@ -210,7 +226,7 @@ export function SummaryPulse({
           value={String(kpis.total_product_sales)}
           change={kpis.product_sales_change_pct}
           icon={<ShoppingBag className="h-4.5 w-4.5" />}
-          accentHex="#a78bfa"
+          accentToken="chart-5"
           sparklineData={kpis.daily_products}
         />
       </div>
