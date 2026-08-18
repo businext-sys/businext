@@ -45,3 +45,49 @@ jobs:
           # implementacion autonoma (reemplaza el workflow_dispatch manual
           # de opencode-run.yml).
           label_trigger: "claude-implement"
+
+      # claude-code-action nunca abre el PR por si mismo cuando se dispara
+      # sobre un issue (su propio prompt le indica dejar solo un link para
+      # crearlo a mano, y su allowedTools no incluye "gh pr create"). Este
+      # paso determinista toma la branch que Claude acaba de pushear y abre
+      # el PR, para que el flujo label -> implementacion -> PR quede
+      # completamente automatico.
+      - name: Auto-crear PR desde la branch de Claude
+        if: |
+          github.event_name == 'issues' &&
+          github.event.action == 'labeled' &&
+          github.event.label.name == 'claude-implement'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+        run: |
+          set -e
+          git fetch --no-tags --depth=1 origin \
+            "refs/heads/claude/issue-${ISSUE_NUMBER}-*:refs/remotes/origin/claude/issue-${ISSUE_NUMBER}-*" \
+            2>/dev/null || true
+
+          BRANCH=$(git for-each-ref --sort=-committerdate \
+            --format='%(refname:short)' \
+            "refs/remotes/origin/claude/issue-${ISSUE_NUMBER}-*" | head -n1 | sed 's#^origin/##')
+
+          if [ -z "$BRANCH" ]; then
+            echo "No se encontro branch de Claude para el issue #${ISSUE_NUMBER}; no habia cambios que pushear (pregunta/revision, no implementacion)."
+            exit 0
+          fi
+
+          EXISTING_PR=$(gh pr list --repo "${{ github.repository }}" --head "$BRANCH" --json number --jq '.[0].number // empty')
+          if [ -n "$EXISTING_PR" ]; then
+            echo "Ya existe el PR #$EXISTING_PR para $BRANCH, no se crea uno nuevo."
+            exit 0
+          fi
+
+          TITLE=$(git log -1 --format=%s "origin/$BRANCH")
+          BODY=$(git log -1 --format=%b "origin/$BRANCH")
+          FULL_BODY=$(printf '%s\n\nCloses #%s\n\n🤖 PR creado automáticamente por el workflow `claude-implement` a partir de la branch `%s`.' "$BODY" "$ISSUE_NUMBER" "$BRANCH")
+
+          gh pr create --repo "${{ github.repository }}" \
+            --base main \
+            --head "$BRANCH" \
+            --title "${TITLE:-Implementa: ${ISSUE_TITLE}}" \
+            --body "$FULL_BODY"
