@@ -104,7 +104,7 @@ export function ReviewFilters({
             {opt.value ? (
               <>
                 {opt.value}
-                <Star className="w-3 h-3 text-[#F59E0B] fill-[#F59E0B]" />
+                <Star className="w-3 h-3 text-warning fill-warning" />
               </>
             ) : (
               opt.label
