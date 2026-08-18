@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { paletteColor, darkChartOptions } from "@/lib/chartjs-dark-theme";
+import { darkChartOptions, paletteColor } from "@/lib/chartjs-dark-theme";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 ChartJS.register(
@@ -45,6 +45,7 @@ export const FinancesBarChart = ({
     return dataset;
   };
   const dataset = createDataSet(financesData);
+  const baseOptions = darkChartOptions();
 
   return (
     <Card className="w-full">
@@ -79,18 +80,18 @@ export const FinancesBarChart = ({
               ],
             }}
             options={{
-              ...darkChartOptions,
+              ...baseOptions,
               plugins: {
-                ...darkChartOptions.plugins,
+                ...baseOptions.plugins,
                 legend: { display: false },
                 title: { display: false },
               },
               scales: {
-                ...darkChartOptions.scales,
+                ...baseOptions.scales,
                 y: {
-                  ...darkChartOptions.scales.y,
+                  ...baseOptions.scales.y,
                   ticks: {
-                    ...darkChartOptions.scales.y.ticks,
+                    ...baseOptions.scales.y.ticks,
                     callback: function (value: string | number) {
                       return "€ " + value;
                     },

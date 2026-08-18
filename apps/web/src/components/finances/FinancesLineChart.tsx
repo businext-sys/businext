@@ -12,7 +12,8 @@ import {
   Legend,
   Filler,
 } from "chart.js";
-import { CHART_PALETTE, darkChartOptions } from "@/lib/chartjs-dark-theme";
+import { darkChartOptions, paletteColor } from "@/lib/chartjs-dark-theme";
+import { colorToken, withAlpha } from "@/lib/theme-tokens";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 ChartJS.register(
@@ -32,6 +33,8 @@ export const FinancesLineChart = ({
   financesData: AnualBalances[];
 }) => {
   const currentYear = new Date().getFullYear().toString();
+  const baseOptions = darkChartOptions();
+  const seriesColor = paletteColor(0);
 
   const data = {
     labels: financesData.map((item) => monthOptions[item.month - 1]),
@@ -39,12 +42,12 @@ export const FinancesLineChart = ({
       {
         label: "Balance por Mes (€)",
         data: financesData.map((item) => item.balance),
-        borderColor: CHART_PALETTE[0],
-        backgroundColor: "rgba(91, 156, 246, 0.10)",
-        pointBackgroundColor: CHART_PALETTE[0],
-        pointBorderColor: "#2d2d8a",
-        pointHoverBackgroundColor: "#fbfcff",
-        pointHoverBorderColor: CHART_PALETTE[0],
+        borderColor: seriesColor,
+        backgroundColor: withAlpha(seriesColor, 0.1),
+        pointBackgroundColor: seriesColor,
+        pointBorderColor: colorToken("surface"),
+        pointHoverBackgroundColor: colorToken("foreground"),
+        pointHoverBorderColor: seriesColor,
         tension: 0.4,
         fill: true,
         borderWidth: 2.5,
@@ -66,18 +69,18 @@ export const FinancesLineChart = ({
           <Line
             data={data}
             options={{
-              ...darkChartOptions,
+              ...baseOptions,
               plugins: {
-                ...darkChartOptions.plugins,
+                ...baseOptions.plugins,
                 legend: { display: false },
                 title: { display: false },
               },
               scales: {
-                ...darkChartOptions.scales,
+                ...baseOptions.scales,
                 y: {
-                  ...darkChartOptions.scales.y,
+                  ...baseOptions.scales.y,
                   ticks: {
-                    ...darkChartOptions.scales.y.ticks,
+                    ...baseOptions.scales.y.ticks,
                     callback: function (value: string | number) {
                       return "€ " + value;
                     },

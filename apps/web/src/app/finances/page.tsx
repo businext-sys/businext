@@ -20,7 +20,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@/components/ui/tabs";
 import { Plus, ChevronLeft, ChevronRight, Receipt } from "lucide-react";
-import "@/lib/chartjs-dark-theme";
 
 export default function FinancesPage() {
   const { context, loading: contextLoading } = useAccessContext();

@@ -10,7 +10,8 @@ import { Pie } from "react-chartjs-2";
 import { Finances } from "@/lib/finances/types";
 import { Product } from "@/lib/product/types";
 import { useProduct } from "@/hooks/useProduct";
-import { paletteColor, darkChartOptions } from "@/lib/chartjs-dark-theme";
+import { darkChartOptions, paletteColor } from "@/lib/chartjs-dark-theme";
+import { colorToken, withAlpha } from "@/lib/theme-tokens";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
@@ -55,6 +56,7 @@ export const FinancesPieChart = ({
   };
 
   const dataset = createDataSet(financesData, productData);
+  const baseOptions = darkChartOptions();
 
   useEffect(() => {
     getAllProducts();
@@ -77,7 +79,7 @@ export const FinancesPieChart = ({
                   label: "Servicios contratados",
                   data: dataset.map((data) => data.amount),
                   backgroundColor: dataset.map((_, i) => paletteColor(i)),
-                  borderColor: "rgba(45, 45, 138, 0.8)",
+                  borderColor: withAlpha(colorToken("surface"), 0.8),
                   borderWidth: 2,
                   hoverOffset: 12,
                 },
@@ -86,14 +88,14 @@ export const FinancesPieChart = ({
             options={{
               responsive: true,
               maintainAspectRatio: false,
-              animation: darkChartOptions.animation,
+              animation: baseOptions.animation,
               plugins: {
-                ...darkChartOptions.plugins,
+                ...baseOptions.plugins,
                 legend: {
                   display: true,
                   position: "bottom" as const,
                   labels: {
-                    color: "#b8b8d4",
+                    color: colorToken("foreground-muted"),
                     font: { size: 12 },
                     padding: 10,
                     usePointStyle: true,
