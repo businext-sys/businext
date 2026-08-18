@@ -37,23 +37,30 @@
   --color-foreground-subtle: #7e97a1;
   --color-border: #24333f;
   --color-border-subtle: #16202a;
+  /* Estado. Ratios AA verificados sobre --color-background (#0c1117) y
+     --color-surface (#1b2733): success 9.86 / 7.89, danger 5.70 / 4.56,
+     warning 9.35 / 7.48. Los *-foreground son el texto sobre el fill. */
   --color-success: #34d399;
   --color-success-foreground: #0c1117;
-  --color-danger: #f87171;
+  --color-danger: #f4574b;
   --color-danger-foreground: #0c1117;
-  --color-warning: #fbbf24;
+  --color-warning: #f5a623;
+  --color-warning-foreground: #0c1117;
   --color-highlight: #f97316;
   --color-muted: #16202a;
   --color-muted-foreground: #9eb6bf;
   --color-input: #24333f;
   --color-ring: #41d9d6;
 
-  /* ── Chart / Calendar Palette ── */
-  --color-chart-1: #7c3aed;
-  --color-chart-2: #0ea5e9;
-  --color-chart-3: #f59e42;
-  --color-chart-4: #06b6d4;
-  --color-chart-5: #f43f5e;
+  /* ── Chart / Calendar Palette ──
+     Categorica de 5 series, ordenada por prioridad: las dos primeras son los
+     colores de marca, las siguientes se alejan en hue para separar series.
+     Todas >= 4.5:1 sobre #0c1117 y #1b2733. */
+  --color-chart-1: #41d9d6;
+  --color-chart-2: #22b8c8;
+  --color-chart-3: #6c8eff;
+  --color-chart-4: #f5a623;
+  --color-chart-5: #e85d9e;
 
   /* ── Typography ── */
   --font-sans: var(--font-body), system-ui, sans-serif;
