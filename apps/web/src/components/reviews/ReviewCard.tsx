@@ -12,11 +12,14 @@ type ReviewCardProps = {
   generatingResponse: number | null;
 };
 
+/* Rampa 5 -> 1. Los extremos y el centro son tokens de estado; el 4 usa la
+   paleta categorica (--color-chart-3, azul) porque no hay token de estado
+   entre success y warning. */
 const RATING_AVATAR_COLORS: Record<number, string> = {
   5: "bg-success/20 text-success",
-  4: "bg-blue-500/20 text-blue-300",
+  4: "bg-chart-3/20 text-chart-3",
   3: "bg-warning/20 text-warning",
-  2: "bg-orange-500/20 text-orange-300",
+  2: "bg-highlight/20 text-highlight",
   1: "bg-danger/20 text-danger",
 };
 
@@ -28,7 +31,7 @@ function StarRating({ rating }: { rating: number }) {
           key={s}
           className={`w-[18px] h-[18px] ${
             s <= rating
-              ? "text-[#F59E0B] fill-[#F59E0B]"
+              ? "text-warning fill-warning"
               : "text-foreground-muted/20"
           }`}
         />

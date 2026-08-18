@@ -71,7 +71,7 @@ export function BusinessSummary({
   // Need at least 10 reviews
   if (profile.totalReviews < 10) {
     return (
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#2d2d8a] via-[#3b2d8a] to-[#4a2d8a] border border-secondary/20 shadow-lg p-8 text-center">
+      <div className="relative overflow-hidden rounded-2xl bg-surface bg-gradient-to-br from-secondary/8 via-transparent to-primary/8 border border-secondary/20 shadow-lg p-8 text-center">
         <div className="absolute -top-12 -right-12 w-48 h-48 bg-secondary/8 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-8 -left-8 w-36 h-36 bg-primary/8 rounded-full blur-3xl pointer-events-none" />
         <div className="relative">
@@ -90,7 +90,7 @@ export function BusinessSummary({
   // Empty state: no summary generated yet — the main banner
   if (!summary) {
     return (
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#1a1a6e] via-[#2a1a6e] to-[#3d1a7a] border border-secondary/25 shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl bg-surface bg-gradient-to-br from-secondary/12 via-transparent to-primary/12 border border-secondary/25 shadow-xl">
         {/* Decorative glow orbs */}
         <div className="absolute -top-20 -right-20 w-72 h-72 bg-secondary/15 rounded-full blur-[80px] pointer-events-none" />
         <div className="absolute -bottom-16 -left-16 w-56 h-56 bg-primary/15 rounded-full blur-[80px] pointer-events-none" />
@@ -99,7 +99,7 @@ export function BusinessSummary({
         <div className="relative px-8 py-12 md:px-12 md:py-14">
           {/* Big centered icon */}
           <div className="flex flex-col items-center text-center space-y-6">
-            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-secondary/25 to-primary/25 border border-secondary/20 flex items-center justify-center shadow-lg shadow-[#1a1a4e]/30">
+            <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-secondary/25 to-primary/25 border border-secondary/20 flex items-center justify-center shadow-glow-accent">
               <BrainCircuit className="w-10 h-10 text-secondary" />
             </div>
 
@@ -123,11 +123,11 @@ export function BusinessSummary({
                     onClick={() => toggleChip(opt.key)}
                     className={`inline-flex items-center gap-2 px-4 py-2 text-caption font-medium rounded-full border transition-all duration-200 ${
                       isSelected
-                        ? "bg-secondary/20 border-secondary/40 text-secondary shadow-sm shadow-[#1a1a4e]/20"
-                        : "bg-[#ffffff0d] border-[#ffffff1a] text-foreground-muted hover:border-secondary/30 hover:text-foreground"
+                        ? "bg-secondary border-secondary text-secondary-foreground shadow-sm"
+                        : "bg-foreground/5 border-foreground/10 text-foreground-muted hover:border-secondary/30 hover:text-foreground"
                     }`}
                   >
-                    <opt.icon className={`w-3.5 h-3.5 ${isSelected ? "text-secondary" : ""}`} />
+                    <opt.icon className="w-3.5 h-3.5" />
                     {opt.label}
                   </button>
                 );
@@ -139,7 +139,7 @@ export function BusinessSummary({
               variant="primary"
               onClick={onGenerateSummary}
               disabled={generating || selectedChips.size === 0}
-              className="px-10 py-3.5 text-body font-bold shadow-lg shadow-[#1a1a4e]/40 bg-gradient-to-r from-[#7c3aed] to-[#3b82f6] hover:from-[#8b5cf6] hover:to-[#60a5fa] border-0 mt-2"
+              className="px-10 py-3.5 text-body font-bold shadow-glow-primary mt-2"
             >
               {generating ? (
                 <Loader2 className="w-5 h-5 mr-2.5 animate-spin" />

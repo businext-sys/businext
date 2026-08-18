@@ -22,23 +22,28 @@ type BusinessProfileCardProps = {
   syncError?: string | null;
 };
 
+/* El badge de categoria no es un estado, asi que los hues salen de la paleta
+   categorica (--color-chart-*) y de los tokens de estado solo cuando el hue
+   coincide: verde -> success, naranja -> highlight. */
 const CATEGORY_MAP: Record<string, { icon: typeof Store; label: string; color: string }> = {
-  barbería: { icon: Scissors, label: "Barbería", color: "bg-blue-500/20 text-blue-300" },
-  barber: { icon: Scissors, label: "Barbería", color: "bg-blue-500/20 text-blue-300" },
-  "clínica estética": { icon: Sparkles, label: "Clínica estética", color: "bg-pink-500/20 text-pink-300" },
-  estética: { icon: Sparkles, label: "Clínica estética", color: "bg-pink-500/20 text-pink-300" },
-  fisioterapia: { icon: Activity, label: "Fisioterapia", color: "bg-green-500/20 text-green-300" },
-  gimnasio: { icon: Dumbbell, label: "Gimnasio", color: "bg-orange-500/20 text-orange-300" },
-  gym: { icon: Dumbbell, label: "Gimnasio", color: "bg-orange-500/20 text-orange-300" },
+  barbería: { icon: Scissors, label: "Barbería", color: "bg-chart-3/20 text-chart-3" },
+  barber: { icon: Scissors, label: "Barbería", color: "bg-chart-3/20 text-chart-3" },
+  "clínica estética": { icon: Sparkles, label: "Clínica estética", color: "bg-chart-5/20 text-chart-5" },
+  estética: { icon: Sparkles, label: "Clínica estética", color: "bg-chart-5/20 text-chart-5" },
+  fisioterapia: { icon: Activity, label: "Fisioterapia", color: "bg-success/20 text-success" },
+  gimnasio: { icon: Dumbbell, label: "Gimnasio", color: "bg-highlight/20 text-highlight" },
+  gym: { icon: Dumbbell, label: "Gimnasio", color: "bg-highlight/20 text-highlight" },
 };
 
+const DEFAULT_CATEGORY_COLOR = "bg-primary/20 text-primary";
+
 function getCategoryInfo(category: string | null) {
-  if (!category) return { icon: Store, label: "Negocio", color: "bg-primary/20 text-primary-foreground/80" };
+  if (!category) return { icon: Store, label: "Negocio", color: DEFAULT_CATEGORY_COLOR };
   const lower = category.toLowerCase();
   for (const [key, val] of Object.entries(CATEGORY_MAP)) {
     if (lower.includes(key)) return val;
   }
-  return { icon: Store, label: category, color: "bg-primary/20 text-primary-foreground/80" };
+  return { icon: Store, label: category, color: DEFAULT_CATEGORY_COLOR };
 }
 
 export function BusinessProfileCard({
@@ -113,7 +118,7 @@ export function BusinessProfileCard({
               <span className="text-[3.5rem] font-heading font-bold leading-none text-foreground">
                 {profile.rating?.toFixed(1) ?? "—"}
               </span>
-              <Star className="w-8 h-8 text-[#F59E0B] fill-[#F59E0B] -mt-2" />
+              <Star className="w-8 h-8 text-warning fill-warning -mt-2" />
             </div>
             <div className="flex items-center gap-1 mt-2">
               {[1, 2, 3, 4, 5].map((s) => (
@@ -121,7 +126,7 @@ export function BusinessProfileCard({
                   key={s}
                   className={`w-5 h-5 ${
                     s <= Math.round(profile.rating ?? 0)
-                      ? "text-[#F59E0B] fill-[#F59E0B]"
+                      ? "text-warning fill-warning"
                       : "text-foreground-muted/30"
                   }`}
                 />
