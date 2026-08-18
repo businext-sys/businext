@@ -828,7 +828,7 @@ function BookingLinkSection({ businessId }: { businessId: string }) {
           <label className="text-label font-semibold text-foreground-muted">
             Código QR
           </label>
-          <div className="flex flex-col items-center gap-4 p-6 rounded-lg border border-border-subtle bg-white">
+          <div className="flex flex-col items-center gap-4 p-6 rounded-lg border border-border-subtle bg-[#ffffff]">
             {qrDataUrl ? (
               <img
                 src={qrDataUrl}
@@ -836,7 +836,7 @@ function BookingLinkSection({ businessId }: { businessId: string }) {
                 className="w-[200px] h-[200px]"
               />
             ) : (
-              <div className="w-[200px] h-[200px] bg-gray-100 animate-pulse rounded" />
+              <div className="w-[200px] h-[200px] bg-[#f1f5f9] animate-pulse rounded" />
             )}
             <Button variant="secondary" size="sm" onClick={handleDownloadQR} disabled={!qrDataUrl}>
               Descargar QR
