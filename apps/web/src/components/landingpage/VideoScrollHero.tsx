@@ -333,7 +333,7 @@ export function VideoScrollHero() {
         <img src="/hero%20app.jpeg" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "72% 75%" }} />
         {/* Overlays */}
         <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(7,8,15,0.95) 20%, rgba(7,8,15,0.40) 38%, transparent 50%)" }} />
-        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 25% 50%, rgba(99,102,241,0.08) 0%, transparent 60%)" }} />
+        <div style={{ position: "absolute", inset: 0, background: "radial-gradient(ellipse at 25% 50%, rgba(65,217,214,0.08) 0%, transparent 60%)" }} />
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 320, background: "linear-gradient(to top, #07080f, transparent)" }} />
 
         {/* Content — left half, vertically centered */}
@@ -360,7 +360,7 @@ export function VideoScrollHero() {
             animation: "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.08s both",
           }}>
             Todo bajo<br />
-            <span style={{ background: "linear-gradient(to right, #3b82f6, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               control.
             </span>
           </h1>
@@ -428,7 +428,7 @@ export function VideoScrollHero() {
                 position: "absolute",
                 inset: -3,
                 borderRadius: 15,
-                background: "linear-gradient(135deg, #3b82f6, #a78bfa)",
+                background: "var(--gradient-primary)",
                 opacity: primaryHovered ? 0.40 : 0,
                 filter: "blur(10px)",
                 transition: "opacity 0.3s ease",
@@ -444,7 +444,7 @@ export function VideoScrollHero() {
                   flexDirection: "column",
                   alignItems: "center",
                   overflow: "hidden",
-                  background: "linear-gradient(135deg, #3b82f6, #a78bfa)",
+                  background: "var(--gradient-primary)",
                   color: "#fff",
                   padding: "13px 28px",
                   borderRadius: 12,
@@ -454,8 +454,8 @@ export function VideoScrollHero() {
                   letterSpacing: "0.02em",
                   border: "1px solid rgba(255,255,255,0.18)",
                   boxShadow: primaryHovered
-                    ? "0 8px 40px rgba(99,102,241,0.60), inset 0 1px 0 rgba(255,255,255,0.28)"
-                    : "0 4px 24px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.20)",
+                    ? "0 8px 40px rgba(65,217,214,0.60), inset 0 1px 0 rgba(255,255,255,0.28)"
+                    : "0 4px 24px rgba(65,217,214,0.35), inset 0 1px 0 rgba(255,255,255,0.20)",
                   transform: primaryHovered ? "translateY(-2px)" : "translateY(0)",
                   transition: "transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease",
                 }}
@@ -560,7 +560,7 @@ export function VideoScrollHero() {
         {/* Loading */}
         {!loaded && (
           <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#07080f", zIndex: 30, gap: 16 }}>
-            <div style={{ width: 48, height: 48, borderRadius: "50%", border: "2px solid #3b82f6", borderTopColor: "transparent", animation: "spin 0.8s linear infinite" }} />
+            <div style={{ width: 48, height: 48, borderRadius: "50%", border: "2px solid #41d9d6", borderTopColor: "transparent", animation: "spin 0.8s linear infinite" }} />
             <span style={{ color: "#b0bec5", fontSize: 13 }}>Cargando... {loadPct}%</span>
           </div>
         )}
@@ -590,10 +590,10 @@ export function VideoScrollHero() {
             pointerEvents: "none",
           }}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "bounceY 1.6s ease-in-out infinite" }}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#41d9d6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "bounceY 1.6s ease-in-out infinite" }}>
             <path d="M12 5v14M5 12l7 7 7-7" />
           </svg>
-          <span style={{ color: "#3b82f6", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" }}>scroll</span>
+          <span style={{ color: "#41d9d6", fontSize: 10, letterSpacing: "0.12em", textTransform: "uppercase" }}>scroll</span>
         </div>
 
         {/* ── 3 Text slides — each is one animated container ── */}
@@ -649,7 +649,7 @@ export function VideoScrollHero() {
                 <span style={{ display: "block", marginBottom: "0.1em" }}>{slide.line1}</span>
                 <span style={{
                   display: "block",
-                  background: "linear-gradient(to right, #3b82f6, #a78bfa)",
+                  background: "var(--gradient-primary)",
                   WebkitBackgroundClip: "text",
                   WebkitTextFillColor: "transparent",
                 }}>{slide.accent}</span>
@@ -681,8 +681,8 @@ export function VideoScrollHero() {
               alignItems: "center",
               gap: 8,
               background: ctaHovered
-                ? "linear-gradient(135deg, rgba(59,130,246,0.38), rgba(167,139,250,0.30))"
-                : "linear-gradient(135deg, rgba(30,42,80,0.82), rgba(50,28,80,0.78))",
+                ? "linear-gradient(135deg, rgba(65,217,214,0.38), rgba(34,184,200,0.30))"
+                : "linear-gradient(135deg, rgba(18,61,71,0.82), rgba(27,39,51,0.78))",
               color: "#f8fafc",
               padding: "14px 32px",
               borderRadius: 12,
@@ -693,7 +693,7 @@ export function VideoScrollHero() {
                 ? "1px solid rgba(255,255,255,0.55)"
                 : "1px solid rgba(255,255,255,0.35)",
               boxShadow: ctaHovered
-                ? "0 12px 40px rgba(99,102,241,0.50), 0 0 20px rgba(167,139,250,0.25), inset 0 2px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(255,255,255,0.10)"
+                ? "0 12px 40px rgba(65,217,214,0.50), 0 0 20px rgba(34,184,200,0.25), inset 0 2px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(255,255,255,0.10)"
                 : "0 8px 32px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,0.45), inset 0 -1px 0 rgba(255,255,255,0.08)",
               transform: ctaHovered ? "translateY(-3px) scale(1.04)" : "translateY(0) scale(1)",
               transition: "transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease, background 0.3s ease, border-color 0.3s ease",
@@ -711,7 +711,7 @@ export function VideoScrollHero() {
 
         {/* Progress bar */}
         <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: "rgba(255,255,255,0.07)", zIndex: 20 }}>
-          <div ref={progressBarRef} style={{ height: "100%", width: "0%", background: "linear-gradient(to right, #3b82f6, #a78bfa)", transition: "none" }} />
+          <div ref={progressBarRef} style={{ height: "100%", width: "0%", background: "var(--gradient-primary)", transition: "none" }} />
         </div>
       </div>
     </div>

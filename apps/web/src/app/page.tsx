@@ -72,14 +72,14 @@ export default function Home() {
         overflow: "hidden",
       }}>
         {/* Ambient glows */}
-        <div style={{ position: "absolute", top: "10%", left: "-5%", width: 500, height: 500, background: "radial-gradient(ellipse, rgba(59,130,246,0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
-        <div style={{ position: "absolute", bottom: "10%", right: "-5%", width: 400, height: 400, background: "radial-gradient(ellipse, rgba(167,139,250,0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: "10%", left: "-5%", width: 500, height: 500, background: "radial-gradient(ellipse, rgba(65,217,214,0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", bottom: "10%", right: "-5%", width: 400, height: 400, background: "radial-gradient(ellipse, rgba(34,184,200,0.07) 0%, transparent 70%)", pointerEvents: "none" }} />
 
         <div style={{ maxWidth: 720, margin: "0 auto", position: "relative", zIndex: 1 }}>
 
           {/* Header */}
           <div style={{ textAlign: "center", marginBottom: "clamp(40px, 6vw, 64px)" }}>
-            <p style={{ margin: "0 0 14px", color: "#a78bfa", fontSize: 10, fontWeight: 700, letterSpacing: "0.20em", textTransform: "uppercase" }}>
+            <p style={{ margin: "0 0 14px", color: "#22b8c8", fontSize: 10, fontWeight: 700, letterSpacing: "0.20em", textTransform: "uppercase" }}>
               Preguntas frecuentes
             </p>
             <h2 style={{
@@ -92,7 +92,7 @@ export default function Home() {
               color: "#f8fafc",
             }}>
               Todo lo que necesitas{" "}
-              <span style={{ background: "linear-gradient(to right, #3b82f6, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
                 saber.
               </span>
             </h2>
@@ -112,12 +112,12 @@ export default function Home() {
                   onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setOpenFaq(isOpen ? null : i); } }}
                   style={{
                     background: isOpen ? "rgba(255,255,255,0.07)" : "rgba(255,255,255,0.04)",
-                    border: isOpen ? "1px solid rgba(167,139,250,0.30)" : "1px solid rgba(255,255,255,0.08)",
+                    border: isOpen ? "1px solid rgba(34,184,200,0.30)" : "1px solid rgba(255,255,255,0.08)",
                     borderRadius: 16,
                     overflow: "hidden",
                     cursor: "pointer",
                     transition: "background 0.25s ease, border-color 0.25s ease",
-                    boxShadow: isOpen ? "0 4px 32px rgba(99,102,241,0.12), inset 0 1px 0 rgba(255,255,255,0.08)" : "none",
+                    boxShadow: isOpen ? "0 4px 32px rgba(65,217,214,0.12), inset 0 1px 0 rgba(255,255,255,0.08)" : "none",
                   }}
                 >
                   {/* Question row */}
@@ -134,13 +134,13 @@ export default function Home() {
                       height: 28,
                       borderRadius: 8,
                       background: isOpen
-                        ? "linear-gradient(135deg, rgba(59,130,246,0.30), rgba(167,139,250,0.25))"
+                        ? "linear-gradient(135deg, rgba(65,217,214,0.30), rgba(34,184,200,0.25))"
                         : "rgba(255,255,255,0.05)",
-                      border: isOpen ? "1px solid rgba(167,139,250,0.40)" : "1px solid rgba(255,255,255,0.08)",
+                      border: isOpen ? "1px solid rgba(34,184,200,0.40)" : "1px solid rgba(255,255,255,0.08)",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      color: isOpen ? "#c4b5fd" : "rgba(255,255,255,0.30)",
+                      color: isOpen ? "#3fcddb" : "rgba(255,255,255,0.30)",
                       fontSize: 11,
                       fontWeight: 700,
                       transition: "all 0.25s ease",
@@ -167,7 +167,7 @@ export default function Home() {
                       width: 24,
                       height: 24,
                       borderRadius: "50%",
-                      background: isOpen ? "linear-gradient(135deg, #3b82f6, #a78bfa)" : "rgba(255,255,255,0.06)",
+                      background: isOpen ? "var(--gradient-primary)" : "rgba(255,255,255,0.06)",
                       border: isOpen ? "none" : "1px solid rgba(255,255,255,0.10)",
                       display: "flex",
                       alignItems: "center",
@@ -261,10 +261,10 @@ export default function Home() {
         }}>
 
           {/* Top accent line */}
-          <div style={{ position: "absolute", top: 0, left: "20%", right: "20%", height: 1, background: "linear-gradient(to right, transparent, rgba(167,139,250,0.6), transparent)" }} />
+          <div style={{ position: "absolute", top: 0, left: "20%", right: "20%", height: 1, background: "linear-gradient(to right, transparent, rgba(34,184,200,0.6), transparent)" }} />
 
           {/* Eyebrow */}
-          <p style={{ margin: "0 0 18px", color: "#a78bfa", fontSize: 10, fontWeight: 700, letterSpacing: "0.20em", textTransform: "uppercase" }}>
+          <p style={{ margin: "0 0 18px", color: "#22b8c8", fontSize: 10, fontWeight: 700, letterSpacing: "0.20em", textTransform: "uppercase" }}>
             Únete a Businext
           </p>
 
@@ -279,7 +279,7 @@ export default function Home() {
             color: "#f8fafc",
           }}>
             Tu negocio.<br />
-            <span style={{ background: "linear-gradient(to right, #3b82f6, #a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            <span style={{ background: "var(--gradient-primary)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               Bajo control.
             </span>
           </h2>
@@ -312,11 +312,11 @@ export default function Home() {
             <div style={{ textAlign: "left", flex: 1 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
                 <span style={{
-                  background: "linear-gradient(135deg, rgba(59,130,246,0.25), rgba(167,139,250,0.20))",
-                  border: "1px solid rgba(167,139,250,0.35)",
+                  background: "linear-gradient(135deg, rgba(65,217,214,0.25), rgba(34,184,200,0.20))",
+                  border: "1px solid rgba(34,184,200,0.35)",
                   borderRadius: 6,
                   padding: "2px 8px",
-                  color: "#c4b5fd",
+                  color: "#3fcddb",
                   fontSize: 10,
                   fontWeight: 700,
                   letterSpacing: "0.1em",
@@ -361,7 +361,7 @@ export default function Home() {
               position: "absolute",
               inset: -2,
               borderRadius: 14,
-              background: "linear-gradient(135deg, #3b82f6, #a78bfa)",
+              background: "var(--gradient-primary)",
               opacity: ctaHovered ? 0.35 : 0,
               filter: "blur(8px)",
               transition: "opacity 0.3s ease",
@@ -378,7 +378,7 @@ export default function Home() {
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 10,
-                background: "linear-gradient(135deg, #3b82f6, #a78bfa)",
+                background: "var(--gradient-primary)",
                 color: "#fff",
                 padding: "17px 32px",
                 borderRadius: 12,
@@ -389,8 +389,8 @@ export default function Home() {
                 letterSpacing: "0.03em",
                 textDecoration: "none",
                 boxShadow: ctaHovered
-                  ? "0 8px 48px rgba(99,102,241,0.60), inset 0 1px 0 rgba(255,255,255,0.30)"
-                  : "0 4px 24px rgba(99,102,241,0.35), inset 0 1px 0 rgba(255,255,255,0.20)",
+                  ? "0 8px 48px rgba(65,217,214,0.60), inset 0 1px 0 rgba(255,255,255,0.30)"
+                  : "0 4px 24px rgba(65,217,214,0.35), inset 0 1px 0 rgba(255,255,255,0.20)",
                 transform: ctaHovered ? "translateY(-2px) scale(1.01)" : "translateY(0) scale(1)",
                 transition: "transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s ease",
                 overflow: "hidden",
