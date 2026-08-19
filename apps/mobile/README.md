@@ -97,29 +97,17 @@ listo. Estado actual:
    **Android** se genero y subio a EAS sin problema (keystore remoto
    creado automaticamente, ver
    [builds](https://expo.dev/accounts/daniflorezm/projects/businext-mobile/builds)).
-5. ⬜ **Pendiente real:** el build de **iOS** en CI falla con
-   `Failed to set up credentials. You're in non-interactive mode. EAS
-   CLI couldn't find any credentials suitable for internal
-   distribution.` — es el primer build de iOS del proyecto, y EAS no
-   puede generar el certificado/perfil de distribucion en modo no
-   interactivo. Hay que correr una vez, de forma interactiva, con la
-   cuenta de Apple Developer real:
-   ```bash
-   cd apps/mobile
-   npx eas-cli login
-   npx eas-cli credentials --platform ios
-   ```
-   (o simplemente `npx eas-cli build --platform ios --profile preview`
-   sin `--non-interactive`, que genera las credenciales la primera vez
-   si no existen). Una vez creadas, quedan guardadas en el servidor de
-   Expo y los builds de iOS en CI (no interactivos) las reutilizan
-   automaticamente.
-6. Mientras el paso 5 no este resuelto, `mobile-build.yml` usa
-   `--platform android` por defecto (tanto en el push automatico a
-   `main` como en el input `platform` de `workflow_dispatch`, que
-   tambien acepta `ios` o `all` una vez existan credenciales de iOS).
-   Cuando completes el paso 5, cambia el default de `platform` en
-   `.github/workflows/mobile-build.yml` de vuelta a `all`.
+5. ✅ Credenciales de iOS configuradas: cuenta de Apple Developer
+   inscrita y pagada, certificado de distribucion + perfil de
+   aprovisionamiento generados via `npx eas-cli credentials --platform
+   ios` (login interactivo con Apple ID + 2FA), y el iPhone de prueba
+   registrado (UDID) para distribucion ad-hoc/internal. Quedan
+   guardadas en el servidor de Expo, asi que los builds de iOS en CI
+   (no interactivos) las reutilizan automaticamente.
+6. `mobile-build.yml` vuelve a usar `--platform all` por defecto (push
+   automatico a `main` y default del input `platform` de
+   `workflow_dispatch`, que igual acepta `android`/`ios` para un build
+   de una sola plataforma).
 
 ### Verificado en este entorno (sin cuenta real)
 
