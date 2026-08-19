@@ -26,7 +26,7 @@ on:
       platform:
         description: "Plataforma de EAS Build (android | ios | all)"
         required: false
-        default: "android"
+        default: "all"
         type: string
 
 jobs:
@@ -72,7 +72,7 @@ jobs:
         working-directory: apps/mobile
         run: |
           npx eas-cli build \
-            --platform "${{ inputs.platform || 'android' }}" \
+            --platform "${{ inputs.platform || 'all' }}" \
             --profile "${{ inputs.profile || 'preview' }}" \
             --non-interactive \
             --no-wait
