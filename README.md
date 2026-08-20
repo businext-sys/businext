@@ -132,17 +132,25 @@ En emulador de Android el host de la maquina anfitriona es `http://10.0.2.2:8000
 ### Migraciones: no corras Alembic en local
 
 `alembic/versions/` esta en el `.gitignore` del backend y **nunca se
-commiteo**: el repo no contiene ninguna revision. `alembic upgrade head` no
-falla, simplemente no aplica nada, asi que no puede construir el esquema desde
-una base de datos vacia.
+commiteo**: el repo no contiene ninguna revision. La base de datos real, en
+cambio, tiene su `alembic_version` sellada en la revision `014`, asi que
+`alembic upgrade head` **falla** con `Can't locate revision identified by
+'014'`. Falla al resolver el grafo de revisiones, antes de tocar el esquema
+(no es destructivo), pero no funciona.
 
 Consecuencias practicas:
 
 - Apunta `DATABASE_URI` a la base de Supabase ya migrada. No intentes levantar
-  un Postgres local vacio esperando que Alembic lo pueble.
-- `docker/entrypoint.sh` con `RUN_MIGRATIONS=1` tampoco aplica nada.
+  un Postgres local vacio esperando que Alembic lo pueble: contra una base
+  vacia no fallaria, pero no aplicaria nada.
+- Si arrancas el backend en Docker, usa `RUN_MIGRATIONS=0`: el entrypoint corre
+  con `set -eu`, asi que el fallo de Alembic mata el contenedor antes de que
+  uvicorn arranque.
 - Cualquier tabla nueva (p. ej. `push_token`, issue #031) hay que crearla a
   mano en Supabase hasta que se versionen las migraciones.
+
+Detalle completo y como salir de ahi: ver la seccion de migraciones del
+[README del backend](https://github.com/businext-sys/businext-backend#migraciones).
 
 ## Comandos
 
