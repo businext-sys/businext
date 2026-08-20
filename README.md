@@ -53,14 +53,11 @@ logica compartida a `packages/shared-core` (issues #13-#20 del board).
 ## Integracion con Claude Code Action
 
 El repo usa la GitHub App oficial de Anthropic (`anthropics/claude-code-action`)
-en vez de opencode. Hay 3 workflows en `.github/workflows/`:
+en vez de opencode. Hay 2 workflows en `.github/workflows/`:
 
 - **`claude.yml`**: responde a menciones `@claude` en comentarios de issues,
   PRs y reviews. Tambien implementa un issue de forma autonoma cuando se le
   aplica la etiqueta `claude-implement`.
-- **`claude-pr-review.yml`**: revisa automaticamente cada PR (calidad,
-  seguridad, performance, tests, docs) al abrirse o actualizarse, sin
-  necesidad de mencionar `@claude`.
 - **`claude-ci-autofix.yml`**: cuando falla un workflow de CI en un PR, crea
   una branch con el fix y abre un PR. **Queda inerte hasta que exista un
   workflow llamado `CI`** (lint/type-check/test) en `.github/workflows/` -
