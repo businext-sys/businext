@@ -3,6 +3,8 @@
 Monorepo de Businext: web (Next.js), mobile (Expo/React Native) y la logica de
 dominio compartida entre ambas.
 
+<!-- staging environment: deploy trigger 2026-09-10 -->
+
 El backend (FastAPI) vive en un repo aparte:
 [`businext-sys/businext-backend`](https://github.com/businext-sys/businext-backend).
 Los tests E2E / carga / API en
