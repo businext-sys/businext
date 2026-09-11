@@ -2,7 +2,18 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: path.join(__dirname),
+  // La raiz de tracing debe ser la raiz del monorepo pnpm: las dependencias
+  // estan hoisteadas en <root>/node_modules/.pnpm, no dentro de apps/web.
+  // Con __dirname (apps/web) el tracer no encontraba modulos como
+  // `next/dist/compiled/source-map`, y las server actions crasheaban en
+  // runtime con "Cannot find module next/dist/compiled/source-map" (500).
+  outputFileTracingRoot: path.join(__dirname, "../.."),
+  // Fuerza la inclusion del modulo compilado de source-map que el tracer de
+  // Next 15.5.x omite en el bundle serverless (bug de empaquetado). Sin esto,
+  // cualquier server action (p. ej. el login) devuelve 500.
+  outputFileTracingIncludes: {
+    "/**": ["../../node_modules/next/dist/compiled/source-map/**"],
+  },
   allowedDevOrigins: ["192.168.1.*"],
   // Permite que Next.js transpile el codigo fuente TS de @businext/shared-core
   // (paquete de workspace pnpm sin build propio, ver packages/shared-core).
