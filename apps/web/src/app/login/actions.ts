@@ -5,6 +5,41 @@ import { redirect } from "next/navigation";
 
 import { createClient } from "@/utils/supabase/server";
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
+
+/**
+ * Decide el destino tras el login segun el contexto de acceso del backend.
+ * Un owner sin suscripcion activa (can_access_app=false) debe ir directo a
+ * /payment; el resto, a /reservation. Antes se redirigia siempre a
+ * /reservation y era el middleware quien rebotaba a /payment, lo que dejaba
+ * la URL inconsistente (se veia el checkout bajo /reservation).
+ */
+async function resolvePostLoginPath(accessToken: string | undefined): Promise<string> {
+  if (!accessToken || !API_BASE) return "/reservation";
+  try {
+    const res = await fetch(`${API_BASE}/auth/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      cache: "no-store",
+    });
+    if (!res.ok) return "/reservation";
+    const ctx = await res.json();
+    const canAccess = ctx?.capabilities?.canAccessApp;
+    // Solo los owners sin suscripcion terminan bloqueados en /payment.
+    if (canAccess === false && ctx?.accountType === "owner") {
+      return "/payment";
+    }
+    return "/reservation";
+  } catch {
+    // Backend inalcanzable (p. ej. cold start): no bloquear el login, el
+    // middleware corregira el destino en la siguiente navegacion.
+    return "/reservation";
+  }
+}
+
 export async function login(state: { error: string }, formData: FormData) {
   "use server";
   const supabase = await createClient();
@@ -22,8 +57,12 @@ export async function login(state: { error: string }, formData: FormData) {
     return { error: "Usuario o contraseña incorrectos" };
   }
 
+  const destination = await resolvePostLoginPath(
+    authData.session?.access_token
+  );
+
   revalidatePath("/", "layout");
-  redirect("/reservation");
+  redirect(destination);
 }
 
 export async function signup(state: { error: string }, formData: FormData) {
