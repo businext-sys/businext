@@ -3,7 +3,7 @@
 Monorepo de Businext: web (Next.js), mobile (Expo/React Native) y la logica de
 dominio compartida entre ambas.
 
-<!-- staging environment: deploy trigger 2026-09-10 -->
+<!-- staging environment: deploy trigger 2026-09-11 stripe env -->
 
 El backend (FastAPI) vive en un repo aparte:
 [`businext-sys/businext-backend`](https://github.com/businext-sys/businext-backend).
