@@ -1,29 +1,14 @@
 "use client";
 import { VideoScrollHero } from "@/components/landingpage/VideoScrollHero";
-import { VideoScrollSection, type ScrollSlide } from "@/components/landingpage/VideoScrollSection";
+import { Story } from "@/components/landingpage/story/Story";
+import { Showcase } from "@/components/landingpage/showcase/Showcase";
 import Link from "next/link";
 import React, { useState } from "react";
 
-// ── Frame path ─────────────────────────────────────────────────────────────
-const fullFramePath = (n: number) =>
-  `/frames-full/frame${String(n).padStart(4, "0")}.jpg`;
-
-// ── 720 frames / 6 videos → cada video ocupa 1/6 del progreso (~0.167)
-// 2 slides por video, distribuidos en el rango de cada sección
-const SLIDES_FULL: ScrollSlide[] = [
-  // — Inicial (0.000 – 0.167) —
-  { line1: "Bienvenido a",  accent: "Businext",      subtitle: "La plataforma que transforma la gestión de tu negocio",   start: -0.02, end: 0.120, noBackground: true },
-  { line1: "Reservas",      accent: "sin esfuerzo",  subtitle: "Gestiona cada reserva de tu negocio desde un solo lugar. Sin papel, sin llamadas — de forma rápida y sencilla, cuando y donde quieras.", start: 0.120, end: 0.240 },
-  { line1: "Control",       accent: "financiero",    subtitle: "Registra cada movimiento, consulta tu caja del día y toma decisiones con datos reales.",  start: 0.240, end: 0.450 },
-  { line1: "Análisis",      accent: "de satisfacción", subtitle: "Extrae reseñas de Google Maps, analiza lo positivo y negativo, y responde automáticamente. Todo en un solo informe.", start: 0.450, end: 0.545 },
-  { line1: "Inteligencia",  accent: "artificial",    subtitle: "Un análisis inteligente cada semana. Estadísticas y recomendaciones concretas para elevar la calidad de tu negocio sin esfuerzo.", start: 0.545, end: 0.742 },
-  { line1: "Únete a",       accent: "Businext",      subtitle: "Todo lo que necesitas para gestionar tu negocio, en un solo lugar. Tu asesor personal, disponible 24/7.", start: 0.742, end: 0.980 },
-];
-
 const FAQS = [
   {
-    q: "¿Funciona para mi tipo de negocio?",
-    a: "Sí. Businext está diseñado para cualquier negocio con reservas, clientes y caja: peluquerías, centros de estética, clínicas, talleres, gimnasios, consultorías y mucho más. Si gestionas citas o servicios, Businext es para ti.",
+    q: "¿Sirve para una barbería pequeña?",
+    a: "Sí. Businext está pensado para barberías: desde el barbero que trabaja solo hasta locales con varios sillones. Cada barbero tiene su agenda, y tú ves la caja y el rendimiento de todo el equipo. También funciona para peluquerías y centros de estética que trabajan con citas.",
   },
   {
     q: "¿Qué incluye exactamente la suscripción?",
@@ -47,7 +32,7 @@ const FAQS = [
   },
   {
     q: "¿Cómo se usa en el día a día?",
-    a: "Desde el panel principal ves de un vistazo las reservas del día, el estado de tu caja y los últimos movimientos. Gestiona citas con un par de toques, registra ingresos y gastos al momento, y cada semana recibes un informe automático con lo más importante de tu negocio. Está pensado para usarlo desde el móvil mientras trabajas.",
+    a: "Desde el panel principal ves de un vistazo las reservas del día, el estado de tu caja y los últimos movimientos. Gestiona citas con un par de toques, registra ingresos y gastos al momento, y cada semana recibes un informe automático con lo más importante de tu negocio. Está pensado para usarlo desde el móvil, entre corte y corte.",
   },
 ];
 
@@ -60,8 +45,11 @@ export default function Home() {
       {/* Section 1: Hero — Video Scroll Experience */}
       <VideoScrollHero />
 
-      {/* Section 2: Video scroll continuo (todos los videos en uno) */}
-      <VideoScrollSection framePath={fullFramePath} frameCount={720} slides={SLIDES_FULL} pxPerFrame={5} />
+      {/* Section 2: La historia — el día de una barbería, acto por acto (ver LANDING.md) */}
+      <Story />
+
+      {/* Section 3: Por dentro — capturas reales de la app */}
+      <Showcase />
 
       {/* ── FAQ ───────────────────────────────────────────────────────────────── */}
       <section style={{
@@ -278,7 +266,7 @@ export default function Home() {
             letterSpacing: "-0.04em",
             color: "#f8fafc",
           }}>
-            Tu negocio.<br />
+            Tu barbería.<br />
             <span style={{ background: "var(--gradient-text)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
               Bajo control.
             </span>
@@ -292,7 +280,7 @@ export default function Home() {
             lineHeight: 1.7,
             fontWeight: 400,
           }}>
-            Reservas, finanzas, reseñas e inteligencia artificial.<br />Todo en un solo lugar.
+            Menos tiempo al teléfono, más tiempo en el sillón.<br />Y una caja que sabes lo que deja.
           </p>
 
           {/* Pricing block */}

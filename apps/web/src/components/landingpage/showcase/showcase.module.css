@@ -1,0 +1,242 @@
+.showcase {
+  position: relative;
+  background: #07080f;
+  color: #f8fafc;
+  padding: clamp(4.5rem, 10vw, 8rem) clamp(1.25rem, 6vw, 5rem) clamp(3rem, 6vw, 5rem);
+  /* The seam with the story: one thin line, like a cut between scenes. */
+  border-top: 1px solid rgba(34, 184, 200, 0.25);
+}
+
+.intro,
+.stepsBlock {
+  max-width: 46rem;
+  margin: 0 auto clamp(3rem, 7vw, 5.5rem);
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: #22b8c8;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-size: clamp(1.9rem, 5.5vw, 3rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+
+.accent {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.lead {
+  margin: 1rem auto 0;
+  max-width: 38rem;
+  color: rgba(248, 250, 252, 0.62);
+  font-size: clamp(0.9375rem, 2.4vw, 1.0625rem);
+  line-height: 1.7;
+}
+
+.block {
+  display: grid;
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: center;
+  max-width: 76rem;
+  margin: 0 auto clamp(4.5rem, 10vw, 8rem);
+}
+
+.copy {
+  max-width: 30rem;
+}
+
+.heading {
+  margin: 0;
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+.text {
+  margin: 0.875rem 0 0;
+  color: rgba(248, 250, 252, 0.68);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.bullets {
+  display: grid;
+  gap: 0.5rem;
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bullets li {
+  position: relative;
+  padding-left: 1.5rem;
+  color: rgba(248, 250, 252, 0.85);
+  font-size: 0.9375rem;
+}
+
+.bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 0.75rem;
+  height: 1px;
+  background: #41d9d6;
+}
+
+.figure {
+  position: relative;
+  margin: 0;
+}
+
+.withPhone {
+  /* Room for the phone to stand off the browser's corner. */
+  padding-right: clamp(2.5rem, 9vw, 6rem);
+  padding-bottom: clamp(1.5rem, 5vw, 3rem);
+}
+
+.browser {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.875rem;
+  background: #0c1117;
+  box-shadow:
+    0 30px 80px -20px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(65, 217, 214, 0.06),
+    0 0 60px -10px rgba(65, 217, 214, 0.15);
+}
+
+.bar {
+  display: flex;
+  gap: 0.375rem;
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: #121922;
+}
+
+.bar span {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.browser img,
+.phone img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.phone {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: clamp(6.5rem, 24%, 11rem);
+  overflow: hidden;
+  border: 0.375rem solid #1b2733;
+  border-radius: 1.5rem;
+  background: #0c1117;
+  box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.8);
+}
+
+.steps {
+  display: grid;
+  gap: 1rem;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  text-align: left;
+}
+
+.steps li {
+  counter-increment: step;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.steps li::before {
+  content: "0" counter(step);
+  display: block;
+  margin-bottom: 0.75rem;
+  color: #22b8c8;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.steps h3 {
+  margin: 0;
+  font-family: var(--font-heading), system-ui, sans-serif;
+  font-size: 1.125rem;
+}
+
+.steps p {
+  margin: 0.5rem 0 0;
+  color: rgba(248, 250, 252, 0.62);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+
+/* Blocks rise in when they reach the screen; without the script they are simply there. */
+.live [data-reveal] {
+  opacity: 0;
+  translate: 0 2rem;
+  transition: opacity 700ms ease, translate 900ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.live [data-reveal][data-visible="true"] {
+  opacity: 1;
+  translate: none;
+}
+
+@media (min-width: 64rem) {
+  .block {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 8fr);
+  }
+
+  .flip .copy {
+    order: 2;
+  }
+
+  .flip {
+    grid-template-columns: minmax(0, 8fr) minmax(0, 5fr);
+  }
+
+  .steps {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stepsBlock {
+    max-width: 64rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live [data-reveal] {
+    opacity: 1;
+    translate: none;
+    transition: none;
+  }
+}

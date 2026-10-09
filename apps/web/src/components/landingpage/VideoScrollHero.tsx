@@ -9,9 +9,9 @@ const PX_PER_FRAME = 5;
 
 // ── Slide data ─────────────────────────────────────────────────────────────────
 const SLIDES_DATA = [
-  { line1: "Todo bajo",  accent: "control", subtitle: "Reservas, finanzas y equipo en un solo lugar",       start: -0.10, end: 0.36, phoneZoom: false },
-  { line1: "Más tiempo", accent: "para ti", subtitle: "Automatiza la gestión y céntrate en lo que importa", start: 0.28,  end: 0.58, phoneZoom: false },
-  { line1: "Listo para", accent: "crecer",  subtitle: "Únete a los negocios que ya confían en Businext",    start: 0.54,  end: 0.97, phoneZoom: true  },
+  { line1: "Tu barbería,", accent: "bajo control", subtitle: "Agenda, caja y reseñas en el móvil, entre corte y corte", start: -0.10, end: 0.36, phoneZoom: false },
+  { line1: "Más tiempo",   accent: "en el sillón", subtitle: "Las citas entran solas: menos teléfono, más clientes",   start: 0.28,  end: 0.58, phoneZoom: false },
+  { line1: "Más dinero",   accent: "en la caja",   subtitle: "Sabes lo que ganas cada día y dónde puedes ganar más",   start: 0.54,  end: 0.97, phoneZoom: true  },
 ];
 
 // ── Animation positions (vh from bottom) ──────────────────────────────────────
@@ -367,6 +367,33 @@ export function VideoScrollHero() {
               animation: "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.08s both",
             }}
           />
+
+          {/* Promise */}
+          <h1 style={{
+            margin: "0 0 16px",
+            fontFamily: "var(--font-heading), system-ui, sans-serif",
+            fontSize: "clamp(2.4rem, 4.2vw, 3.8rem)",
+            fontWeight: 700,
+            lineHeight: 1.04,
+            letterSpacing: "-0.035em",
+            color: "#f8fafc",
+            animation: "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.12s both",
+          }}>
+            Tu barbería gana tiempo{" "}
+            <span style={{ background: "var(--gradient-text)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              y dinero.
+            </span>
+          </h1>
+          <p style={{
+            margin: "0 0 36px",
+            maxWidth: 460,
+            color: "rgba(255,255,255,0.62)",
+            fontSize: "clamp(1rem, 1.2vw, 1.125rem)",
+            lineHeight: 1.65,
+            animation: "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.16s both",
+          }}>
+            Businext lleva la agenda, la caja y las reseñas de tu barbería para que tú te dediques a cortar y a crecer.
+          </p>
 
           {/* Primary CTA */}
           <div style={{ position: "relative", animation: "fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s both" }}>
