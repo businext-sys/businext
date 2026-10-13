@@ -107,6 +107,33 @@ ver `src/api/auth.py` en `businext-backend`.
 - **`SectionSkeleton` / `ProductGridSkeleton` / `TeamListSkeleton`** — estados
   de carga por seccion.
 
+## Landing (`src/app/page.tsx`)
+
+Historia en seis capítulos: un barbero que pasa de cortar diez horas y cuadrar
+caja de noche a empresario con tiempo y patrimonio. Copy en
+`src/components/landingpage/story/chapters.ts`, maquetas de la app en
+`mockups.tsx` y el layout de cada escena en `StoryScene.tsx`.
+
+Sigue los principios de `businext-sys/businext-web-system`:
+
+- **Assets por MCP de Comfy** (Nano Banana Pro con la plancha del personaje,
+  `assets-src/landing/character-reference.png`, como referencia). Cada escena
+  tiene plancha `-desktop` (16:9) y `-mobile` (9:16); el navegador solo baja la
+  de su orientación. Binarios commiteados y registrados en
+  `public/assets.manifest.json` (modelo, prompt, parámetros, id de generación).
+- **Alt escrito** en todas las planchas y maquetas como `figure` con
+  `figcaption` que avisa de que los datos son de ejemplo.
+- **Movimiento** solo con CSS scroll-driven (`.story-reveal`), desactivado con
+  `prefers-reduced-motion`. Sin vídeo.
+- **Contraste**: los degradados de `StoryScene` están medidos contra cada
+  plancha; si se regenera una, volver a medir.
+- **Self-check**: `pnpm check:landing` avisa (no bloquea) de contraste de
+  tokens, peso por orientación (presupuesto 1,5 MB sin vídeo) y huecos en el
+  manifest.
+
+El capítulo 04 presenta el radar de tendencias como **próximamente**; su plan
+está en `docs/plans/radar-de-tendencias/`.
+
 ## Comandos
 
 Desde la raiz del monorepo (o con `pnpm --filter @businext/web <script>`):

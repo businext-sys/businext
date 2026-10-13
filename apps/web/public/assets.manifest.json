@@ -1,0 +1,223 @@
+{
+  "_doc": "Un registro por asset generado de la landing (regla de businext-sys/businext-web-system). Los binarios están commiteados: con API alojada son la única garantía de reproducibilidad.",
+  "reference": {
+    "path": "apps/web/assets-src/landing/character-reference.png",
+    "description": "Plancha de personaje (frente, tres cuartos, perfil, espalda) aportada por el cliente. Fuente de identidad para todas las escenas."
+  },
+  "assets": [
+    {
+      "path": "/landing/assets-desktop.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: early morning street, he stands proudly between two barbershop storefronts that are both his, holding a set of keys up in one hand, the second shop brand new with teal light strips inside. Confident businessman pose, sunrise sky. Feeling of ownership and growth. Cinematic wide 16:9 shot: the character in the right third of the frame, generous calm dark empty space on the left for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "16:9",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "0ed912c7-506a-467a-b516-1fb0a2f635f9",
+      "generated_at": "2026-10-13",
+      "review_note": "Incluye el rótulo genérico 'BARBERSHOP' (cortado arriba) pese a pedir sin texto. Aceptado en la revisión del 13-oct; candidato a regenerar."
+    },
+    {
+      "path": "/landing/assets-mobile.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: early morning street, he stands proudly between two barbershop storefronts that are both his, holding a set of keys up in one hand, the second shop brand new with teal light strips inside. Confident businessman pose, sunrise sky. Feeling of ownership and growth. Vertical 9:16 shot: the character and action in the lower half of the frame, generous calm dark empty space in the upper third for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "9:16",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "b61f5ac5-2098-486c-85c4-fb9c04346b7a",
+      "generated_at": "2026-10-13",
+      "review_note": "Incluye el rótulo genérico 'BARBERSHOP' pese a pedir sin texto. Aceptado en la revisión del 13-oct."
+    },
+    {
+      "path": "/landing/bookings-desktop.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: he is focused giving a precise skin fade with clippers to a seated client wearing a black barber cape; on the counter next to them his smartphone lights up with a glowing teal notification card (abstract shapes only), a small teal light pulse radiating from it. Sense of immediacy: the booking arrives while he keeps working. Cinematic wide 16:9 shot: the character in the right third of the frame, generous calm dark empty space on the left for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "16:9",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "892da339-4062-4d3b-bc7e-8a81347f54ae",
+      "generated_at": "2026-10-13"
+    },
+    {
+      "path": "/landing/bookings-mobile.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: he is focused giving a precise skin fade with clippers to a seated client wearing a black barber cape; on the counter next to them his smartphone lights up with a glowing teal notification card (abstract shapes only), a small teal light pulse radiating from it. Sense of immediacy: the booking arrives while he keeps working. Vertical 9:16 shot: the character and action in the lower half of the frame, generous calm dark empty space in the upper third for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "9:16",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "27b918ef-64ae-4527-91bc-9d18a98e9230",
+      "generated_at": "2026-10-13"
+    },
+    {
+      "path": "/landing/chaos-desktop.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: late night inside his closed barbershop, he slumps exhausted in his own barber chair, staring at a phone flooded with dozens of abstract chat bubbles glowing on the screen; a messy paper appointment book with crossed-out scribbles and loose cash notes on the counter, a wall clock showing late hour. Cold dim blue light, feeling of overwhelm. Cinematic wide 16:9 shot: the character in the right third of the frame, generous calm dark empty space on the left for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "16:9",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "7ff5e95b-7a8e-4117-90aa-d19f00084b3d",
+      "generated_at": "2026-10-13"
+    },
+    {
+      "path": "/landing/chaos-mobile.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: late night inside his closed barbershop, he slumps exhausted in his own barber chair, staring at a phone flooded with dozens of abstract chat bubbles glowing on the screen; a messy paper appointment book with crossed-out scribbles and loose cash notes on the counter, a wall clock showing late hour. Cold dim blue light, feeling of overwhelm. Vertical 9:16 shot: the character and action in the lower half of the frame, generous calm dark empty space in the upper third for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "9:16",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "d267ead8-f9f0-4c4b-be86-16fbdc29cb47",
+      "generated_at": "2026-10-13"
+    },
+    {
+      "path": "/landing/finances-desktop.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: at the small front desk of the barbershop, a happy client with a fresh haircut waves goodbye leaving through the door; he holds his phone and above it floats a soft holographic teal bar chart rising with a glowing coin, abstract and minimal. Satisfied smile, sense of the money being registered automatically. Cinematic wide 16:9 shot: the character in the right third of the frame, generous calm dark empty space on the left for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "16:9",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "4b0a4e56-d960-4b5a-bd24-ce8eb2482373",
+      "generated_at": "2026-10-13",
+      "review_note": "El gráfico flota sobre el móvil del cliente, no del barbero. Aceptado: se lee como cobro registrado."
+    },
+    {
+      "path": "/landing/finances-mobile.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: at the small front desk of the barbershop, a happy client with a fresh haircut waves goodbye leaving through the door; he holds his phone and above it floats a soft holographic teal bar chart rising with a glowing coin, abstract and minimal. Satisfied smile, sense of the money being registered automatically. Vertical 9:16 shot: the character and action in the lower half of the frame, generous calm dark empty space in the upper third for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "9:16",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "d94f3db6-45cf-4773-9877-e2932d015453",
+      "generated_at": "2026-10-13",
+      "review_note": "El gráfico flota sobre el móvil del cliente, no del barbero. Aceptado."
+    },
+    {
+      "path": "/landing/hero-desktop.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: he stands confidently in the doorway of his own small modern barbershop at dawn, one hand on the glass door, looking toward the camera with a calm, determined half smile. Interior behind him: a single vintage barber chair, mirror, warm wood, dark charcoal walls with subtle teal (#41d9d6) neon accent light strip. Cinematic wide shot, the character placed in the right third of the frame, generous dark empty space on the left for headline text. Moody dark palette (near-black blue #0c1117) with teal rim light and warm tungsten interior glow. No text, no letters, no logos, no signage words.",
+      "params": {
+        "aspect_ratio": "16:9",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "001b7f58-024f-4400-8c9e-2be64f603907",
+      "generated_at": "2026-10-13"
+    },
+    {
+      "path": "/landing/hero-mobile.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: he stands confidently in the doorway of his own small modern barbershop at dawn, one hand on the glass door, looking toward the camera with a calm, determined half smile. Interior: a vintage barber chair, mirror, warm wood, charcoal walls with a subtle teal neon light strip. Vertical 9:16 shot: the character and action in the lower half of the frame, generous calm dark empty space in the upper third for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "9:16",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "f704b65b-f331-400a-996c-4c85bb912942",
+      "generated_at": "2026-10-13"
+    },
+    {
+      "path": "/landing/time-desktop.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: golden hour Sunday afternoon, he sits relaxed on a sunny terrace with a coffee, laughing, phone face down on the table, a calm city street behind him. Warm sunlight mixing with subtle teal accents in the environment. Feeling of time regained and freedom. Cinematic wide 16:9 shot: the character in the right third of the frame, generous calm dark empty space on the left for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "16:9",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "af672939-d8d7-457f-96ce-32445e019dbf",
+      "generated_at": "2026-10-13"
+    },
+    {
+      "path": "/landing/time-mobile.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: golden hour Sunday afternoon, he sits relaxed on a sunny terrace with a coffee, laughing, phone face down on the table, a calm city street behind him. Warm sunlight mixing with subtle teal accents in the environment. Feeling of time regained and freedom. Vertical 9:16 shot: the character and action in the lower half of the frame, generous calm dark empty space in the upper third for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "9:16",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "fe7f4aca-d265-4f55-bf74-cf63b827e3e0",
+      "generated_at": "2026-10-13"
+    },
+    {
+      "path": "/landing/trends-desktop.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: he films a short vertical video of a client's fresh fade with a smartphone mounted on a small tripod with a ring light; around the phone float glowing teal holographic abstract icons: a heart, a play triangle, an upward trending arrow, a small bell, radar-like rings, suggesting social media trends and smart notifications. Creative, energetic, focused expression. Cinematic wide 16:9 shot: the character in the right third of the frame, generous calm dark empty space on the left for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "16:9",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "e5763bc4-1d82-41c8-ba2e-2adcf191cf8f",
+      "generated_at": "2026-10-13"
+    },
+    {
+      "path": "/landing/trends-mobile.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: he films a short vertical video of a client's fresh fade with a smartphone mounted on a small tripod with a ring light; around the phone float glowing teal holographic abstract icons: a heart, a play triangle, an upward trending arrow, a small bell, radar-like rings, suggesting social media trends and smart notifications. Creative, energetic, focused expression. Vertical 9:16 shot: the character and action in the lower half of the frame, generous calm dark empty space in the upper third for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "9:16",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "41a3a26b-d1e9-4bf0-a4c3-d765c3db0fc9",
+      "generated_at": "2026-10-13"
+    }
+  ]
+}
