@@ -8,7 +8,8 @@
     "postbuild": "next-sitemap",
     "start": "next start",
     "lint": "eslint .",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "check:landing": "node --experimental-strip-types scripts/landing.check.mts"
   },
   "dependencies": {
     "@4keys/date-fns-utc-locale-es": "^1.1.0",
