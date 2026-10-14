@@ -109,8 +109,9 @@ ver `src/api/auth.py` en `businext-backend`.
 
 ## Landing (`src/app/page.tsx`)
 
-Historia en seis capítulos: un barbero que pasa de cortar diez horas y cuadrar
-caja de noche a empresario con tiempo y patrimonio. Copy en
+Historia en siete capítulos: un barbero que pasa de cortar diez horas y
+cuadrar caja de noche a empresario con tiempo y patrimonio. **Texto mínimo**:
+titular y una línea por capítulo; la escena y la maqueta cuentan el resto. Copy en
 `src/components/landingpage/story/chapters.ts`, maquetas de la app en
 `mockups.tsx` y el layout de cada escena en `StoryScene.tsx`.
 
@@ -131,8 +132,9 @@ Sigue los principios de `businext-sys/businext-web-system`:
   tokens, peso por orientación (presupuesto 1,5 MB sin vídeo) y huecos en el
   manifest.
 
-El capítulo 04 presenta el radar de tendencias como **próximamente**; su plan
-está en `docs/plans/radar-de-tendencias/`.
+Los capítulos 03 (agente de llamadas con IA) y 05 (radar de tendencias) son
+**próximamente**; sus planes están en `docs/plans/agente-de-llamadas/` y
+`docs/plans/radar-de-tendencias/`.
 
 ## Comandos
 

@@ -68,6 +68,36 @@
       "generated_at": "2026-10-13"
     },
     {
+      "path": "/landing/calls-desktop.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: he is calmly giving a haircut with scissors and comb to a seated client wearing a black barber cape, both hands busy, relaxed smile; on the counter beside them his smartphone is ringing and answering by itself: above it floats a glowing teal holographic voice orb with soft concentric sound waves and a small abstract headset icon, suggesting an AI voice assistant taking the phone call for him. Cinematic wide 16:9 shot: the character in the right third of the frame, generous calm dark empty space on the left for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names, no signage anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "16:9",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "068364f0-60a9-40ed-b01a-4378f30faa74",
+      "generated_at": "2026-10-14"
+    },
+    {
+      "path": "/landing/calls-mobile.webp",
+      "provider": "Comfy Cloud (partner API: Google Vertex AI)",
+      "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",
+      "prompt": "Use the character from the reference image exactly: same face, beard, short black fade haircut, brown leather bomber jacket with striped cuffs, white t-shirt, black jeans, black-and-white sneakers. Same stylized 3D collectible-figure render style (soft vinyl toy look, Pixar-like lighting). Scene: he is calmly giving a haircut with scissors and comb to a seated client wearing a black barber cape, both hands busy, relaxed smile; on the counter beside them his smartphone is ringing and answering by itself: above it floats a glowing teal holographic voice orb with soft concentric sound waves and a small abstract headset icon, suggesting an AI voice assistant taking the phone call for him. Vertical 9:16 shot: the character and action in the lower half of the frame, generous calm dark empty space in the upper third for headline text. Moody dark palette (near-black blue #0c1117) with teal (#41d9d6) accent light and warm tungsten glow. No text, no letters, no numbers, no logos, no brand names, no signage anywhere, screens show only abstract shapes.",
+      "params": {
+        "aspect_ratio": "9:16",
+        "reference_image": "apps/web/assets-src/landing/character-reference.png",
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q82 con Pillow"
+      },
+      "seed": null,
+      "seed_note": "el proveedor no expone seed",
+      "generation_id": "a750a0a2-1342-4655-bfff-917ce49b9df1",
+      "generated_at": "2026-10-14"
+    },
+    {
       "path": "/landing/chaos-desktop.webp",
       "provider": "Comfy Cloud (partner API: Google Vertex AI)",
       "model": "vertexai/nano-banana-pro (Gemini 3 Pro Image)",

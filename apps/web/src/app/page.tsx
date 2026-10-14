@@ -3,10 +3,11 @@ import type { ComponentType } from "react";
 import type { Metadata } from "next";
 import { ArrowRight, ChevronDown } from "lucide-react";
 import { StoryScene, Eyebrow } from "@/components/landingpage/story/StoryScene";
-import { CHAPTERS, FAQS, HERO, type ChapterId } from "@/components/landingpage/story/chapters";
+import { CHAPTERS, HERO, type ChapterId } from "@/components/landingpage/story/chapters";
 import {
   AssetsSteps,
   BookingMock,
+  CallMock,
   ChaosList,
   FinanceMock,
   Lede,
@@ -17,12 +18,13 @@ import {
 export const metadata: Metadata = {
   title: { absolute: "Businext · La app que convierte tu barbería en empresa" },
   description:
-    "Reservas al instante, caja que se cuadra sola e inteligencia artificial que te dice cuándo y qué publicar. Businext digitaliza tu barbería para que ganes tiempo y construyas patrimonio.",
+    "Reservas, llamadas con IA, caja automática y tendencias. Businext digitaliza tu barbería para que ganes tiempo y patrimonio.",
 };
 
 const MOCKUPS: Record<ChapterId, ComponentType> = {
   chaos: ChaosList,
   bookings: BookingMock,
+  calls: CallMock,
   finances: FinanceMock,
   trends: TrendsMock,
   time: TimeList,
@@ -78,19 +80,16 @@ export default function Home() {
           </>
         }
       >
-        <Lede>
-          Businext digitaliza tu barbería, pero lo que de verdad automatiza es tu vida como empresario: reservas, caja y
-          contenido funcionando solos, para que ganes tiempo, eficiencia y patrimonio.
-        </Lede>
+        <Lede>Más tiempo. Más eficiencia. Más patrimonio.</Lede>
         <div className="flex flex-col gap-3 sm:flex-row">
           <Link href="/login" className={primaryCta}>
-            Empieza gratis un mes <ArrowRight aria-hidden className="h-4 w-4" />
+            Prueba gratis <ArrowRight aria-hidden className="h-4 w-4" />
           </Link>
           <a
             href="#capitulo-chaos"
             className="inline-flex items-center justify-center gap-2 rounded-xl border border-border px-6 py-3.5 text-label font-semibold text-foreground transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
           >
-            Ver su historia <ChevronDown aria-hidden className="h-4 w-4" />
+            Ver cómo <ChevronDown aria-hidden className="h-4 w-4" />
           </a>
         </div>
       </StoryScene>
@@ -127,47 +126,21 @@ export default function Home() {
           <h2 id="titulo-oferta" className="m-0 font-heading text-[clamp(1.75rem,6vw,2.75rem)] font-bold leading-tight tracking-[-0.03em]">
             Tu barbería, <span className="bg-[image:var(--gradient-text)] bg-clip-text text-transparent">en piloto automático.</span>
           </h2>
-          <p className="mx-auto mb-8 mt-4 max-w-md text-body text-foreground-muted">
-            Reservas, finanzas, reseñas e informe semanal con IA. El radar de tendencias llega en una próxima versión, sin
-            coste extra.
-          </p>
-          <dl className="mb-6 grid grid-cols-2 gap-3 text-left">
+          <dl className="mb-6 mt-8 grid grid-cols-2 gap-3 text-left">
             <div className="rounded-2xl border border-border bg-surface-raised p-4">
               <dt className="text-caption uppercase tracking-[0.12em] text-primary">Primer mes</dt>
               <dd className="m-0 font-heading text-h2 font-bold">Gratis</dd>
-              <dd className="m-0 text-caption text-foreground-muted">Cancela antes y no pagas</dd>
+              <dd className="m-0 text-caption text-foreground-muted">Sin compromiso</dd>
             </div>
             <div className="rounded-2xl border border-border bg-surface-raised p-4">
               <dt className="text-caption uppercase tracking-[0.12em] text-foreground-muted">Después</dt>
               <dd className="m-0 font-heading text-h2 font-bold">70 €</dd>
-              <dd className="m-0 text-caption text-foreground-muted">Al mes · sin permanencia</dd>
+              <dd className="m-0 text-caption text-foreground-muted">Al mes · cancela cuando quieras</dd>
             </div>
           </dl>
           <Link href="/login" className={`${primaryCta} w-full`}>
             Crear mi cuenta <ArrowRight aria-hidden className="h-4 w-4" />
           </Link>
-        </div>
-      </section>
-
-      <section aria-labelledby="titulo-faq" className="px-5 pb-28 md:px-12">
-        <div className="mx-auto max-w-2xl">
-          <h2 id="titulo-faq" className="mb-8 text-center font-heading text-h2 font-bold">
-            Preguntas frecuentes
-          </h2>
-          <div className="grid gap-3">
-            {FAQS.map((f) => (
-              <details
-                key={f.q}
-                className="group rounded-2xl border border-border bg-surface px-5 py-4 open:border-primary/60"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-body font-semibold text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
-                  {f.q}
-                  <ChevronDown aria-hidden className="h-4 w-4 shrink-0 text-primary transition-transform group-open:rotate-180" />
-                </summary>
-                <p className="m-0 mt-3 text-body-sm text-foreground-muted">{f.a}</p>
-              </details>
-            ))}
-          </div>
         </div>
       </section>
 

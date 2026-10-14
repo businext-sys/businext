@@ -55,8 +55,7 @@ ubicación activa). Solo con `canViewTrends`.
 ## Landing
 
 Cuando la fase 2 esté en producción: quitar `upcoming` del capítulo `trends` en
-`chapters.ts`, el "· próximamente" de `TimeList` y ajustar la FAQ y el bloque
-de oferta, que hoy dicen que llega "en una próxima versión".
+`chapters.ts` y el "Concepto" del pie de `TrendsMock`.
 
 ## Verificación
 

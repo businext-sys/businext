@@ -1,7 +1,7 @@
 # Plan: radar de tendencias y avisos de contenido
 
 > Estado: **propuesta**, nada implementado. La landing ya lo anuncia como
-> "Nuevo · Próximamente" (capítulo 04). Fecha: 13-oct-2026.
+> "Nuevo · Próximamente" (capítulo 05). Fecha: 13-oct-2026.
 
 ## Qué es
 

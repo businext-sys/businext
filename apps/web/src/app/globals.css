@@ -226,3 +226,16 @@ h4 {
     }
   }
 }
+
+/* Landing: live-call waveform in the AI call agent mockup. */
+@keyframes call-wave {
+  0%, 100% { transform: scaleY(0.35); }
+  50% { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .call-wave {
+    animation: call-wave 1.1s ease-in-out infinite;
+    transform-origin: center;
+  }
+}
