@@ -139,7 +139,7 @@ export default function Home() {
             </div>
             <div className="rounded-2xl border border-border bg-surface-raised p-4">
               <dt className="text-caption uppercase tracking-[0.12em] text-foreground-muted">Después</dt>
-              <dd className="m-0 font-heading text-h2 font-bold">14,99 €</dd>
+              <dd className="m-0 font-heading text-h2 font-bold">70 €</dd>
               <dd className="m-0 text-caption text-foreground-muted">Al mes · sin permanencia</dd>
             </div>
           </dl>

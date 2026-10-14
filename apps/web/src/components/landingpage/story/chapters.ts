@@ -117,7 +117,7 @@ export const FAQS = [
   },
   {
     q: "¿Cómo funciona el primer mes gratis?",
-    a: "Creas tu cuenta, introduces tu tarjeta para verificar tu identidad y usas Businext completo durante 30 días sin cargo. Después se activa la suscripción de 14,99 €/mes; si cancelas antes, no se te cobra nada.",
+    a: "Creas tu cuenta, introduces tu tarjeta para verificar tu identidad y usas Businext completo durante 30 días sin cargo. Después se activa la suscripción de 70 €/mes; si cancelas antes, no se te cobra nada.",
   },
   {
     q: "¿Necesito instalar algo?",
