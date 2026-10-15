@@ -25,7 +25,7 @@ export const STOPS: Stop[] = [
   {
     id: "inicio",
     label: "Businext",
-    eyebrow: "Businext para barberías",
+    eyebrow: "Para barberías",
     title: "Tu barbería contesta, publica y cobra",
     accent: "mientras tú cortas.",
     body: "Una IA que coge el teléfono, convierte las tendencias en publicaciones y te avisa de todo al momento. Reservas y caja, solas.",

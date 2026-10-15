@@ -1,8 +1,10 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { ArrowRight, ChevronDown, ExternalLink, Globe, Sparkles } from "lucide-react";
 import { FlightStage } from "@/components/landingpage/flight/FlightStage";
 import { SCREENS } from "@/components/landingpage/flight/screens";
+import { SocialLogo, type Network } from "@/components/landingpage/flight/SocialLogo";
 import { FAQS, SHOWCASE, STOPS } from "@/components/landingpage/flight/stops";
 import { WhitelistForm } from "@/components/landingpage/WhitelistForm";
 
@@ -13,10 +15,19 @@ export const metadata: Metadata = {
 };
 
 const primaryCta =
-  "inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-label font-semibold text-primary-foreground shadow-glow-primary transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
+  "inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 text-label font-semibold text-brand-foreground shadow-glow-primary transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
 const secondaryCta =
   "inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-background/40 px-6 py-3.5 text-label font-semibold text-foreground backdrop-blur-md transition-colors hover:border-primary focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
 const gradientText = "bg-[image:var(--gradient-text)] bg-clip-text text-transparent";
+
+const WORDMARK = "Businext";
+
+/** Drifting network logos for the trends stop: position, depth and when each one shows up. */
+const FLOATING: { network: Network; x: string; y: string; depth: number; in: number }[] = [
+  { network: "tiktok", x: "62%", y: "24%", depth: 1.2, in: 0.02 },
+  { network: "instagram", x: "84%", y: "38%", depth: 0.8, in: 0.1 },
+  { network: "youtube", x: "70%", y: "62%", depth: 1, in: 0.18 },
+];
 
 function Eyebrow({ children }: { children: string }) {
   return <p className="mb-3 text-caption font-bold uppercase tracking-[0.2em] text-primary">{children}</p>;
@@ -24,7 +35,7 @@ function Eyebrow({ children }: { children: string }) {
 
 export default function Home() {
   return (
-    <div className="w-full bg-background text-foreground">
+    <div className="landing w-full text-foreground">
       <a
         href="#whitelist"
         className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
@@ -33,11 +44,11 @@ export default function Home() {
       </a>
 
       <nav aria-label="Principal" className="fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 md:px-12">
-        <span className="font-heading text-label font-bold uppercase tracking-[0.22em] text-primary">Businext</span>
+        <span className="nav-brand font-heading text-label font-bold uppercase tracking-[0.22em] text-primary">Businext</span>
         <div className="flex items-center gap-2">
           <a
             href="#whitelist"
-            className="hidden rounded-lg bg-primary px-4 py-2 text-label font-semibold text-primary-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:inline-flex"
+            className="hidden rounded-lg bg-brand px-4 py-2 text-label font-semibold text-brand-foreground transition-colors hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:inline-flex"
           >
             Whitelist
           </a>
@@ -73,10 +84,41 @@ export default function Home() {
               key={stop.id}
               id={stop.id}
               aria-labelledby={`titulo-${stop.id}`}
-              className={`flight-stop${index === 0 ? " is-on" : ""}`}
+              className={`flight-stop${index === 0 ? " is-on is-current" : ""}`}
             >
               <div className="flight-copy">
+                {stop.screen === "trends" && (
+                  <div className="flight-float" aria-hidden>
+                    {FLOATING.map((f) => (
+                      <span
+                        key={f.network}
+                        style={{ "--x": f.x, "--y": f.y, "--depth": f.depth, "--in": f.in } as CSSProperties}
+                      >
+                        <span className="block">
+                          <SocialLogo network={f.network} size={56} />
+                        </span>
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <div className="flight-text">
+                  {index === 0 && (
+                    <p
+                      aria-label={WORDMARK}
+                      className="wordmark m-0 mb-3 font-heading text-[clamp(2.75rem,11vw,6.5rem)] font-bold leading-none tracking-[-0.04em]"
+                    >
+                      {[...WORDMARK].map((letter, i) => (
+                        <span
+                          key={i}
+                          aria-hidden
+                          className={`wordmark-letter ${gradientText}`}
+                          style={{ "--i": i } as CSSProperties}
+                        >
+                          {letter}
+                        </span>
+                      ))}
+                    </p>
+                  )}
                   <Eyebrow>{stop.eyebrow}</Eyebrow>
                   <Heading
                     id={`titulo-${stop.id}`}
@@ -108,7 +150,7 @@ export default function Home() {
         <div className="flight-site">
           <section id="whitelist" aria-labelledby="titulo-whitelist" className="px-5 pb-20 pt-28 md:px-12">
             <div className="mx-auto grid max-w-5xl items-start gap-10 md:grid-cols-[1.1fr_1fr]">
-              <div>
+              <div className="reveal">
                 <Eyebrow>Acceso anticipado</Eyebrow>
                 <h2 id="titulo-whitelist" className="m-0 font-heading text-[clamp(1.875rem,6vw,3rem)] font-bold leading-tight tracking-[-0.03em]">
                   Entra en la <span className={gradientText}>whitelist.</span>
@@ -128,7 +170,7 @@ export default function Home() {
                   </p>
                 </div>
               </div>
-              <div className="rounded-3xl border border-border bg-surface p-6 shadow-lg sm:p-8">
+              <div className="reveal rounded-3xl border border-border bg-surface p-6 shadow-lg sm:p-8">
                 <WhitelistForm />
               </div>
             </div>
@@ -136,8 +178,8 @@ export default function Home() {
 
           <section aria-labelledby="titulo-webs" className="px-5 pb-24 md:px-12">
             <div className="mx-auto grid max-w-5xl gap-4 md:grid-cols-2">
-              <article className="relative overflow-hidden rounded-3xl border border-primary/60 bg-surface p-6 shadow-glow-primary sm:p-8">
-                <p className="m-0 mb-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-3 py-1 text-caption font-bold uppercase tracking-[0.12em] text-primary-foreground">
+              <article className="reveal relative overflow-hidden rounded-3xl border border-primary/60 bg-surface p-6 shadow-glow-primary sm:p-8">
+                <p className="m-0 mb-4 inline-flex items-center gap-1.5 rounded-full bg-brand px-3 py-1 text-caption font-bold uppercase tracking-[0.12em] text-brand-foreground">
                   <Sparkles aria-hidden className="h-3.5 w-3.5" /> Incluida en el pack
                 </p>
                 <h2 id="titulo-webs" className="m-0 font-heading text-h2 font-bold leading-tight">
@@ -149,7 +191,7 @@ export default function Home() {
                 </p>
               </article>
 
-              <article className="rounded-3xl border border-border bg-surface p-6 sm:p-8">
+              <article className="reveal rounded-3xl border border-border bg-surface p-6 sm:p-8">
                 <p className="m-0 mb-4 inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1 text-caption font-bold uppercase tracking-[0.12em] text-primary">
                   <Globe aria-hidden className="h-3.5 w-3.5" /> ¿Solo la web?
                 </p>
@@ -190,7 +232,7 @@ export default function Home() {
               </h2>
               <div className="grid gap-3">
                 {FAQS.map((f) => (
-                  <details key={f.q} className="group rounded-2xl border border-border bg-surface px-5 py-4 open:border-primary/60">
+                  <details key={f.q} className="reveal group rounded-2xl border border-border bg-surface px-5 py-4 open:border-primary/60">
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-body font-semibold text-foreground focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary [&::-webkit-details-marker]:hidden">
                       {f.q}
                       <ChevronDown aria-hidden className="h-4 w-4 shrink-0 text-primary transition-transform group-open:rotate-180" />

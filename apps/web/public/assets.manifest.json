@@ -4,7 +4,7 @@
     "path": "apps/web/assets-src/landing/character-reference.png",
     "description": "Plancha de personaje (frente, tres cuartos, perfil, espalda) aportada por el cliente. Fuente de identidad para todas las escenas."
   },
-  "concepto": "Vuelo continuo por la barbería enganchado al scroll (plantilla narrativa de businext-web-system): 5 planchas por orientación y 4 tramos de vídeo de primer a último fotograma entre ellas. Coste aproximado: 10 planchas + 8 tramos.",
+  "concepto": "Vuelo continuo por la barbería enganchado al scroll (plantilla narrativa de businext-web-system): 5 planchas por orientación y 4 tramos de vídeo de primer a último fotograma entre ellas. Coste aproximado: 10 planchas + 8 tramos. Paleta medianoche y zafiro: todo el material lleva la misma corrección de color (params.grade).",
   "assets": [
     {
       "path": "/landing/stop1-desktop.webp",
@@ -15,7 +15,8 @@
       "params": {
         "aspect_ratio": "16:9",
         "reference_image": "apps/web/assets-src/landing/character-reference.png (pasada por su URL pública de raw.githubusercontent.com)",
-        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow"
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de convertir a WebP"
       },
       "seed": null,
       "seed_note": "el proveedor no expone seed",
@@ -31,7 +32,8 @@
       "params": {
         "aspect_ratio": "9:16",
         "reference_image": "apps/web/assets-src/landing/character-reference.png (pasada por su URL pública de raw.githubusercontent.com)",
-        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow"
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de convertir a WebP"
       },
       "seed": null,
       "seed_note": "el proveedor no expone seed",
@@ -47,7 +49,8 @@
       "params": {
         "aspect_ratio": "16:9",
         "reference_image": "apps/web/assets-src/landing/character-reference.png (pasada por su URL pública de raw.githubusercontent.com)",
-        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow"
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de convertir a WebP"
       },
       "seed": null,
       "seed_note": "el proveedor no expone seed",
@@ -63,7 +66,8 @@
       "params": {
         "aspect_ratio": "9:16",
         "reference_image": "apps/web/assets-src/landing/character-reference.png (pasada por su URL pública de raw.githubusercontent.com)",
-        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow"
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de convertir a WebP"
       },
       "seed": null,
       "seed_note": "el proveedor no expone seed",
@@ -79,7 +83,8 @@
       "params": {
         "aspect_ratio": "16:9",
         "reference_image": "apps/web/assets-src/landing/character-reference.png (pasada por su URL pública de raw.githubusercontent.com)",
-        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow"
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de convertir a WebP"
       },
       "seed": null,
       "seed_note": "el proveedor no expone seed",
@@ -95,7 +100,8 @@
       "params": {
         "aspect_ratio": "9:16",
         "reference_image": "apps/web/assets-src/landing/character-reference.png (pasada por su URL pública de raw.githubusercontent.com)",
-        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow"
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de convertir a WebP"
       },
       "seed": null,
       "seed_note": "el proveedor no expone seed",
@@ -111,7 +117,8 @@
       "params": {
         "aspect_ratio": "16:9",
         "reference_image": "apps/web/assets-src/landing/character-reference.png (pasada por su URL pública de raw.githubusercontent.com)",
-        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow"
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de convertir a WebP"
       },
       "seed": null,
       "seed_note": "el proveedor no expone seed",
@@ -127,7 +134,8 @@
       "params": {
         "aspect_ratio": "9:16",
         "reference_image": "apps/web/assets-src/landing/character-reference.png (pasada por su URL pública de raw.githubusercontent.com)",
-        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow"
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de convertir a WebP"
       },
       "seed": null,
       "seed_note": "el proveedor no expone seed",
@@ -143,7 +151,8 @@
       "params": {
         "aspect_ratio": "16:9",
         "reference_image": "apps/web/assets-src/landing/character-reference.png (pasada por su URL pública de raw.githubusercontent.com)",
-        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow"
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de convertir a WebP"
       },
       "seed": null,
       "seed_note": "el proveedor no expone seed",
@@ -160,7 +169,8 @@
       "params": {
         "aspect_ratio": "9:16",
         "reference_image": "apps/web/assets-src/landing/character-reference.png (pasada por su URL pública de raw.githubusercontent.com)",
-        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow"
+        "output": "PNG 1376x768 o 768x1376, convertido a WebP q80 con Pillow",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de convertir a WebP"
       },
       "seed": null,
       "seed_note": "el proveedor no expone seed",
@@ -181,7 +191,8 @@
         "watermark": false,
         "first_frame": "/landing/stop1-desktop.webp (generación 332c7fc3-845f-4266-b61c-850e5286cff7)",
         "last_frame": "/landing/stop2-desktop.webp (generación 2d20c1ec-19a4-4901-8e84-80b9c89400c5)",
-        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio"
+        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
       },
       "seed": 20261015,
       "generation_id": "f3c7525b-c707-4262-90bb-852e3f004a93",
@@ -201,7 +212,8 @@
         "watermark": false,
         "first_frame": "/landing/stop1-mobile.webp (generación 239f35fb-6556-4b1c-8070-a0a29bd8eae9)",
         "last_frame": "/landing/stop2-mobile.webp (generación 668fa93c-88ed-44b7-9454-dc097826fb10)",
-        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio"
+        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
       },
       "seed": 20261015,
       "generation_id": "f48e22a6-59ca-4412-beae-a2a3f61fad22",
@@ -221,7 +233,8 @@
         "watermark": false,
         "first_frame": "/landing/stop2-desktop.webp (generación 2d20c1ec-19a4-4901-8e84-80b9c89400c5)",
         "last_frame": "/landing/stop3-desktop.webp (generación e24e7554-d359-4f3c-9ead-0a1556718074)",
-        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio"
+        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
       },
       "seed": 20261015,
       "generation_id": "f987a2bc-7087-4e01-a160-9aa64f8a7e32",
@@ -241,7 +254,8 @@
         "watermark": false,
         "first_frame": "/landing/stop2-mobile.webp (generación 668fa93c-88ed-44b7-9454-dc097826fb10)",
         "last_frame": "/landing/stop3-mobile.webp (generación afd5bdd1-8577-493b-a209-519064a5013f)",
-        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio"
+        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
       },
       "seed": 20261015,
       "generation_id": "f37adc0d-4218-4bae-861b-331a25f3e542",
@@ -261,7 +275,8 @@
         "watermark": false,
         "first_frame": "/landing/stop3-desktop.webp (generación e24e7554-d359-4f3c-9ead-0a1556718074)",
         "last_frame": "/landing/stop4-desktop.webp (generación 68282084-dcd4-418d-aabb-94493ec06cc9)",
-        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio"
+        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
       },
       "seed": 20261015,
       "generation_id": "bc6698ea-1cf5-4a70-884f-f4611d98957d",
@@ -281,7 +296,8 @@
         "watermark": false,
         "first_frame": "/landing/stop3-mobile.webp (generación afd5bdd1-8577-493b-a209-519064a5013f)",
         "last_frame": "/landing/stop4-mobile.webp (generación b8e0154b-af93-4681-96b6-3eedf3115620)",
-        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio"
+        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
       },
       "seed": 20261015,
       "generation_id": "51d4caa4-4413-4999-a4da-fede7490e6f9",
@@ -301,7 +317,8 @@
         "watermark": false,
         "first_frame": "/landing/stop4-desktop.webp (generación 68282084-dcd4-418d-aabb-94493ec06cc9)",
         "last_frame": "/landing/stop5-desktop.webp (generación 6689741a-a37f-4624-9297-50539d9268dd)",
-        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio"
+        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
       },
       "seed": 20261015,
       "generation_id": "048e2979-7b93-48f2-aea2-25f6a79639d2",
@@ -321,7 +338,8 @@
         "watermark": false,
         "first_frame": "/landing/stop4-mobile.webp (generación b8e0154b-af93-4681-96b6-3eedf3115620)",
         "last_frame": "/landing/stop5-mobile.webp (generación 27af9f64-bf13-4bbe-a5ab-b55e1ae77a3d)",
-        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio"
+        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
+        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
       },
       "seed": 20261015,
       "generation_id": "68c545b6-5254-4c11-98c3-aa14da4b9d1b",

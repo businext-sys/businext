@@ -41,6 +41,10 @@
   --color-muted-foreground: #9eb6bf;
   --color-input: #24333f;
   --color-ring: #41d9d6;
+  /* Deep sapphire fill for the landing's calls to action: white text on it is 7.98:1. */
+  --color-brand: #2c4a8a;
+  --color-brand-hover: #3a5aa0;
+  --color-brand-foreground: #f4f7fd;
 
   /* ── Typography ── */
   --font-sans: var(--font-body), system-ui, sans-serif;
@@ -203,6 +207,34 @@ h4 {
   display: none;
 }
 
+/* ── Landing palette ──
+   Midnight and sapphire, scoped to the landing so the app keeps its own tokens. Tailwind
+   utilities read these variables, so everything under .landing picks them up. The scenes
+   are graded to match (cyans moved to sapphire, see public/assets.manifest.json).
+   AA measured on #0a0c16 / #121828: text 17.7, muted 10.9, subtle 6.2 / 5.6, primary 9.0 /
+   8.2, gradient end 5.6, success 9.7, danger 5.3. */
+.landing {
+  --color-background: #0a0c16;
+  --color-surface: #121828;
+  --color-surface-raised: #1a2236;
+  --color-border: #252e46;
+  --color-border-subtle: #151b2b;
+  --color-primary: #9db0de;
+  --color-primary-hover: #b8c7ea;
+  --color-primary-foreground: #0a0c16;
+  --color-accent: #1d2947;
+  --color-accent-hover: #2a3a62;
+  --color-accent-foreground: #e9eef9;
+  --color-foreground: #f2f4fa;
+  --color-foreground-muted: #b9c2d8;
+  --color-foreground-subtle: #8891aa;
+  --color-success: #6fd3a8;
+  --color-ring: #9db0de;
+  --gradient-text: linear-gradient(100deg, #eef2fb 0%, #9db0de 55%, #7088c6 100%);
+  --shadow-glow-primary: 0 12px 32px -10px rgb(44 74 138 / 0.75);
+  background: var(--color-background);
+}
+
 /* ── Landing flight ──
    One pinned stage scrubbed by the scroll (FlightStage.tsx), the narrative template of
    businext-sys/businext-web-system. Each stop is only scroll length; its copy sits in a
@@ -276,19 +308,56 @@ h4 {
   padding: 5.25rem 1.25rem 1.25rem;
   background: linear-gradient(
     to bottom,
-    rgb(12 17 23 / 0.94) 0%,
-    rgb(12 17 23 / 0.7) 34%,
+    rgb(10 12 22 / 0.94) 0%,
+    rgb(10 12 22 / 0.7) 34%,
     transparent 52%,
     transparent 62%,
-    rgb(12 17 23 / 0.6) 100%
+    rgb(10 12 22 / 0.6) 100%
   );
-  text-shadow: 0 1px 2px rgb(12 17 23 / 0.7);
+  text-shadow: 0 1px 2px rgb(10 12 22 / 0.7);
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition:
     opacity 320ms linear,
     visibility 0s linear 320ms;
+}
+
+/* Each line of a stop arrives on its own beat when the stop takes the stage, and leaves
+   rising and blurring over the last stretch of the leg. */
+.flight-text > * {
+  opacity: 0;
+  translate: 0 1.5rem;
+  filter: blur(6px);
+  transition:
+    opacity 700ms var(--ease-fluid),
+    translate 700ms var(--ease-fluid),
+    filter 700ms var(--ease-fluid);
+}
+
+.flight-stop.is-current .flight-text > * {
+  opacity: 1;
+  translate: 0 0;
+  filter: none;
+}
+
+.flight-stop.is-current .flight-text > :nth-child(2) {
+  transition-delay: 90ms;
+}
+
+.flight-stop.is-current .flight-text > :nth-child(3) {
+  transition-delay: 180ms;
+}
+
+.flight-stop.is-current .flight-text > :nth-child(n + 4) {
+  transition-delay: 270ms;
+}
+
+.flight-stop.is-on .flight-text,
+.flight-stop.is-on .flight-screen {
+  --leave: max(0, var(--progress) - 0.74);
+  transform: translateY(calc(var(--leave) * -14rem));
+  filter: blur(calc(var(--leave) * 28px));
 }
 
 .flight-stop.is-on .flight-copy {
@@ -324,9 +393,9 @@ h4 {
     padding: 6rem 3rem 3rem clamp(3rem, 7vw, 8rem);
     background: linear-gradient(
       to right,
-      rgb(12 17 23 / 0.95) 0%,
-      rgb(12 17 23 / 0.78) 30%,
-      rgb(12 17 23 / 0.2) 52%,
+      rgb(10 12 22 / 0.95) 0%,
+      rgb(10 12 22 / 0.78) 30%,
+      rgb(10 12 22 / 0.2) 52%,
       transparent 62%
     );
   }
@@ -342,18 +411,20 @@ h4 {
   }
 }
 
-/* App pieces land one by one at their --at share of the stop. */
+/* App pieces land one by one at their --at share of the stop, compressed so the screen is
+   full well before the copy leaves. */
 .ui-item {
-  opacity: clamp(0, (var(--progress) - var(--at)) * 9, 1);
-  translate: 0 calc(clamp(0, (var(--at) - var(--progress)) * 9, 1) * 1rem);
+  --arrive: calc(var(--at) * 0.7);
+  opacity: clamp(0, (var(--progress) - var(--arrive)) * 10, 1);
+  translate: 0 calc(clamp(0, (var(--arrive) - var(--progress)) * 10, 1) * 1rem);
 }
 
 .ui-bar {
-  width: calc(clamp(0, (var(--progress) - var(--at)) * 4, 1) * var(--w) * 100%);
+  width: calc(clamp(0, (var(--progress) - var(--arrive)) * 5, 1) * var(--w) * 100%);
 }
 
 .ui-bar-v {
-  height: calc(clamp(0.08, (var(--progress) - var(--at)) * 4, 1) * var(--h) * 100%);
+  height: calc(clamp(0.08, (var(--progress) - var(--arrive)) * 5, 1) * var(--h) * 100%);
 }
 
 /* The first stop is on stage before any scroll: its pieces rise in on load instead. */
@@ -413,11 +484,131 @@ h4 {
   background: var(--color-background);
 }
 
+/* The Businext wordmark: its letters rise in on load, and as the first leg flies it lifts,
+   shrinks and dissolves while the small mark in the navigation takes over. */
+.wordmark-letter {
+  display: inline-block;
+  animation: wordmark-in 900ms var(--ease-fluid) both;
+  animation-delay: calc(120ms + var(--i) * 55ms);
+}
+
+@keyframes wordmark-in {
+  from {
+    opacity: 0;
+    translate: 0 0.6em;
+    filter: blur(10px);
+  }
+}
+
+.flight-stop:first-of-type .wordmark {
+  transform-origin: left bottom;
+  transform: translateY(calc(var(--progress) * -18vh)) scale(calc(1 - var(--progress) * 0.5));
+  opacity: clamp(0, 1 - var(--progress) * 3.2, 1);
+  filter: blur(calc(var(--progress) * 24px));
+}
+
+.nav-brand {
+  opacity: 0;
+  translate: 0 -0.5rem;
+  transition:
+    opacity 500ms var(--ease-fluid),
+    translate 500ms var(--ease-fluid);
+}
+
+.flight-past-hero .nav-brand {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* Real network logos drifting through the trends stop: in with the leg, out before it ends. */
+.flight-float {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.flight-float > * {
+  position: absolute;
+  /* On a phone the open band of the scene sits between the copy and the app screen. */
+  left: calc(var(--x) - 12%);
+  top: calc(36% + var(--y) * 0.22);
+  opacity: clamp(0, min((var(--progress) - var(--in)) * 6, (0.8 - var(--progress)) * 6), 1);
+  transform: translateY(calc((var(--progress) - 0.4) * -26vh * var(--depth)))
+    scale(calc(0.85 + var(--depth) * 0.15));
+  filter: drop-shadow(0 10px 24px rgb(0 0 0 / 0.45));
+}
+
+.flight-float > * > * {
+  animation: float-bob 4.8s ease-in-out infinite alternate;
+  animation-delay: calc(var(--in) * -20s);
+}
+
+@media (min-width: 48rem) {
+  .flight-float > * {
+    left: var(--x);
+    top: var(--y);
+  }
+}
+
+@keyframes float-bob {
+  to {
+    translate: 0 -10px;
+    rotate: 4deg;
+  }
+}
+
+/* A live dot that breathes. */
+.live-dot {
+  animation: live 1.6s ease-in-out infinite;
+}
+
+@keyframes live {
+  50% {
+    opacity: 0.35;
+    scale: 0.7;
+  }
+}
+
+/* Past the flight, blocks rise in as they scroll into view. Without scroll timelines they
+   are simply there. */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: reveal linear both;
+    animation-timeline: view();
+    animation-range: entry 5% entry 45%;
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    translate: 0 2.5rem;
+    filter: blur(6px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ui-item,
-  .flight-stop:first-of-type .ui-item {
+  .flight-stop:first-of-type .ui-item,
+  .flight-text > *,
+  .wordmark-letter,
+  .reveal {
     opacity: 1;
     translate: none;
+    filter: none;
+    animation: none;
+    transition: none;
+  }
+
+  .flight-stop.is-on .flight-text,
+  .flight-stop.is-on .flight-screen,
+  .flight-stop:first-of-type .wordmark {
+    transform: none;
+    filter: none;
+  }
+
+  .flight-float > * > *,
+  .live-dot {
     animation: none;
   }
 

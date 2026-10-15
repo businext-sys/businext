@@ -7,14 +7,15 @@ import {
   Bell,
   CalendarCheck,
   CircleCheck,
-  Instagram,
   MessageSquareText,
   Phone,
   Send,
   Sparkles,
   TrendingUp,
   Wallet,
+  type LucideIcon,
 } from "lucide-react";
+import { SocialLogo, type Network } from "./SocialLogo";
 import type { ScreenId } from "./stops";
 
 function Item({ at, className = "", children }: { at: number; className?: string; children: ReactNode }) {
@@ -69,12 +70,14 @@ function Call() {
     <Screen caption="Vista previa del asistente telefónico. Llamada y datos de ejemplo.">
       <Item at={0.02} className="flex items-center justify-between">
         <p className="m-0 flex items-center gap-2 text-label font-semibold text-foreground">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary">
-            <Phone aria-hidden className="h-3.5 w-3.5 text-primary-foreground" />
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-brand">
+            <Phone aria-hidden className="h-3.5 w-3.5 text-brand-foreground" />
           </span>
           Llamada atendida por la IA
         </p>
-        <span className="text-caption text-success">● en curso</span>
+        <span className="flex items-center gap-1.5 text-caption text-success">
+          <span aria-hidden className="live-dot h-1.5 w-1.5 rounded-full bg-success" /> en curso
+        </span>
       </Item>
       {lines.map((line, i) => (
         <Item
@@ -100,19 +103,20 @@ function Call() {
 
 function Trends() {
   const trends = [
-    { name: "Antes y después en 15 s", source: "TikTok", growth: 180 },
-    { name: "Degradado bajo con textura", source: "Instagram", growth: 95 },
-    { name: "Transformación con audio viral", source: "YouTube Shorts", growth: 60 },
-  ];
+    { name: "Antes y después en 15 s", source: "TikTok", network: "tiktok", growth: 180 },
+    { name: "Degradado bajo con textura", source: "Instagram", network: "instagram", growth: 95 },
+    { name: "Transformación con audio viral", source: "YouTube Shorts", network: "youtube", growth: 60 },
+  ] satisfies { name: string; source: string; network: Network; growth: number }[];
   return (
     <Screen caption="Vista previa de Tendencias y contenido. Tendencias y porcentajes de ejemplo.">
       <Item at={0.02} className="flex items-center gap-2 text-label font-semibold text-foreground">
         <TrendingUp aria-hidden className="h-4 w-4 text-primary" /> Creciendo esta semana
       </Item>
       {trends.map((t, i) => (
-        <Item key={t.name} at={0.1 + i * 0.08} className={card}>
+        <Item key={t.name} at={0.05 + i * 0.07} className={card}>
           <span className="flex items-center justify-between gap-3">
-            <span className="min-w-0">
+            <SocialLogo network={t.network} size={28} />
+            <span className="min-w-0 flex-1">
               <span className="block truncate text-body-sm text-foreground">{t.name}</span>
               <span className="block text-caption text-foreground-subtle">{t.source}</span>
             </span>
@@ -134,38 +138,49 @@ function Trends() {
         <Send aria-hidden className="h-5 w-5 shrink-0 text-primary" />
         <span className="min-w-0 flex-1">
           <span className="block text-label font-semibold text-foreground">Publicación programada · hoy 19:30</span>
-          <span className="flex items-center gap-1 text-caption text-foreground-muted">
-            <Instagram aria-hidden className="h-3.5 w-3.5" /> Reel de 15 s · Instagram y TikTok
+          <span className="mt-0.5 flex items-center gap-1.5 text-caption text-foreground-muted">
+            <SocialLogo network="instagram" size={16} />
+            <SocialLogo network="tiktok" size={16} />
+            Reel de 15 s · Instagram y TikTok
           </span>
         </span>
-        <span className="rounded-full bg-primary px-2 py-0.5 text-caption font-semibold text-primary-foreground">Auto</span>
+        <span className="rounded-full bg-brand px-2 py-0.5 text-caption font-semibold text-brand-foreground">Auto</span>
       </Item>
     </Screen>
   );
 }
 
+type Alert = { title: string; text: string; time: string } & ({ icon: LucideIcon } | { network: Network });
+
 function Control() {
-  const alerts = [
+  const alerts: Alert[] = [
     { icon: CalendarCheck, title: "La IA reservó a Carlos", text: "Degradado + barba · hoy 18:30", time: "18:02" },
     { icon: Bell, title: "Cancelación a las 19:00", text: "Hueco ofrecido a tu lista de espera", time: "18:20" },
-    { icon: Instagram, title: "Reel publicado", text: "1.240 reproducciones en la primera hora", time: "20:31" },
+    { network: "instagram", title: "Reel publicado", text: "1.240 reproducciones en la primera hora", time: "20:31" },
   ];
   return (
     <Screen caption="Vista previa de Notificaciones y del asistente. Datos de ejemplo.">
-      {alerts.map(({ icon: Icon, title, text, time }, i) => (
-        <Item key={title} at={0.04 + i * 0.1} className="flex gap-3 rounded-2xl bg-surface-raised p-2.5">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-primary">
-            <Icon aria-hidden className="h-4 w-4 text-primary-foreground" />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="flex justify-between gap-2 text-label font-semibold text-foreground">
-              {title}
-              <span className="text-caption font-normal text-foreground-subtle">{time}</span>
+      {alerts.map((alert, i) => {
+        const { title, text, time } = alert;
+        return (
+          <Item key={title} at={0.04 + i * 0.1} className="flex gap-3 rounded-2xl bg-surface-raised p-2.5">
+            {"network" in alert ? (
+              <SocialLogo network={alert.network} size={32} />
+            ) : (
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-brand">
+                <alert.icon aria-hidden className="h-4 w-4 text-brand-foreground" />
+              </span>
+            )}
+            <span className="min-w-0 flex-1">
+              <span className="flex justify-between gap-2 text-label font-semibold text-foreground">
+                {title}
+                <span className="text-caption font-normal text-foreground-subtle">{time}</span>
+              </span>
+              <span className="block text-caption text-foreground-muted">{text}</span>
             </span>
-            <span className="block text-caption text-foreground-muted">{text}</span>
-          </span>
-        </Item>
-      ))}
+          </Item>
+        );
+      })}
       <Item at={0.38} className="flex items-center gap-2 rounded-2xl border border-border px-3 py-2 text-body-sm text-foreground">
         <MessageSquareText aria-hidden className="h-4 w-4 shrink-0 text-primary" />
         ¿Cuánto llevo esta semana?

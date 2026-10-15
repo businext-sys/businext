@@ -62,6 +62,8 @@ export function FlightStage({ stops }: { stops: Stop[] }) {
       frame = 0;
       const last = sections.at(-1)?.getBoundingClientRect();
       document.documentElement.classList.toggle("flight-landed", Boolean(last && last.bottom <= 0));
+      const hero = sections[0]?.getBoundingClientRect();
+      document.documentElement.classList.toggle("flight-past-hero", Boolean(hero && -hero.top > hero.height * 0.12));
 
       sections.forEach((section, index) => {
         const { top, height } = section.getBoundingClientRect();
@@ -69,6 +71,7 @@ export function FlightStage({ stops }: { stops: Stop[] }) {
         if (!panel) return;
         const on = top <= 1 && top + height > 0;
         section.classList.toggle("is-on", on);
+        section.classList.toggle("is-current", on);
         panel.classList.toggle("is-on", on);
         if (on) pips.forEach((pip, i) => pip.setAttribute("aria-current", i === index ? "true" : "false"));
 
@@ -107,7 +110,7 @@ export function FlightStage({ stops }: { stops: Stop[] }) {
       root.removeEventListener("seeked", onSeeked, true);
       root.removeEventListener("loadeddata", sync, true);
       cancelAnimationFrame(frame);
-      document.documentElement.classList.remove("flight-landed");
+      document.documentElement.classList.remove("flight-landed", "flight-past-hero");
     };
   }, [stops]);
 

@@ -75,7 +75,7 @@ export function WhitelistForm() {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-6 py-3.5 text-label font-semibold text-primary-foreground shadow-glow-primary transition-transform hover:-translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary disabled:opacity-70"
+        className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 text-label font-semibold text-brand-foreground shadow-glow-primary transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary disabled:opacity-70"
       >
         {status === "sending" ? "Enviando…" : "Apuntarme a la whitelist"} <ArrowRight aria-hidden className="h-4 w-4" />
       </button>

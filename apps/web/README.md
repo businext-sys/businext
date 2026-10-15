@@ -130,6 +130,16 @@ La Perla y Sito como ejemplos) y las preguntas frecuentes.
   escritorio y H.264 (keyframe cada 4 fotogramas) para móvil. Sin JavaScript, sin
   clip o con `prefers-reduced-motion` se queda la plancha. El hosting tiene que
   servir peticiones por rango (`Range`) o el vídeo no se puede buscar.
+- **Paleta**: medianoche y zafiro, solo en la landing (`.landing` en
+  `globals.css` redefine los tokens; la app conserva los suyos). Los botones usan
+  `bg-brand`. Las planchas y los tramos llevan la misma corrección de color
+  (cian → zafiro con `huesaturation`, anotada en el manifest) para casar con ella.
+- **Movimiento**: el wordmark de Businext entra letra a letra y se disuelve en la
+  barra de navegación al empezar el vuelo; el texto de cada parada entra
+  escalonado y sale subiendo y desenfocándose; en tendencias flotan los logos
+  reales de TikTok, Instagram y YouTube (`SocialLogo.tsx`, trazados de Simple
+  Icons, CC0); los bloques del final aparecen al entrar en pantalla. Todo se
+  apaga con `prefers-reduced-motion`.
 - **Whitelist**: el formulario envía a `/api/whitelist`, que manda un email con el
   mismo transporte de Gmail que `/api/send-contact-email`.
 - **Self-check**: `pnpm check:landing` avisa (no bloquea) de contraste de tokens,
