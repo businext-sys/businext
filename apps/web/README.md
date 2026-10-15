@@ -109,30 +109,32 @@ ver `src/api/auth.py` en `businext-backend`.
 
 ## Landing (`src/app/page.tsx`)
 
-Historia en seis capítulos: un barbero que pasa de cortar diez horas y cuadrar
-caja de noche a empresario con tiempo y patrimonio. Copy en
-`src/components/landingpage/story/chapters.ts`, maquetas de la app en
-`mockups.tsx` y el layout de cada escena en `StoryScene.tsx`.
+Un vuelo continuo por la barbería enganchado al scroll, con la plantilla
+`narrativa` de `businext-sys/businext-web-system` (piloto `kuberse-web`). Cinco
+paradas: Businext, asistente telefónico con IA, tendencias y publicación
+automática, control con IA y avisos en tiempo real, y reservas y caja. Después
+aterriza en la whitelist (precio tachado, orientativo entre 50 y 70 €/mes), los
+dos anuncios de web (incluida en la suscripción, o solo la web desde 150 €, con
+La Perla y Sito como ejemplos) y las preguntas frecuentes.
 
-Sigue los principios de `businext-sys/businext-web-system`:
-
-- **Assets por MCP de Comfy** (Nano Banana Pro con la plancha del personaje,
-  `assets-src/landing/character-reference.png`, como referencia). Cada escena
-  tiene plancha `-desktop` (16:9) y `-mobile` (9:16); el navegador solo baja la
-  de su orientación. Binarios commiteados y registrados en
-  `public/assets.manifest.json` (modelo, prompt, parámetros, id de generación).
-- **Alt escrito** en todas las planchas y maquetas como `figure` con
-  `figcaption` que avisa de que los datos son de ejemplo.
-- **Movimiento** solo con CSS scroll-driven (`.story-reveal`), desactivado con
-  `prefers-reduced-motion`. Sin vídeo.
-- **Contraste**: los degradados de `StoryScene` están medidos contra cada
-  plancha; si se regenera una, volver a medir.
-- **Self-check**: `pnpm check:landing` avisa (no bloquea) de contraste de
-  tokens, peso por orientación (presupuesto 1,5 MB sin vídeo) y huecos en el
-  manifest.
-
-El capítulo 04 presenta el radar de tendencias como **próximamente**; su plan
-está en `docs/plans/radar-de-tendencias/`.
+- **Guion** en `src/components/landingpage/flight/stops.ts`; pantallas de la app
+  que entran pieza a pieza en `screens.tsx`; el escenario fijo y el scrubbing del
+  vídeo en `FlightStage.tsx`. Cada parada expone `--progress` (0–1) y todo lo que
+  se mueve lo usa: el vídeo, la salida del texto y cada `.ui-item` (`--at`).
+- **Assets por MCP de Comfy**: planchas con Nano Banana Pro y la plancha del
+  personaje (`assets-src/landing/character-reference.png`) como referencia; tramos
+  con Wan 2.7 de primer a último fotograma, así que cada tramo termina exactamente
+  en la plancha siguiente. Todo registrado en `public/assets.manifest.json`; el
+  concepto anterior queda archivado ahí con sus prompts e ids.
+- **Vídeo**: `scripts/encode-leg.sh` quita el audio y codifica AV1 para
+  escritorio y H.264 (keyframe cada 4 fotogramas) para móvil. Sin JavaScript, sin
+  clip o con `prefers-reduced-motion` se queda la plancha. El hosting tiene que
+  servir peticiones por rango (`Range`) o el vídeo no se puede buscar.
+- **Whitelist**: el formulario envía a `/api/whitelist`, que manda un email con el
+  mismo transporte de Gmail que `/api/send-contact-email`.
+- **Self-check**: `pnpm check:landing` avisa (no bloquea) de contraste de tokens,
+  peso por orientación (presupuesto 3 MB con vídeo), huecos en el manifest y alt
+  sin escribir.
 
 ## Comandos
 
