@@ -11,7 +11,7 @@ import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 
-/** Tokens read straight from globals.css, so the check follows any palette change. */
+/** Tokens read straight from globals.css; the .landing scope comes later in the file and wins. */
 function tokens(): Record<string, string> {
   const css = readFileSync(join(root, "src/app/globals.css"), "utf8");
   const out: Record<string, string> = {};
@@ -44,6 +44,8 @@ const PAIRS: [string, string, number][] = [
   ["primary", "surface", 4.5],
   ["primary", "accent", 4.5],
   ["primary-foreground", "primary", 4.5],
+  ["brand-foreground", "brand", 4.5],
+  ["brand-foreground", "brand-hover", 4.5],
   ["success", "surface", 4.5],
   ["success", "surface-raised", 4.5],
   ["warning", "surface", 3],
