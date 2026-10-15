@@ -2,9 +2,8 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import type { Metadata } from "next";
 import { ArrowRight, ChevronDown, ExternalLink, Globe, Sparkles } from "lucide-react";
-import { FlightStage } from "@/components/landingpage/flight/FlightStage";
 import { SCREENS } from "@/components/landingpage/flight/screens";
-import { SocialLogo, type Network } from "@/components/landingpage/flight/SocialLogo";
+import { Story, type Chapter } from "@/components/landingpage/flight/Story";
 import { FAQS, SHOWCASE, STOPS } from "@/components/landingpage/flight/stops";
 import { WhitelistForm } from "@/components/landingpage/WhitelistForm";
 
@@ -22,12 +21,9 @@ const gradientText = "bg-[image:var(--gradient-text)] bg-clip-text text-transpar
 
 const WORDMARK = "Businext";
 
-/** Drifting network logos for the trends stop: position, depth and when each one shows up. */
-const FLOATING: { network: Network; x: string; y: string; depth: number; in: number }[] = [
-  { network: "tiktok", x: "62%", y: "24%", depth: 1.2, in: 0.02 },
-  { network: "instagram", x: "84%", y: "38%", depth: 0.8, in: 0.1 },
-  { network: "youtube", x: "70%", y: "62%", depth: 1, in: 0.18 },
-];
+const [HERO, ...REST] = STOPS;
+const CHAPTERS: Chapter[] = REST.map((stop, i) => ({ stop, from: STOPS[i]! }));
+const HeroScreen = SCREENS[HERO.screen];
 
 function Eyebrow({ children }: { children: string }) {
   return <p className="mb-3 text-caption font-bold uppercase tracking-[0.2em] text-primary">{children}</p>;
@@ -43,7 +39,7 @@ export default function Home() {
         Saltar a la whitelist
       </a>
 
-      <nav aria-label="Principal" className="fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 md:px-12">
+      <nav aria-label="Principal" className="site-nav fixed inset-x-0 top-0 z-30 flex items-center justify-between px-5 py-4 md:px-12">
         <span className="nav-brand font-heading text-label font-bold uppercase tracking-[0.22em] text-primary">Businext</span>
         <div className="flex items-center gap-2">
           <a
@@ -61,93 +57,59 @@ export default function Home() {
         </div>
       </nav>
 
-      <FlightStage stops={STOPS} />
-      {/* Without script nothing puts a stop on stage: let every copy flow instead. */}
-      <noscript>
-        <style>{`.flight-copy{position:relative;opacity:1;visibility:visible;min-height:100svh}.ui-item{opacity:1;translate:none}`}</style>
-      </noscript>
-
-      <nav aria-label="Capítulos" className="flight-pips">
-        {STOPS.map((stop, index) => (
-          <a key={stop.id} className="flight-pip" href={`#${stop.id}`} aria-current={index === 0 ? "true" : "false"}>
-            <span className="sr-only">{stop.label}</span>
-          </a>
-        ))}
-      </nav>
-
       <main>
-        {STOPS.map((stop, index) => {
-          const Heading = index === 0 ? "h1" : "h2";
-          const ScreenView = SCREENS[stop.screen];
-          return (
-            <section
-              key={stop.id}
-              id={stop.id}
-              aria-labelledby={`titulo-${stop.id}`}
-              className={`flight-stop${index === 0 ? " is-on is-current" : ""}`}
+        <section id="inicio" aria-labelledby="titulo-inicio" className="hero relative flex min-h-[100svh] items-start md:items-center">
+          <picture>
+            <source media="(max-width: 47.99rem)" srcSet={`/landing/${HERO.plate}-mobile.webp`} width={768} height={1376} />
+            <img
+              src={`/landing/${HERO.plate}-desktop.webp`}
+              width={1376}
+              height={768}
+              alt={HERO.alt}
+              fetchPriority="high"
+              decoding="async"
+              className="hero-plate absolute inset-0 h-full w-full object-cover"
+            />
+          </picture>
+          <div aria-hidden className="hero-scrim absolute inset-0" />
+          <div className="hero-copy relative z-10 w-full px-5 pb-10 pt-28 md:max-w-[min(40rem,48vw)] md:px-0 md:pb-0 md:pl-[clamp(3rem,7vw,8rem)]">
+            <p
+              aria-label={WORDMARK}
+              className="m-0 mb-3 font-heading text-[clamp(2.75rem,11vw,6.5rem)] font-bold leading-none tracking-[-0.04em]"
             >
-              <div className="flight-copy">
-                {stop.screen === "trends" && (
-                  <div className="flight-float" aria-hidden>
-                    {FLOATING.map((f) => (
-                      <span
-                        key={f.network}
-                        style={{ "--x": f.x, "--y": f.y, "--depth": f.depth, "--in": f.in } as CSSProperties}
-                      >
-                        <span className="block">
-                          <SocialLogo network={f.network} size={56} />
-                        </span>
-                      </span>
-                    ))}
-                  </div>
-                )}
-                <div className="flight-text">
-                  {index === 0 && (
-                    <p
-                      aria-label={WORDMARK}
-                      className="wordmark m-0 mb-3 font-heading text-[clamp(2.75rem,11vw,6.5rem)] font-bold leading-none tracking-[-0.04em]"
-                    >
-                      {[...WORDMARK].map((letter, i) => (
-                        <span
-                          key={i}
-                          aria-hidden
-                          className={`wordmark-letter ${gradientText}`}
-                          style={{ "--i": i } as CSSProperties}
-                        >
-                          {letter}
-                        </span>
-                      ))}
-                    </p>
-                  )}
-                  <Eyebrow>{stop.eyebrow}</Eyebrow>
-                  <Heading
-                    id={`titulo-${stop.id}`}
-                    className="m-0 font-heading text-[clamp(1.875rem,6.4vw,3.5rem)] font-bold leading-[1.05] tracking-[-0.03em] text-foreground"
-                  >
-                    {stop.title} <span className={`block ${gradientText}`}>{stop.accent}</span>
-                  </Heading>
-                  <p className="mb-0 mt-4 max-w-xl text-body text-foreground-muted md:text-[1.0625rem]">{stop.body}</p>
-                  {index === 0 && (
-                    <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                      <a href="#whitelist" className={primaryCta}>
-                        Apúntate a la whitelist <ArrowRight aria-hidden className="h-4 w-4" />
-                      </a>
-                      <a href={`#${STOPS[1]?.id}`} className={secondaryCta}>
-                        Ver cómo funciona <ChevronDown aria-hidden className="h-4 w-4" />
-                      </a>
-                    </div>
-                  )}
-                </div>
-                <div className="flight-screen">
-                  <ScreenView />
-                </div>
-              </div>
-            </section>
-          );
-        })}
+              {[...WORDMARK].map((letter, i) => (
+                <span key={i} aria-hidden className={`wordmark-letter ${gradientText}`} style={{ "--i": i } as CSSProperties}>
+                  {letter}
+                </span>
+              ))}
+            </p>
+            <Eyebrow>{HERO.eyebrow}</Eyebrow>
+            <h1
+              id="titulo-inicio"
+              className="m-0 font-heading text-[clamp(1.875rem,5.6vw,3.5rem)] font-bold leading-[1.05] tracking-[-0.03em] text-foreground"
+            >
+              {HERO.title} <span className={`block ${gradientText}`}>{HERO.accent}</span>
+            </h1>
+            <p className="mb-0 mt-4 max-w-xl text-body text-foreground-muted md:text-[1.0625rem]">{HERO.body}</p>
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <a href="#whitelist" className={primaryCta}>
+                Apúntate a la whitelist <ArrowRight aria-hidden className="h-4 w-4" />
+              </a>
+              <a href={`#${CHAPTERS[0]?.stop.id}`} className={secondaryCta}>
+                Ver cómo funciona <ChevronDown aria-hidden className="h-4 w-4" />
+              </a>
+            </div>
+            <div className="is-active mt-6 hidden max-w-md md:block">
+              <HeroScreen />
+            </div>
+          </div>
+        </section>
 
-        {/* Past the flight the page lands on solid ground and covers the stage. */}
-        <div className="flight-site">
+        <section aria-label="Cómo funciona" className="py-10 md:py-24">
+          <Story chapters={CHAPTERS} />
+        </section>
+
+        <div>
           <section id="whitelist" aria-labelledby="titulo-whitelist" className="px-5 pb-20 pt-28 md:px-12">
             <div className="mx-auto grid max-w-5xl items-start gap-10 md:grid-cols-[1.1fr_1fr]">
               <div className="reveal">
