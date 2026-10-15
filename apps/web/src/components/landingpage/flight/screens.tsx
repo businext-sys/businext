@@ -29,7 +29,7 @@ function Item({ at, className = "", children }: { at: number; className?: string
 function Screen({ caption, children }: { caption: string; children: ReactNode }) {
   return (
     <figure className="ui-item m-0 w-full" style={{ "--at": -0.04 } as CSSProperties}>
-      <div className="grid gap-2 rounded-3xl border border-border bg-surface/90 p-3 shadow-lg backdrop-blur-md sm:p-4">
+      <div className="grid gap-2 rounded-3xl border border-border bg-surface/95 p-3 shadow-lg sm:p-4">
         {children}
       </div>
       <figcaption className="mt-1.5 text-caption text-foreground-subtle">{caption}</figcaption>
@@ -50,7 +50,7 @@ function Overview() {
     <ul className="m-0 grid list-none grid-cols-2 gap-2 p-0">
       {pillars.map(({ icon: Icon, text }, i) => (
         <li key={text} className="contents">
-          <Item at={0.04 + i * 0.07} className="flex items-center gap-2 rounded-2xl border border-border bg-surface/80 px-3 py-2.5 backdrop-blur-md">
+          <Item at={0.04 + i * 0.07} className="flex items-center gap-2 rounded-2xl border border-border bg-surface/90 px-3 py-2.5">
             <Icon aria-hidden className="h-4 w-4 shrink-0 text-primary" />
             <span className="text-body-sm text-foreground">{text}</span>
           </Item>

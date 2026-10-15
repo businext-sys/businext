@@ -109,37 +109,41 @@ ver `src/api/auth.py` en `businext-backend`.
 
 ## Landing (`src/app/page.tsx`)
 
-Un vuelo continuo por la barbería enganchado al scroll, con la plantilla
-`narrativa` de `businext-sys/businext-web-system` (piloto `kuberse-web`). Cinco
-paradas: Businext, asistente telefónico con IA, tendencias y publicación
-automática, control con IA y avisos en tiempo real, y reservas y caja. Después
-aterriza en la whitelist (precio tachado, orientativo entre 50 y 70 €/mes), los
-dos anuncios de web (incluida en la suscripción, o solo la web desde 150 €, con
-La Perla y Sito como ejemplos) y las preguntas frecuentes.
+Una portada y cuatro capítulos: asistente telefónico con IA, tendencias y
+publicación automática, control con IA y avisos en tiempo real, y reservas y
+caja. Después, la whitelist (precio tachado, orientativo entre 50 y 70 €/mes),
+los dos anuncios de web (incluida en la suscripción, o solo la web desde 150 €,
+con La Perla y Sito como ejemplos) y las preguntas frecuentes.
 
 - **Guion** en `src/components/landingpage/flight/stops.ts`; pantallas de la app
-  que entran pieza a pieza en `screens.tsx`; el escenario fijo y el scrubbing del
-  vídeo en `FlightStage.tsx`. Cada parada expone `--progress` (0–1) y todo lo que
-  se mueve lo usa: el vídeo, la salida del texto y cada `.ui-item` (`--at`).
+  en `screens.tsx`; los capítulos en `Story.tsx`.
+- **Scroll nativo, nada por fotograma.** El primer concepto movía vídeo, texto y
+  desenfoques con cada fotograma de scroll y se notaba con retraso. Ahora un
+  capítulo se activa una sola vez, al cruzar el centro de la pantalla
+  (`IntersectionObserver`), y ese cambio cambia la escena, reproduce a su
+  velocidad el tramo que vuela hasta ella y monta su pantalla de la app. Todas
+  las transiciones son de opacidad o posición. En escritorio la escena y la
+  pantalla van en un panel fijo junto al texto; en móvil cada capítulo lleva la
+  suya.
 - **Assets por MCP de Comfy**: planchas con Nano Banana Pro y la plancha del
   personaje (`assets-src/landing/character-reference.png`) como referencia; tramos
   con Wan 2.7 de primer a último fotograma, así que cada tramo termina exactamente
   en la plancha siguiente. Todo registrado en `public/assets.manifest.json`; el
   concepto anterior queda archivado ahí con sus prompts e ids.
 - **Vídeo**: `scripts/encode-leg.sh` quita el audio y codifica AV1 para
-  escritorio y H.264 (keyframe cada 4 fotogramas) para móvil. Sin JavaScript, sin
-  clip o con `prefers-reduced-motion` se queda la plancha. El hosting tiene que
-  servir peticiones por rango (`Range`) o el vídeo no se puede buscar.
+  escritorio y H.264 para móvil. Cada tramo se reproduce una vez al llegar a su
+  capítulo; volviendo hacia atrás se queda la plancha. Sin JavaScript, sin clip o
+  con `prefers-reduced-motion` también.
 - **Paleta**: medianoche y zafiro, solo en la landing (`.landing` en
   `globals.css` redefine los tokens; la app conserva los suyos). Los botones usan
   `bg-brand`. Las planchas y los tramos llevan la misma corrección de color
   (cian → zafiro con `huesaturation`, anotada en el manifest) para casar con ella.
-- **Movimiento**: el wordmark de Businext entra letra a letra y se disuelve en la
-  barra de navegación al empezar el vuelo; el texto de cada parada entra
-  escalonado y sale subiendo y desenfocándose; en tendencias flotan los logos
-  reales de TikTok, Instagram y YouTube (`SocialLogo.tsx`, trazados de Simple
-  Icons, CC0); los bloques del final aparecen al entrar en pantalla. Todo se
-  apaga con `prefers-reduced-motion`.
+- **Movimiento**, con cuentagotas: el wordmark de Businext entra letra a letra al
+  cargar y la marca pequeña de la barra aparece al dejar la portada; en
+  escritorio el capítulo activo se ilumina y los demás se atenúan; los bloques
+  del final aparecen al entrar en pantalla. Los logos de TikTok, Instagram y
+  YouTube son los reales (`SocialLogo.tsx`, trazados de Simple Icons, CC0). Todo
+  se apaga con `prefers-reduced-motion`.
 - **Whitelist**: el formulario envía a `/api/whitelist`, que manda un email con el
   mismo transporte de Gmail que `/api/send-contact-email`.
 - **Self-check**: `pnpm check:landing` avisa (no bloquea) de contraste de tokens,

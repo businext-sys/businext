@@ -1,4 +1,5 @@
-// The flight: one continuous shot through the barbershop, scrubbed by the scroll.
+// The story: a hero and four chapters through the same barbershop. Each chapter's clip flies
+// in from the previous plate and plays once when the chapter is reached (Story.tsx).
 // Each stop has a plate (-desktop 16:9, -mobile 9:16) in /public/landing and, except the
 // last, a leg that flies to the next plate in /public/landing/video. Everything generated is
 // registered in /public/assets.manifest.json.
@@ -7,8 +8,6 @@ export type ScreenId = "overview" | "call" | "trends" | "control" | "till";
 
 export type Stop = {
   id: string;
-  /** Short name for the navigation pips. */
-  label: string;
   eyebrow: string;
   title: string;
   accent: string;
@@ -24,7 +23,6 @@ export type Stop = {
 export const STOPS: Stop[] = [
   {
     id: "inicio",
-    label: "Businext",
     eyebrow: "Para barberías",
     title: "Tu barbería contesta, publica y cobra",
     accent: "mientras tú cortas.",
@@ -36,7 +34,6 @@ export const STOPS: Stop[] = [
   },
   {
     id: "llamadas",
-    label: "Asistente telefónico",
     eyebrow: "01 · Asistente telefónico con IA",
     title: "Suena el teléfono.",
     accent: "Lo coge la IA.",
@@ -48,7 +45,6 @@ export const STOPS: Stop[] = [
   },
   {
     id: "tendencias",
-    label: "Tendencias y contenido",
     eyebrow: "02 · Tendencias y contenido",
     title: "Lo que es tendencia,",
     accent: "publicado solo.",
@@ -60,7 +56,6 @@ export const STOPS: Stop[] = [
   },
   {
     id: "control",
-    label: "Control con IA",
     eyebrow: "03 · Control con IA",
     title: "Todo lo que pasa,",
     accent: "te llega al momento.",
@@ -72,7 +67,6 @@ export const STOPS: Stop[] = [
   },
   {
     id: "reservas-y-caja",
-    label: "Reservas y caja",
     eyebrow: "04 · Reservas y caja",
     title: "Y lo de siempre,",
     accent: "funcionando solo.",

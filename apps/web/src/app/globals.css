@@ -235,326 +235,202 @@ h4 {
   background: var(--color-background);
 }
 
-/* ── Landing flight ──
-   One pinned stage scrubbed by the scroll (FlightStage.tsx), the narrative template of
-   businext-sys/businext-web-system. Each stop is only scroll length; its copy sits in a
-   fixed layer over the footage and only the stop on stage shows it. --progress (0–1) is
-   set on each stop by the script, and everything that moves rides it. */
-.flight-stage {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  overflow: hidden;
-  background: var(--color-background);
+/* ── Landing story ──
+   The page scrolls natively and nothing runs per scroll frame: a chapter turns active once
+   (Story.tsx) and everything below is a transition on opacity or transform, which the
+   compositor handles on its own. Clips play at their own speed, they are never scrubbed. */
+.hero-plate {
+  object-position: 50% 100%;
+  animation: hero-settle 2.2s var(--ease-fluid) both;
 }
 
-.flight-landed .flight-stage,
-.flight-landed .flight-pips {
-  visibility: hidden;
+@keyframes hero-settle {
+  from {
+    opacity: 0;
+    scale: 1.06;
+  }
 }
 
-.flight-panel {
-  position: absolute;
-  inset: 0;
+/* Keeps the copy above AA over any part of the plate: the top on a phone, the left on desktop. */
+.hero-scrim {
+  background: linear-gradient(
+    to bottom,
+    rgb(10 12 22 / 0.95) 0%,
+    rgb(10 12 22 / 0.75) 48%,
+    transparent 72%,
+    var(--color-background) 100%
+  );
+}
+
+.hero-copy > * {
+  animation: rise 800ms var(--ease-fluid) both;
+}
+
+.hero-copy > :nth-child(2) {
+  animation-delay: 450ms;
+}
+
+.hero-copy > :nth-child(3) {
+  animation-delay: 540ms;
+}
+
+.hero-copy > :nth-child(n + 4) {
+  animation-delay: 630ms;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    translate: 0 1.25rem;
+  }
+}
+
+/* The wordmark's letters rise in one after another on load. */
+.wordmark-letter {
+  display: inline-block;
+  animation: rise 800ms var(--ease-fluid) both;
+  animation-delay: calc(100ms + var(--i) * 50ms);
+}
+
+.nav-brand {
   opacity: 0;
-  transition: opacity 160ms linear;
+  transition: opacity 400ms var(--ease-fluid);
 }
 
-.flight-panel.is-on {
+.past-hero .nav-brand {
   opacity: 1;
 }
 
-.flight-panel img,
-.flight-panel video {
+/* Past the hero the bar gets a solid ground so it never sits on top of a scene. */
+.site-nav {
+  border-bottom: 1px solid transparent;
+  transition:
+    background-color 400ms var(--ease-fluid),
+    border-color 400ms var(--ease-fluid);
+}
+
+.past-hero .site-nav {
+  background-color: rgb(10 12 22 / 0.94);
+  border-bottom-color: var(--color-border-subtle);
+}
+
+@media (min-width: 48rem) {
+  .hero-plate {
+    object-position: 70% 50%;
+  }
+
+  .hero-scrim {
+    background:
+      linear-gradient(to top, var(--color-background) 0%, transparent 22%),
+      linear-gradient(to right, rgb(10 12 22 / 0.95) 0%, rgb(10 12 22 / 0.78) 32%, rgb(10 12 22 / 0.2) 55%, transparent 65%);
+  }
+}
+
+.story-scene img,
+.story-scene video,
+.story-layer img,
+.story-layer video {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 100%;
+  object-position: 50% 85%;
 }
 
-/* The clip only shows once it has a frame: a slow load leaves the plate. */
-.flight-panel video {
+.story-layer img,
+.story-layer video {
+  object-position: 70% 50%;
+}
+
+/* A clip shows only once it is playing; until then the chapter's own plate is there. */
+.story-scene video,
+.story-layer video {
   opacity: 0;
-  transition: opacity 150ms linear;
+  transition: opacity 200ms linear;
 }
 
-.flight-panel video.is-ready {
+.story-scene video.is-playing,
+.story-layer video.is-playing {
   opacity: 1;
 }
 
-.flight-stop {
-  --progress: 0;
-  position: relative;
-  z-index: 10;
-  min-height: 220svh;
-}
-
-/* No leg after the last stop: extra room so its screen completes before the site covers it. */
-.flight-stop:last-of-type {
-  min-height: 320svh;
-}
-
-/* Scrim stops keep the copy above AA over any part of the footage: the copy area is the
-   top of the 9:16 plates and the left of the 16:9 ones, both kept empty by the prompts. */
-.flight-copy {
-  position: fixed;
+.story-layer {
+  position: absolute;
   inset: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  padding: 5.25rem 1.25rem 1.25rem;
-  background: linear-gradient(
-    to bottom,
-    rgb(10 12 22 / 0.94) 0%,
-    rgb(10 12 22 / 0.7) 34%,
-    transparent 52%,
-    transparent 62%,
-    rgb(10 12 22 / 0.6) 100%
-  );
-  text-shadow: 0 1px 2px rgb(10 12 22 / 0.7);
   opacity: 0;
-  visibility: hidden;
+  transition: opacity 600ms var(--ease-fluid);
+}
+
+.story-layer.is-active {
+  opacity: 1;
+}
+
+.story-screens {
+  display: grid;
+}
+
+.story-screen {
+  grid-area: 1 / 1;
+  align-self: end;
+  opacity: 0;
+  translate: 0 1rem;
   pointer-events: none;
-  transition:
-    opacity 320ms linear,
-    visibility 0s linear 320ms;
-}
-
-/* Each line of a stop arrives on its own beat when the stop takes the stage, and leaves
-   rising and blurring over the last stretch of the leg. */
-.flight-text > * {
-  opacity: 0;
-  translate: 0 1.5rem;
-  filter: blur(6px);
-  transition:
-    opacity 700ms var(--ease-fluid),
-    translate 700ms var(--ease-fluid),
-    filter 700ms var(--ease-fluid);
-}
-
-.flight-stop.is-current .flight-text > * {
-  opacity: 1;
-  translate: 0 0;
-  filter: none;
-}
-
-.flight-stop.is-current .flight-text > :nth-child(2) {
-  transition-delay: 90ms;
-}
-
-.flight-stop.is-current .flight-text > :nth-child(3) {
-  transition-delay: 180ms;
-}
-
-.flight-stop.is-current .flight-text > :nth-child(n + 4) {
-  transition-delay: 270ms;
-}
-
-.flight-stop.is-on .flight-text,
-.flight-stop.is-on .flight-screen {
-  --leave: max(0, var(--progress) - 0.74);
-  transform: translateY(calc(var(--leave) * -14rem));
-  filter: blur(calc(var(--leave) * 28px));
-}
-
-.flight-stop.is-on .flight-copy {
-  /* Out over the last stretch of the leg, so the next stop takes over. */
-  opacity: clamp(0, (1 - var(--progress)) * 8, 1);
-  visibility: visible;
-  pointer-events: auto;
-  transition: opacity 320ms linear;
-}
-
-.flight-screen {
-  margin-top: auto;
-  width: 100%;
-  max-width: 26rem;
-  text-shadow: none;
-  /* A phone keeps the scene visible above the screen: the whole preview, a size smaller. */
-  zoom: 0.8;
-}
-
-/* Gradient text is transparent: a shadow behind it would show through and muddy it. */
-.flight-copy .bg-clip-text {
-  text-shadow: none;
-}
-
-@media (min-width: 48rem) {
-  .flight-panel img,
-  .flight-panel video {
-    object-position: 70% 50%;
-  }
-
-  .flight-copy {
-    justify-content: center;
-    padding: 6rem 3rem 3rem clamp(3rem, 7vw, 8rem);
-    background: linear-gradient(
-      to right,
-      rgb(10 12 22 / 0.95) 0%,
-      rgb(10 12 22 / 0.78) 30%,
-      rgb(10 12 22 / 0.2) 52%,
-      transparent 62%
-    );
-  }
-
-  .flight-text {
-    max-width: min(34rem, 44vw);
-  }
-
-  .flight-screen {
-    margin-top: 0;
-    max-width: min(26rem, 40vw);
-    zoom: 1;
-  }
-}
-
-/* App pieces land one by one at their --at share of the stop, compressed so the screen is
-   full well before the copy leaves. */
-.ui-item {
-  --arrive: calc(var(--at) * 0.7);
-  opacity: clamp(0, (var(--progress) - var(--arrive)) * 10, 1);
-  translate: 0 calc(clamp(0, (var(--arrive) - var(--progress)) * 10, 1) * 1rem);
-}
-
-.ui-bar {
-  width: calc(clamp(0, (var(--progress) - var(--arrive)) * 5, 1) * var(--w) * 100%);
-}
-
-.ui-bar-v {
-  height: calc(clamp(0.08, (var(--progress) - var(--arrive)) * 5, 1) * var(--h) * 100%);
-}
-
-/* The first stop is on stage before any scroll: its pieces rise in on load instead. */
-.flight-stop:first-of-type .ui-item {
-  opacity: 1;
-  translate: none;
-  animation: flight-rise 620ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
-  animation-delay: calc(300ms + var(--at) * 2400ms);
-}
-
-@keyframes flight-rise {
-  from {
-    opacity: 0;
-    translate: 0 1rem;
-  }
-}
-
-.flight-pips {
-  position: fixed;
-  right: 1.25rem;
-  top: 50%;
-  z-index: 20;
-  display: none;
-  flex-direction: column;
-  gap: 0.75rem;
-  translate: 0 -50%;
-}
-
-@media (min-width: 48rem) {
-  .flight-pips {
-    display: flex;
-  }
-}
-
-.flight-pip {
-  width: 0.625rem;
-  height: 0.625rem;
-  border-radius: 999px;
-  border: 1px solid var(--color-foreground-muted);
-  transition: background-color 200ms linear;
-}
-
-.flight-pip[aria-current="true"] {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-}
-
-.flight-pip:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 3px;
-}
-
-/* Past the flight the page lands on solid ground, over the stage. */
-.flight-site {
-  position: relative;
-  z-index: 20;
-  background: var(--color-background);
-}
-
-/* The Businext wordmark: its letters rise in on load, and as the first leg flies it lifts,
-   shrinks and dissolves while the small mark in the navigation takes over. */
-.wordmark-letter {
-  display: inline-block;
-  animation: wordmark-in 900ms var(--ease-fluid) both;
-  animation-delay: calc(120ms + var(--i) * 55ms);
-}
-
-@keyframes wordmark-in {
-  from {
-    opacity: 0;
-    translate: 0 0.6em;
-    filter: blur(10px);
-  }
-}
-
-.flight-stop:first-of-type .wordmark {
-  transform-origin: left bottom;
-  transform: translateY(calc(var(--progress) * -18vh)) scale(calc(1 - var(--progress) * 0.5));
-  opacity: clamp(0, 1 - var(--progress) * 3.2, 1);
-  filter: blur(calc(var(--progress) * 24px));
-}
-
-.nav-brand {
-  opacity: 0;
-  translate: 0 -0.5rem;
   transition:
     opacity 500ms var(--ease-fluid),
     translate 500ms var(--ease-fluid);
 }
 
-.flight-past-hero .nav-brand {
+.story-screen.is-active {
+  opacity: 1;
+  translate: 0 0;
+  pointer-events: auto;
+}
+
+@media (min-width: 48rem) {
+  .story-copy {
+    opacity: 0.35;
+    transition: opacity 500ms var(--ease-fluid);
+  }
+
+  .story-chapter.is-active .story-copy {
+    opacity: 1;
+  }
+}
+
+/* App pieces assemble one after another, in --at order, when their chapter turns active. */
+.ui-item {
+  opacity: 0;
+  translate: 0 0.75rem;
+  transition:
+    opacity 450ms var(--ease-fluid),
+    translate 450ms var(--ease-fluid);
+  transition-delay: max(0s, var(--at) * 1.6s);
+}
+
+.is-active .ui-item {
   opacity: 1;
   translate: 0 0;
 }
 
-/* Real network logos drifting through the trends stop: in with the leg, out before it ends. */
-.flight-float {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+.ui-bar {
+  width: 0;
+  transition: width 900ms var(--ease-fluid);
+  transition-delay: calc(var(--at) * 1.6s + 250ms);
 }
 
-.flight-float > * {
-  position: absolute;
-  /* On a phone the open band of the scene sits between the copy and the app screen. */
-  left: calc(var(--x) - 12%);
-  top: calc(36% + var(--y) * 0.22);
-  opacity: clamp(0, min((var(--progress) - var(--in)) * 6, (0.8 - var(--progress)) * 6), 1);
-  transform: translateY(calc((var(--progress) - 0.4) * -26vh * var(--depth)))
-    scale(calc(0.85 + var(--depth) * 0.15));
-  filter: drop-shadow(0 10px 24px rgb(0 0 0 / 0.45));
+.is-active .ui-bar {
+  width: calc(var(--w) * 100%);
 }
 
-.flight-float > * > * {
-  animation: float-bob 4.8s ease-in-out infinite alternate;
-  animation-delay: calc(var(--in) * -20s);
+.ui-bar-v {
+  height: 8%;
+  transition: height 900ms var(--ease-fluid);
+  transition-delay: calc(var(--at) * 1.6s + 250ms);
 }
 
-@media (min-width: 48rem) {
-  .flight-float > * {
-    left: var(--x);
-    top: var(--y);
-  }
-}
-
-@keyframes float-bob {
-  to {
-    translate: 0 -10px;
-    rotate: 4deg;
-  }
+.is-active .ui-bar-v {
+  height: calc(var(--h) * 100%);
 }
 
 /* A live dot that breathes. */
@@ -569,54 +445,30 @@ h4 {
   }
 }
 
-/* Past the flight, blocks rise in as they scroll into view. Without scroll timelines they
-   are simply there. */
+/* Past the story, blocks rise in as they scroll into view. Without scroll timelines they are
+   simply there. */
 @supports (animation-timeline: view()) {
   .reveal {
-    animation: reveal linear both;
+    animation: rise linear both;
     animation-timeline: view();
-    animation-range: entry 5% entry 45%;
-  }
-}
-
-@keyframes reveal {
-  from {
-    opacity: 0;
-    translate: 0 2.5rem;
-    filter: blur(6px);
+    animation-range: entry 5% entry 40%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ui-item,
-  .flight-stop:first-of-type .ui-item,
-  .flight-text > *,
+  .hero-plate,
+  .hero-copy > *,
   .wordmark-letter,
-  .reveal {
-    opacity: 1;
-    translate: none;
-    filter: none;
-    animation: none;
-    transition: none;
-  }
-
-  .flight-stop.is-on .flight-text,
-  .flight-stop.is-on .flight-screen,
-  .flight-stop:first-of-type .wordmark {
-    transform: none;
-    filter: none;
-  }
-
-  .flight-float > * > *,
+  .reveal,
   .live-dot {
     animation: none;
   }
 
-  .ui-bar {
-    width: calc(var(--w) * 100%);
-  }
-
-  .ui-bar-v {
-    height: calc(var(--h) * 100%);
+  .ui-item,
+  .ui-bar,
+  .ui-bar-v,
+  .story-screen,
+  .story-layer {
+    transition: none;
   }
 }

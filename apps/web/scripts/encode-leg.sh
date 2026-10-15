@@ -11,9 +11,8 @@
 #
 # Phone (<out>.mp4): H.264 at 540x960 and 24 fps, capped at 520 kb/s. Most iPhones cannot
 # decode AV1, so the codec every phone decodes in hardware wins over the one that compresses
-# best. A keyframe every fourth frame and no B-frames: the phone seeks the clip with the
-# scroll (FlightStage.tsx), and each seek decodes from the last keyframe — with the
-# default GOP that was up to a second of footage per seek, and the picture lagged the text.
+# best. A keyframe every fourth frame and no B-frames, from when the clips were seeked with
+# the scroll; they only play now, so a longer GOP would also do.
 # ~370 KB per clip.
 #
 # Usage: apps/web/scripts/encode-leg.sh <in> <out.webm|out.mp4>   (FFMPEG=/path/to/ffmpeg to pick a binary)
