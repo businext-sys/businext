@@ -203,26 +203,229 @@ h4 {
   display: none;
 }
 
-/* ── Landing story: reveal on scroll ──
-   CSS scroll-driven animation, no JS. Browsers without animation-timeline and
-   visitors who ask for reduced motion just get the content in place. */
-@keyframes story-reveal {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
+/* ── Landing flight ──
+   One pinned stage scrubbed by the scroll (FlightStage.tsx), the narrative template of
+   businext-sys/businext-web-system. Each stop is only scroll length; its copy sits in a
+   fixed layer over the footage and only the stop on stage shows it. --progress (0–1) is
+   set on each stop by the script, and everything that moves rides it. */
+.flight-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--color-background);
+}
+
+.flight-landed .flight-stage,
+.flight-landed .flight-pips {
+  visibility: hidden;
+}
+
+.flight-panel {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 160ms linear;
+}
+
+.flight-panel.is-on {
+  opacity: 1;
+}
+
+.flight-panel img,
+.flight-panel video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 100%;
+}
+
+/* The clip only shows once it has a frame: a slow load leaves the plate. */
+.flight-panel video {
+  opacity: 0;
+  transition: opacity 150ms linear;
+}
+
+.flight-panel video.is-ready {
+  opacity: 1;
+}
+
+.flight-stop {
+  --progress: 0;
+  position: relative;
+  z-index: 10;
+  min-height: 220svh;
+}
+
+/* No leg after the last stop: extra room so its screen completes before the site covers it. */
+.flight-stop:last-of-type {
+  min-height: 320svh;
+}
+
+/* Scrim stops keep the copy above AA over any part of the footage: the copy area is the
+   top of the 9:16 plates and the left of the 16:9 ones, both kept empty by the prompts. */
+.flight-copy {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 5.25rem 1.25rem 1.25rem;
+  background: linear-gradient(
+    to bottom,
+    rgb(12 17 23 / 0.94) 0%,
+    rgb(12 17 23 / 0.7) 34%,
+    transparent 52%,
+    transparent 62%,
+    rgb(12 17 23 / 0.6) 100%
+  );
+  text-shadow: 0 1px 2px rgb(12 17 23 / 0.7);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 320ms linear,
+    visibility 0s linear 320ms;
+}
+
+.flight-stop.is-on .flight-copy {
+  /* Out over the last stretch of the leg, so the next stop takes over. */
+  opacity: clamp(0, (1 - var(--progress)) * 8, 1);
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 320ms linear;
+}
+
+.flight-screen {
+  margin-top: auto;
+  width: 100%;
+  max-width: 26rem;
+  text-shadow: none;
+  /* A phone keeps the scene visible above the screen: the whole preview, a size smaller. */
+  zoom: 0.8;
+}
+
+/* Gradient text is transparent: a shadow behind it would show through and muddy it. */
+.flight-copy .bg-clip-text {
+  text-shadow: none;
+}
+
+@media (min-width: 48rem) {
+  .flight-panel img,
+  .flight-panel video {
+    object-position: 70% 50%;
   }
-  to {
-    opacity: 1;
-    transform: none;
+
+  .flight-copy {
+    justify-content: center;
+    padding: 6rem 3rem 3rem clamp(3rem, 7vw, 8rem);
+    background: linear-gradient(
+      to right,
+      rgb(12 17 23 / 0.95) 0%,
+      rgb(12 17 23 / 0.78) 30%,
+      rgb(12 17 23 / 0.2) 52%,
+      transparent 62%
+    );
+  }
+
+  .flight-text {
+    max-width: min(34rem, 44vw);
+  }
+
+  .flight-screen {
+    margin-top: 0;
+    max-width: min(26rem, 40vw);
+    zoom: 1;
   }
 }
 
-@supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) {
-    .story-reveal {
-      animation: story-reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 40%;
-    }
+/* App pieces land one by one at their --at share of the stop. */
+.ui-item {
+  opacity: clamp(0, (var(--progress) - var(--at)) * 9, 1);
+  translate: 0 calc(clamp(0, (var(--at) - var(--progress)) * 9, 1) * 1rem);
+}
+
+.ui-bar {
+  width: calc(clamp(0, (var(--progress) - var(--at)) * 4, 1) * var(--w) * 100%);
+}
+
+.ui-bar-v {
+  height: calc(clamp(0.08, (var(--progress) - var(--at)) * 4, 1) * var(--h) * 100%);
+}
+
+/* The first stop is on stage before any scroll: its pieces rise in on load instead. */
+.flight-stop:first-of-type .ui-item {
+  opacity: 1;
+  translate: none;
+  animation: flight-rise 620ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  animation-delay: calc(300ms + var(--at) * 2400ms);
+}
+
+@keyframes flight-rise {
+  from {
+    opacity: 0;
+    translate: 0 1rem;
+  }
+}
+
+.flight-pips {
+  position: fixed;
+  right: 1.25rem;
+  top: 50%;
+  z-index: 20;
+  display: none;
+  flex-direction: column;
+  gap: 0.75rem;
+  translate: 0 -50%;
+}
+
+@media (min-width: 48rem) {
+  .flight-pips {
+    display: flex;
+  }
+}
+
+.flight-pip {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-foreground-muted);
+  transition: background-color 200ms linear;
+}
+
+.flight-pip[aria-current="true"] {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.flight-pip:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
+/* Past the flight the page lands on solid ground, over the stage. */
+.flight-site {
+  position: relative;
+  z-index: 20;
+  background: var(--color-background);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ui-item,
+  .flight-stop:first-of-type .ui-item {
+    opacity: 1;
+    translate: none;
+    animation: none;
+  }
+
+  .ui-bar {
+    width: calc(var(--w) * 100%);
+  }
+
+  .ui-bar-v {
+    height: calc(var(--h) * 100%);
   }
 }
