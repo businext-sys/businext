@@ -11,3 +11,8 @@ apps/web/out/
 # Entornos locales
 .env
 .env.local
+
+
+# APM dependencies
+apm_modules/
+.claude/
