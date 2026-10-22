@@ -144,3 +144,28 @@ que crearla a mano en Supabase.
   dominio: Completar / Revertir / Eliminar. El modelo no tiene un estado
   "cancelada" distinto (ver la nota en el propio archivo).
 - **Login** (issue #029) — Supabase Auth con token en `expo-secure-store`.
+
+## Tests E2E (Maestro, issue #85)
+
+Flows del chat en `.maestro/flows/` (el login es el subflow
+`.maestro/subflows/login.yaml`):
+
+- `chat-reservas-hoy.yaml` — chip «Reservas de hoy» → tarjeta de reservas.
+- `chat-confirmar-cancelacion.yaml` — pedir una cancelacion → Confirmar →
+  «Confirmada».
+- `chat-aceptar-solicitud.yaml` — chip «Solicitudes pendientes» → Aceptar →
+  «Aceptada».
+
+Cada flow espera el `testID` de su tarjeta (`card-reservation-list`,
+`card-confirmation`, `card-booking-request`), asi que falla si un chip deja de
+devolverla. Necesitan un build con el chat activo instalado en un emulador o
+dispositivo, un usuario de prueba con reservas y solicitudes, y un backend con
+el LLM mockeado para que las respuestas sean deterministas:
+
+```bash
+maestro test -e MAESTRO_EMAIL=<email> -e MAESTRO_PASSWORD=<password> apps/mobile/.maestro/flows
+```
+
+**Pendiente:** ejecutarlos en CI depende de la base de Maestro y del workflow
+`qa-mobile.yml` (issue #32) y del backend con el LLM mockeado.
+
