@@ -1,8 +1,13 @@
-import { useState } from "react";
-import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { useRef } from "react";
+import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
+import type { ChatMessage } from "@businext/shared-core/assistant";
 import { useAssistantChat } from "@businext/shared-core/hooks";
+import { ChatErrorBanner } from "@/components/chat/ChatErrorBanner";
 import { ChatHeader } from "@/components/chat/ChatHeader";
+import { ChatInput } from "@/components/chat/ChatInput";
+import { MessageBubble } from "@/components/chat/MessageBubble";
+import { TypingIndicator } from "@/components/chat/TypingIndicator";
 import { useAuth } from "@/context/AuthContext";
 import { usePushRegistration } from "@/hooks/usePushRegistration";
 import { assistantClient } from "@/lib/assistantClient";
@@ -16,15 +21,17 @@ export default function ChatScreen() {
   const { logout } = useAuth();
   const pushState = usePushRegistration();
   const chat = useAssistantChat({ client: assistantClient });
-  const [draft, setDraft] = useState("");
+  const listRef = useRef<FlatList<ChatMessage>>(null);
 
-  const send = () => {
-    chat.send(draft);
-    setDraft("");
-  };
+  const lastMessage = chat.messages[chat.messages.length - 1];
+  const waitingForText =
+    chat.status === "streaming" && (lastMessage?.role !== "assistant" || chat.activity !== null);
 
   return (
-    <View style={styles.flex}>
+    <KeyboardAvoidingView
+      style={styles.flex}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
+    >
       <ChatHeader
         menuItems={[
           { label: "Nueva conversación", onPress: () => chat.reset() },
@@ -41,29 +48,31 @@ export default function ChatScreen() {
       )}
 
       <FlatList
+        ref={listRef}
         data={chat.messages}
         keyExtractor={(message) => message.id}
-        renderItem={({ item }) => (
-          <Text style={styles.message}>
-            {item.blocks.map((block) => (block.type === "text" ? block.text : "")).join("\n")}
+        renderItem={({ item }) => <MessageBubble message={item} />}
+        onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: true })}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="interactive"
+        contentContainerStyle={chat.messages.length === 0 ? styles.emptyContainer : styles.list}
+        ListEmptyComponent={
+          <Text style={styles.empty} accessibilityRole="header">
+            ¿En qué te ayudo hoy?
           </Text>
-        )}
-        ListEmptyComponent={<Text style={styles.empty}>¿En qué te ayudo hoy?</Text>}
+        }
+        ListFooterComponent={
+          <>
+            {waitingForText && <TypingIndicator activity={chat.activity} />}
+            {chat.status === "error" && chat.error && (
+              <ChatErrorBanner message={chat.error} onRetry={chat.retry} />
+            )}
+          </>
+        }
       />
 
-      <View style={styles.inputBar}>
-        <TextInput
-          style={styles.input}
-          value={draft}
-          onChangeText={setDraft}
-          placeholder="Escribe un mensaje"
-          placeholderTextColor={colors.foregroundSubtle}
-        />
-        <Pressable style={styles.sendButton} onPress={send} accessibilityRole="button">
-          <Text style={styles.sendText}>Enviar</Text>
-        </Pressable>
-      </View>
-    </View>
+      <ChatInput streaming={chat.status === "streaming"} onSend={chat.send} onStop={chat.stop} />
+    </KeyboardAvoidingView>
   );
 }
 
@@ -78,40 +87,16 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.accentForeground,
   },
-  message: {
-    color: colors.foreground,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+  list: { paddingVertical: 12 },
+  emptyContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24,
   },
   empty: {
-    color: colors.foregroundMuted,
-    textAlign: "center",
-    marginTop: 48,
-    fontSize: 18,
-  },
-  inputBar: {
-    flexDirection: "row",
-    gap: 8,
-    padding: 12,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-  },
-  input: {
-    flex: 1,
     color: colors.foreground,
-    backgroundColor: colors.surface,
-    borderRadius: 20,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-  },
-  sendButton: {
-    justifyContent: "center",
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    backgroundColor: colors.primary,
-  },
-  sendText: {
-    color: colors.primaryForeground,
+    textAlign: "center",
+    fontSize: 22,
     fontWeight: "700",
   },
 });
