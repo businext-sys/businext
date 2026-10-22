@@ -120,7 +120,11 @@ que crearla a mano en Supabase.
   escribiendo/herramienta, input con enviar y parar, error con reintento y
   chips de acciones rapidas (`quickActionsFor` de shared-core, por rol) en el
   estado vacio y sobre el input; las `quick_replies` del asistente tambien se
-  muestran como chips.
+  muestran como chips. Los bloques ricos son tarjetas nativas en
+  `src/components/chat/cards/`: reservas (abren `reservation/[id]`), caja
+  (balance, ingresos frente a gastos y comparativa), solicitud de reserva
+  (Aceptar/Rechazar contra `/booking-requests`) y confirmacion de acciones
+  (Confirmar/Cancelar llama a `confirm` del chat).
   Colores de `src/theme/colors.ts` (paleta BN de la web). Sin tabs: el menu de la
   cabecera lleva a nueva conversacion, agenda, ajustes y cerrar sesion. Si
   `EXPO_PUBLIC_ASSISTANT_CHAT=false` (hoy en los perfiles `preview` y

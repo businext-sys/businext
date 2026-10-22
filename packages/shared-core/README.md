@@ -67,7 +67,7 @@ se regenera `generated-types.ts` y se contrasta con estos schemas.
 |---|---|
 | `text` | `text` |
 | `reservation_list` | `title \| null`, `reservations[]: { id, client_name, service, start_time, end_time \| null, employee_name \| null, status }` |
-| `cash_summary` | `period_label`, `total_income`, `total_expense`, `balance`, `currency` |
+| `cash_summary` | `period_label`, `total_income`, `total_expense`, `balance`, `previous_balance?` (periodo anterior, para la comparativa), `currency` |
 | `booking_request` | `request: { id, client_name, service, requested_date, employee_name \| null, status }` |
 | `confirmation` | `action_id`, `title`, `description`, `status: pending \| confirmed \| cancelled \| expired` |
 | `quick_replies` | `options[]: { label, message }` |
