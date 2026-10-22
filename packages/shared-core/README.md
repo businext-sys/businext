@@ -101,6 +101,10 @@ backend en cada herramienta.
 `POST /assistant/actions/{action_id}/confirm` responden en SSE;
 `GET /assistant/conversations`, `GET` y `DELETE /assistant/conversations/{id}`.
 
+**Historial:** `useAssistantConversations({ client })` lista las
+conversaciones (SWR) y `deleteConversation(id)` las borra de forma optimista,
+con rollback si falla.
+
 **Uso:** `useAssistantChat({ client })` (de `@businext/shared-core/hooks`)
 devuelve `messages`, `status` (`idle` | `streaming` | `error`), `error`
 (distingue sin conexion de un fallo del servidor), `activity` (la
