@@ -3,6 +3,7 @@ import * as Notifications from "expo-notifications";
 import { useRouter } from "expo-router";
 import { useAccessContext } from "@businext/shared-core/hooks";
 import { pushTokenApi } from "@businext/shared-core/api";
+import { assistantChatEnabled } from "@/lib/featureFlags";
 import { registerForPushNotificationsAsync } from "@/lib/pushNotifications";
 
 export type PushRegistrationState =
@@ -56,23 +57,37 @@ export function usePushRegistration(): PushRegistrationState {
     });
   }, [context]);
 
-  // Deep link: al tocar una notificacion de nueva solicitud de reserva.
+  // Deep link al tocar una notificacion. `useLastNotificationResponse`
+  // incluye la que abrio la app estando cerrada, no solo las recibidas con
+  // la app viva.
+  const lastResponse = Notifications.useLastNotificationResponse();
+  const handledRef = useRef<string | null>(null);
+
   useEffect(() => {
-    const subscription = Notifications.addNotificationResponseReceivedListener(
-      (response) => {
-        const data = response.notification.request.content.data as
-          | { type?: string; bookingRequestId?: number }
-          | undefined;
-        if (data?.type === "booking_request") {
-          // NOTA: no existe todavia una pantalla de detalle de
-          // BookingRequest en mobile (solo de Reservation, ver #030) —
-          // se navega a la Agenda como destino razonable mientras tanto.
-          router.push("/");
-        }
-      }
-    );
-    return () => subscription.remove();
-  }, [router]);
+    if (
+      !lastResponse ||
+      lastResponse.actionIdentifier !== Notifications.DEFAULT_ACTION_IDENTIFIER
+    ) {
+      return;
+    }
+    const notificationId = lastResponse.notification.request.identifier;
+    if (handledRef.current === notificationId) return;
+    handledRef.current = notificationId;
+    Notifications.clearLastNotificationResponse();
+
+    const data = lastResponse.notification.request.content.data as
+      | { type?: string; bookingRequestId?: number; conversationId?: string }
+      | undefined;
+    if (assistantChatEnabled && data?.conversationId) {
+      router.navigate({ pathname: "/", params: { conversation: data.conversationId } });
+    } else if (data?.type === "booking_request") {
+      router.navigate(
+        assistantChatEnabled && data.bookingRequestId
+          ? { pathname: "/", params: { bookingRequest: String(data.bookingRequestId) } }
+          : "/"
+      );
+    }
+  }, [lastResponse, router]);
 
   return state;
 }

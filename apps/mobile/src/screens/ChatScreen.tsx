@@ -10,8 +10,12 @@ import {
   View,
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { assistantApi } from "@businext/shared-core/api";
-import { quickActionsFor, type ChatMessage } from "@businext/shared-core/assistant";
+import { assistantApi, bookingRequestApi } from "@businext/shared-core/api";
+import {
+  bookingRequestContextMessage,
+  quickActionsFor,
+  type ChatMessage,
+} from "@businext/shared-core/assistant";
 import { useAccessContext, useAssistantChat } from "@businext/shared-core/hooks";
 import { ChatErrorBanner } from "@/components/chat/ChatErrorBanner";
 import { ChatHeader } from "@/components/chat/ChatHeader";
@@ -33,7 +37,10 @@ export default function ChatScreen() {
   const pushState = usePushRegistration();
   const chat = useAssistantChat({ client: assistantClient });
   const listRef = useRef<FlatList<ChatMessage>>(null);
-  const { conversation } = useLocalSearchParams<{ conversation?: string }>();
+  const { conversation, bookingRequest } = useLocalSearchParams<{
+    conversation?: string;
+    bookingRequest?: string;
+  }>();
   const [loadingConversation, setLoadingConversation] = useState(false);
   const { reset } = chat;
 
@@ -51,6 +58,21 @@ export default function ChatScreen() {
       .catch(() => Alert.alert("No se ha podido abrir la conversación."))
       .finally(() => setLoadingConversation(false));
   }, [conversation, reset, router]);
+
+  useEffect(() => {
+    if (!bookingRequest) return;
+    router.setParams({ bookingRequest: undefined });
+    setLoadingConversation(true);
+    bookingRequestApi
+      .list()
+      .then((requests) => {
+        const request = requests.find((r) => String(r.id) === bookingRequest);
+        if (!request) throw new Error("not found");
+        reset({ messages: [bookingRequestContextMessage(request)] });
+      })
+      .catch(() => Alert.alert("No se ha podido abrir la solicitud de reserva."))
+      .finally(() => setLoadingConversation(false));
+  }, [bookingRequest, reset, router]);
 
   const { context } = useAccessContext();
   const quickActions = quickActionsFor(context?.capabilities ?? null);
