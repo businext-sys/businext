@@ -19,14 +19,16 @@
         "simulator": false
       },
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://businext-backend.onrender.com"
+        "EXPO_PUBLIC_API_BASE_URL": "https://businext-backend.onrender.com",
+        "EXPO_PUBLIC_ASSISTANT_CHAT": "false"
       }
     },
     "production": {
       "autoIncrement": true,
       "channel": "production",
       "env": {
-        "EXPO_PUBLIC_API_BASE_URL": "https://businext-backend.onrender.com"
+        "EXPO_PUBLIC_API_BASE_URL": "https://businext-backend.onrender.com",
+        "EXPO_PUBLIC_ASSISTANT_CHAT": "false"
       }
     }
   },

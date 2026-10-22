@@ -72,6 +72,9 @@ const config: ExpoConfig = {
     // Publicas por diseno (anon key), no son secretas.
     supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL ?? "",
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "",
+    // Chat del asistente como home (issue #78). Activo salvo que se
+    // apague explicitamente; ver src/lib/featureFlags.ts.
+    assistantChatEnabled: process.env.EXPO_PUBLIC_ASSISTANT_CHAT !== "false",
     ...(EAS_PROJECT_ID ? { eas: { projectId: EAS_PROJECT_ID } } : {}),
   },
 };
