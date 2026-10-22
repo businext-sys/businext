@@ -88,6 +88,19 @@ desconocidos, que se ignoran.
 `ConversationSummary { id, title, last_message_preview \| null, updated_at }` y
 `Conversation { id, title, messages, updated_at }`.
 
+**Endpoints** (`assistantApi`, issue #76): `POST /assistant/chat` y
+`POST /assistant/actions/{action_id}/confirm` responden en SSE;
+`GET /assistant/conversations`, `GET` y `DELETE /assistant/conversations/{id}`.
+
+**Uso:** `useAssistantChat({ client })` (de `@businext/shared-core/hooks`)
+devuelve `messages`, `status` (`idle` | `streaming` | `error`), `error`,
+`conversationId`, `send`, `confirm`, `stop` y `retry`. La logica vive en
+`createAssistantChat` (`@businext/shared-core/assistant`), sin React, y es lo
+que cubren los tests. Reintenta solo si la peticion falla antes de recibir
+eventos (red o 5xx). En mobile se le pasa `assistantClient`
+(`apps/mobile/src/lib/assistantClient.ts`), creado con `expo/fetch`, porque el
+`fetch` global de React Native no expone el body como stream.
+
 ## Generacion de tipos desde OpenAPI (issue #018)
 
 `src/api/generated-types.ts` **se genera automaticamente** desde el OpenAPI
