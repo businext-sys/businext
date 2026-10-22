@@ -15,4 +15,7 @@ apps/web/out/
 
 # APM dependencies
 apm_modules/
-.claude/
+# .claude/ lo genera apm install; solo se versionan el hook de sesion y su settings
+.claude/*
+!.claude/settings.json
+!.claude/hooks/
