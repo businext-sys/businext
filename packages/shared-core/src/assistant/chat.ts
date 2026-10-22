@@ -12,6 +12,7 @@ export type AssistantChatState = {
   messages: ChatMessage[];
   status: AssistantChatStatus;
   error: string | null;
+  activity: string | null;
 };
 
 export type AssistantChatTransport = {
@@ -41,7 +42,8 @@ export type AssistantChat = {
   reset(conversation?: { id: string; messages: ChatMessage[] }): void;
 };
 
-export const ASSISTANT_ERROR_TEXT = "No se ha podido conectar con el asistente.";
+export const ASSISTANT_ERROR_TEXT = "El asistente no ha podido responder.";
+export const ASSISTANT_OFFLINE_TEXT = "Sin conexión. Revisa tu red y vuelve a intentarlo.";
 
 export function applyChatEvent(state: AssistantChatState, event: ChatEvent): AssistantChatState {
   switch (event.type) {
@@ -61,7 +63,7 @@ export function applyChatEvent(state: AssistantChatState, event: ChatEvent): Ass
         ],
       };
     case "text_delta":
-      return updateMessage(state, event.message_id, (message) => {
+      return updateMessage({ ...state, activity: null }, event.message_id, (message) => {
         const last = message.blocks[message.blocks.length - 1];
         if (last?.type === "text") {
           return {
@@ -71,6 +73,8 @@ export function applyChatEvent(state: AssistantChatState, event: ChatEvent): Ass
         }
         return { ...message, blocks: [...message.blocks, { type: "text", text: event.delta }] };
       });
+    case "tool_status":
+      return { ...state, activity: event.label };
     case "block":
       return updateMessage(state, event.message_id, (message) => ({
         ...message,
@@ -105,9 +109,14 @@ function updateMessage(
   };
 }
 
-function isRetryable(error: unknown): boolean {
+function httpStatus(error: unknown): number | null {
   const status = (error as { status?: unknown } | null)?.status;
-  return typeof status !== "number" || status >= 500;
+  return typeof status === "number" ? status : null;
+}
+
+function isRetryable(error: unknown): boolean {
+  const status = httpStatus(error);
+  return status === null || status >= 500;
 }
 
 export function createAssistantChat(options: AssistantChatOptions): AssistantChat {
@@ -117,6 +126,7 @@ export function createAssistantChat(options: AssistantChatOptions): AssistantCha
     messages: options.messages ?? [],
     status: "idle",
     error: null,
+    activity: null,
   };
   const listeners = new Set<() => void>();
   let abortController: AbortController | null = null;
@@ -150,27 +160,31 @@ export function createAssistantChat(options: AssistantChatOptions): AssistantCha
         for await (const event of open(controller.signal)) {
           received = true;
           if (event.type === "error") {
-            setState({ status: "error", error: event.message });
+            setState({ status: "error", error: event.message, activity: null });
             return;
           }
           setState(applyChatEvent(state, event));
         }
-        setState({ status: "idle" });
+        setState({ status: "idle", activity: null });
         return;
       } catch (error) {
         if (controller.signal.aborted) {
-          if (abortController === controller) setState({ status: "idle" });
+          if (abortController === controller) setState({ status: "idle", activity: null });
           return;
         }
         if (!received && attempt < maxRetries && isRetryable(error)) {
           await wait(retryDelayMs * 2 ** attempt, controller.signal);
           if (controller.signal.aborted) {
-            if (abortController === controller) setState({ status: "idle" });
+            if (abortController === controller) setState({ status: "idle", activity: null });
             return;
           }
           continue;
         }
-        setState({ status: "error", error: ASSISTANT_ERROR_TEXT });
+        setState({
+          status: "error",
+          activity: null,
+          error: httpStatus(error) === null ? ASSISTANT_OFFLINE_TEXT : ASSISTANT_ERROR_TEXT,
+        });
         return;
       }
     }
@@ -235,6 +249,7 @@ export function createAssistantChat(options: AssistantChatOptions): AssistantCha
         messages: conversation?.messages ?? [],
         status: "idle",
         error: null,
+        activity: null,
       });
     },
 

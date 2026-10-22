@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from "vitest";
 import type { ChatEvent } from "../../src/assistant";
 import {
   ASSISTANT_ERROR_TEXT,
+  ASSISTANT_OFFLINE_TEXT,
   createAssistantChat,
   type AssistantChatTransport,
 } from "../../src/assistant/chat";
@@ -238,5 +239,40 @@ describe("createAssistantChat", () => {
     chat.reset();
     await pending;
     expect(chat.getState()).toMatchObject({ messages: [], status: "idle", error: null });
+  });
+
+  it("expone la herramienta en curso y la limpia al llegar texto y al terminar", async () => {
+    const seen: (string | null)[] = [];
+    const chat = createAssistantChat({
+      transport: transport({
+        sendMessage: () =>
+          stream([
+            reply[0],
+            { type: "tool_status", message_id: "m-1", label: "Consultando reservas…" },
+            reply[1],
+            { type: "tool_status", message_id: "m-1", label: "Consultando caja…" },
+            reply[4],
+          ]),
+      }),
+    });
+    chat.subscribe(() => seen.push(chat.getState().activity));
+    await chat.send("Hola");
+    expect(seen).toContain("Consultando reservas…");
+    expect(seen).toContain("Consultando caja…");
+    expect(chat.getState().activity).toBeNull();
+  });
+
+  it("distingue sin conexion de un error del servidor", async () => {
+    const offline = createAssistantChat({
+      transport: transport({
+        sendMessage: () => {
+          throw new TypeError("Network request failed");
+        },
+      }),
+      maxRetries: 0,
+    });
+    await offline.send("Hola");
+    expect(offline.getState().error).toBe(ASSISTANT_OFFLINE_TEXT);
+    expect(offline.getState().messages).toHaveLength(1);
   });
 });

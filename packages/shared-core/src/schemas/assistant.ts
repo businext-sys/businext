@@ -119,6 +119,12 @@ export const MessageEndEventSchema = z.object({
   message_id: z.string(),
 });
 
+export const ToolStatusEventSchema = z.object({
+  type: z.literal("tool_status"),
+  message_id: z.string(),
+  label: z.string().nullable(),
+});
+
 export const ErrorEventSchema = z.object({
   type: z.literal("error"),
   code: z.string(),
@@ -129,6 +135,7 @@ export const ChatEventSchema = z.discriminatedUnion("type", [
   MessageStartEventSchema,
   TextDeltaEventSchema,
   BlockEventSchema,
+  ToolStatusEventSchema,
   MessageEndEventSchema,
   ErrorEventSchema,
 ]);

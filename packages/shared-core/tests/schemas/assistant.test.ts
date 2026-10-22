@@ -160,6 +160,8 @@ describe("ChatEventSchema / parseChatEvent", () => {
     { type: "message_start", conversation_id: "c-1", message_id: "m-1" },
     { type: "text_delta", message_id: "m-1", delta: "Ho" },
     { type: "block", message_id: "m-1", block: reservationList },
+    { type: "tool_status", message_id: "m-1", label: "Consultando reservas…" },
+    { type: "tool_status", message_id: "m-1", label: null },
     { type: "message_end", message_id: "m-1" },
     { type: "error", code: "rate_limited", message: "Demasiadas peticiones" },
   ])("parsea el evento $type", (event) => {
