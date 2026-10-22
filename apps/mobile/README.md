@@ -115,7 +115,10 @@ que crearla a mano en Supabase.
 
 - **Chat del asistente** (`app/index.tsx` → `src/screens/ChatScreen.tsx`,
   issue #78) — la home tras el login. Usa `useAssistantChat` de shared-core
-  con `assistantClient` (`expo/fetch`, streaming). Sin tabs: el menu de la
+  con `assistantClient` (`expo/fetch`, streaming). Componentes en
+  `src/components/chat/`: burbujas con markdown basico, indicador de
+  escribiendo/herramienta, input con enviar y parar, y error con reintento.
+  Colores de `src/theme/colors.ts` (paleta BN de la web). Sin tabs: el menu de la
   cabecera lleva a nueva conversacion, agenda, ajustes y cerrar sesion. Si
   `EXPO_PUBLIC_ASSISTANT_CHAT=false` (hoy en los perfiles `preview` y
   `production` de `eas.json`), la home es la agenda.

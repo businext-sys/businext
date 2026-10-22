@@ -79,7 +79,9 @@ version nueva de la app.
 
 **Eventos SSE** (cada `data:` es un JSON con `type`): `message_start
 { conversation_id, message_id }`, `text_delta { message_id, delta }`,
-`block { message_id, block }`, `message_end { message_id }`,
+`block { message_id, block }`, `tool_status { message_id, label | null }`
+(herramienta en curso, p. ej. «Consultando reservas…»; `null` la limpia),
+`message_end { message_id }`,
 `error { code, message }`. `parseChatEvent` devuelve `null` para eventos
 desconocidos, que se ignoran.
 
@@ -93,7 +95,9 @@ desconocidos, que se ignoran.
 `GET /assistant/conversations`, `GET` y `DELETE /assistant/conversations/{id}`.
 
 **Uso:** `useAssistantChat({ client })` (de `@businext/shared-core/hooks`)
-devuelve `messages`, `status` (`idle` | `streaming` | `error`), `error`,
+devuelve `messages`, `status` (`idle` | `streaming` | `error`), `error`
+(distingue sin conexion de un fallo del servidor), `activity` (la
+herramienta en curso),
 `conversationId`, `send`, `confirm`, `stop` y `retry`. La logica vive en
 `createAssistantChat` (`@businext/shared-core/assistant`), sin React, y es lo
 que cubren los tests. Reintenta solo si la peticion falla antes de recibir
