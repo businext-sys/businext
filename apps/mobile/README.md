@@ -117,7 +117,10 @@ que crearla a mano en Supabase.
   issue #78) — la home tras el login. Usa `useAssistantChat` de shared-core
   con `assistantClient` (`expo/fetch`, streaming). Componentes en
   `src/components/chat/`: burbujas con markdown basico, indicador de
-  escribiendo/herramienta, input con enviar y parar, y error con reintento.
+  escribiendo/herramienta, input con enviar y parar, error con reintento y
+  chips de acciones rapidas (`quickActionsFor` de shared-core, por rol) en el
+  estado vacio y sobre el input; las `quick_replies` del asistente tambien se
+  muestran como chips.
   Colores de `src/theme/colors.ts` (paleta BN de la web). Sin tabs: el menu de la
   cabecera lleva a nueva conversacion, agenda, ajustes y cerrar sesion. Si
   `EXPO_PUBLIC_ASSISTANT_CHAT=false` (hoy en los perfiles `preview` y
