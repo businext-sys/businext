@@ -76,6 +76,20 @@ describe("ChatBlockSchema", () => {
     expect(ChatBlockSchema.parse(block).type).toBe(block.type);
   });
 
+  it("cash_summary admite previous_balance opcional o nulo", () => {
+    const base = {
+      type: "cash_summary",
+      period_label: "Esta semana",
+      total_income: 500,
+      total_expense: 100,
+      balance: 400,
+      currency: "EUR",
+    };
+    expect(() => ChatBlockSchema.parse({ ...base, previous_balance: 350 })).not.toThrow();
+    expect(() => ChatBlockSchema.parse({ ...base, previous_balance: null })).not.toThrow();
+    expect(() => ChatBlockSchema.parse({ ...base, previous_balance: "350" })).toThrow();
+  });
+
   it("rechaza un bloque con campos que faltan", () => {
     expect(() => ChatBlockSchema.parse({ type: "cash_summary", balance: 1 })).toThrow();
   });

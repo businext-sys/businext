@@ -34,6 +34,7 @@ export const CashSummaryBlockSchema = z.object({
   total_income: z.number(),
   total_expense: z.number(),
   balance: z.number(),
+  previous_balance: z.number().nullable().optional(),
   currency: z.string(),
 });
 
