@@ -1,12 +1,13 @@
 import { useRef } from "react";
 import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
 import { useRouter } from "expo-router";
-import type { ChatMessage } from "@businext/shared-core/assistant";
-import { useAssistantChat } from "@businext/shared-core/hooks";
+import { quickActionsFor, type ChatMessage } from "@businext/shared-core/assistant";
+import { useAccessContext, useAssistantChat } from "@businext/shared-core/hooks";
 import { ChatErrorBanner } from "@/components/chat/ChatErrorBanner";
 import { ChatHeader } from "@/components/chat/ChatHeader";
 import { ChatInput } from "@/components/chat/ChatInput";
 import { MessageBubble } from "@/components/chat/MessageBubble";
+import { QuickActions } from "@/components/chat/QuickActions";
 import { TypingIndicator } from "@/components/chat/TypingIndicator";
 import { useAuth } from "@/context/AuthContext";
 import { usePushRegistration } from "@/hooks/usePushRegistration";
@@ -22,10 +23,14 @@ export default function ChatScreen() {
   const pushState = usePushRegistration();
   const chat = useAssistantChat({ client: assistantClient });
   const listRef = useRef<FlatList<ChatMessage>>(null);
+  const { context } = useAccessContext();
+  const quickActions = quickActionsFor(context?.capabilities ?? null);
+  const streaming = chat.status === "streaming";
+  const lastAssistantId = [...chat.messages].reverse().find((m) => m.role === "assistant")?.id;
 
   const lastMessage = chat.messages[chat.messages.length - 1];
   const waitingForText =
-    chat.status === "streaming" && (lastMessage?.role !== "assistant" || chat.activity !== null);
+    streaming && (lastMessage?.role !== "assistant" || chat.activity !== null);
 
   return (
     <KeyboardAvoidingView
@@ -51,15 +56,23 @@ export default function ChatScreen() {
         ref={listRef}
         data={chat.messages}
         keyExtractor={(message) => message.id}
-        renderItem={({ item }) => <MessageBubble message={item} />}
+        renderItem={({ item }) => (
+          <MessageBubble
+            message={item}
+            onQuickReply={item.id === lastAssistantId && !streaming ? chat.send : undefined}
+          />
+        )}
         onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: true })}
         keyboardShouldPersistTaps="handled"
         keyboardDismissMode="interactive"
         contentContainerStyle={chat.messages.length === 0 ? styles.emptyContainer : styles.list}
         ListEmptyComponent={
-          <Text style={styles.empty} accessibilityRole="header">
-            ¿En qué te ayudo hoy?
-          </Text>
+          <View style={styles.emptyContent}>
+            <Text style={styles.empty} accessibilityRole="header">
+              ¿En qué te ayudo hoy?
+            </Text>
+            <QuickActions chips={quickActions} onPress={chat.send} wrap />
+          </View>
         }
         ListFooterComponent={
           <>
@@ -71,7 +84,10 @@ export default function ChatScreen() {
         }
       />
 
-      <ChatInput streaming={chat.status === "streaming"} onSend={chat.send} onStop={chat.stop} />
+      {chat.messages.length > 0 && (
+        <QuickActions chips={quickActions} onPress={chat.send} disabled={streaming} />
+      )}
+      <ChatInput streaming={streaming} onSend={chat.send} onStop={chat.stop} />
     </KeyboardAvoidingView>
   );
 }
@@ -93,6 +109,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 24,
   },
+  emptyContent: { gap: 24 },
   empty: {
     color: colors.foreground,
     textAlign: "center",
