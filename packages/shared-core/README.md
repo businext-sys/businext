@@ -50,6 +50,44 @@ import { useReservation } from "@businext/shared-core/hooks";
 import { detectReservationConflict } from "@businext/shared-core/services";
 ```
 
+## Contrato del asistente conversacional (Fase 7, issue #75)
+
+`src/schemas/assistant.ts` define el protocolo del chat de la app movil y
+`@businext/shared-core/assistant` sus tipos y funciones de parseo. Se propuso
+desde aqui antes de que existiera el ADR del backend
+(`businext-sys/businext-backend#19`): **el backend debe implementar esta
+forma** (snake_case, como el resto de su API). Cuando publique los endpoints,
+se regenera `generated-types.ts` y se contrasta con estos schemas.
+
+**Mensaje:** `{ id, conversation_id, role: "user" | "assistant", blocks, created_at }`.
+
+**Bloques** (campo `type`); todos admiten un `fallback_text` opcional:
+
+| `type` | Campos |
+|---|---|
+| `text` | `text` |
+| `reservation_list` | `title \| null`, `reservations[]: { id, client_name, service, start_time, end_time \| null, employee_name \| null, status }` |
+| `cash_summary` | `period_label`, `total_income`, `total_expense`, `balance`, `currency` |
+| `booking_request` | `request: { id, client_name, service, requested_date, employee_name \| null, status }` |
+| `confirmation` | `action_id`, `title`, `description`, `status: pending \| confirmed \| cancelled \| expired` |
+| `quick_replies` | `options[]: { label, message }` |
+
+Un bloque de tipo desconocido o mal formado no rompe la app:
+`parseChatBlock` lo convierte en un bloque `text` con su `fallback_text` (o un
+aviso generico). Asi el backend puede anadir bloques nuevos sin forzar una
+version nueva de la app.
+
+**Eventos SSE** (cada `data:` es un JSON con `type`): `message_start
+{ conversation_id, message_id }`, `text_delta { message_id, delta }`,
+`block { message_id, block }`, `message_end { message_id }`,
+`error { code, message }`. `parseChatEvent` devuelve `null` para eventos
+desconocidos, que se ignoran.
+
+**Peticiones:** `ChatRequest { conversation_id?, message }`,
+`ConfirmActionRequest { conversation_id, decision: "confirm" | "cancel" }`,
+`ConversationSummary { id, title, last_message_preview \| null, updated_at }` y
+`Conversation { id, title, messages, updated_at }`.
+
 ## Generacion de tipos desde OpenAPI (issue #018)
 
 `src/api/generated-types.ts` **se genera automaticamente** desde el OpenAPI
