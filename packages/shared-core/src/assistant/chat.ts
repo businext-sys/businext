@@ -39,7 +39,7 @@ export type AssistantChat = {
   confirm(actionId: string, decision: ConfirmActionRequest["decision"]): Promise<void>;
   stop(): void;
   retry(): Promise<void>;
-  reset(conversation?: { id: string; messages: ChatMessage[] }): void;
+  reset(conversation?: { id?: string | null; messages: ChatMessage[] }): void;
 };
 
 export const ASSISTANT_ERROR_TEXT = "El asistente no ha podido responder.";
