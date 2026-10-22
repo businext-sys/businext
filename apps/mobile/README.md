@@ -20,6 +20,7 @@ los valores a la app via `Constants.expoConfig.extra`:
 | `EXPO_PUBLIC_SUPABASE_ANON_KEY` | `extra.supabaseAnonKey` | `src/lib/supabaseAuth.ts` |
 | `EAS_PROJECT_ID` | `extra.eas.projectId` | `src/lib/pushNotifications.ts`, EAS Build/Update |
 | `EXPO_PUBLIC_ASSISTANT_CHAT` | `extra.assistantChatEnabled` | `src/lib/featureFlags.ts` (`"false"` apaga el chat y la home vuelve a ser la agenda) |
+| `EXPO_PUBLIC_ASSISTANT_PILOT_BUSINESSES` | `extra.assistantPilotBusinesses` | `src/lib/featureFlags.ts` (ids de negocio separados por comas; vacio = todos) |
 
 `runtimeVersion` usa la politica `appVersion` a proposito: resuelve igual
 tenga o no `EAS_PROJECT_ID` definido, para que todos los builds y updates sean
@@ -118,8 +119,8 @@ que crearla a mano en Supabase.
 
 ## Pantallas
 
-- **Chat del asistente** (`app/index.tsx` → `src/screens/ChatScreen.tsx`,
-  issue #78) — la home tras el login. Usa `useAssistantChat` de shared-core
+- **Chat del asistente** (`app/index.tsx` → `src/screens/HomeScreen.tsx` →
+  `src/screens/ChatScreen.tsx`, issue #78) — la home tras el login. Usa `useAssistantChat` de shared-core
   con `assistantClient` (`expo/fetch`, streaming). Componentes en
   `src/components/chat/`: burbujas con markdown basico, indicador de
   escribiendo/herramienta, input con enviar y parar, error con reintento y
@@ -144,6 +145,47 @@ que crearla a mano en Supabase.
   dominio: Completar / Revertir / Eliminar. El modelo no tiene un estado
   "cancelada" distinto (ver la nota en el propio archivo).
 - **Login** (issue #029) — Supabase Auth con token en `expo-secure-store`.
+
+## Lanzamiento del chat (issue #86)
+
+La home es el chat solo si `EXPO_PUBLIC_ASSISTANT_CHAT` no es `"false"` **y**
+`EXPO_PUBLIC_ASSISTANT_PILOT_BUSINESSES` esta vacia o incluye el `businessId`
+del usuario (`/auth/me`). Si no, la home es la agenda. Las push siguen la
+misma regla. Ambas variables se leen al construir el bundle, asi que cambian
+con un build nuevo o con `eas update`.
+
+**Antes del piloto** (requiere el backend del asistente desplegado y evals y
+E2E en verde):
+
+1. Variables de EAS del entorno `preview` (no estan en el repo):
+   `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY` y
+   `EAS_PROJECT_ID` (tambien como Variable del repo para `mobile-build.yml`).
+   ```bash
+   cd apps/mobile
+   npx eas-cli env:list --environment preview
+   npx eas-cli env:create --environment preview --name EXPO_PUBLIC_SUPABASE_URL --value <url> --visibility plaintext
+   npx eas-cli env:create --environment preview --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <anon-key> --visibility plaintext
+   ```
+2. En `eas.json`, perfil `preview`: `EXPO_PUBLIC_ASSISTANT_CHAT: "true"` y
+   `EXPO_PUBLIC_ASSISTANT_PILOT_BUSINESSES` con los negocios piloto.
+3. Build preview: `mobile-build.yml` (`workflow_dispatch`, perfil `preview`)
+   o `pnpm --filter @businext/mobile build:preview`. Instalar por link/QR y
+   comprobar que un negocio piloto aterriza en el chat y otro en la agenda.
+
+**Rollback** (sin build nuevo): poner `EXPO_PUBLIC_ASSISTANT_CHAT=false` (o
+quitar el negocio de la lista) y publicar un OTA:
+
+```bash
+cd apps/mobile
+EXPO_PUBLIC_ASSISTANT_CHAT=false npx eas-cli update --branch preview --message "rollback: chat off"
+```
+
+Al reabrir la app, la home vuelve a ser la agenda. Probarlo una vez durante
+el piloto.
+
+**Tras validar el piloto:** quitar la agenda antigua
+(`src/screens/AgendaScreen.tsx`, `app/agenda.tsx`, la entrada del menu) y
+`HomeScreen`, y dejar `app/index.tsx` apuntando al chat.
 
 ## Tests E2E (Maestro, issue #85)
 
