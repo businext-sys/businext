@@ -19,6 +19,7 @@ los valores a la app via `Constants.expoConfig.extra`:
 | `EXPO_PUBLIC_SUPABASE_URL` | `extra.supabaseUrl` | `src/lib/supabaseAuth.ts` |
 | `EXPO_PUBLIC_SUPABASE_ANON_KEY` | `extra.supabaseAnonKey` | `src/lib/supabaseAuth.ts` |
 | `EAS_PROJECT_ID` | `extra.eas.projectId` | `src/lib/pushNotifications.ts`, EAS Build/Update |
+| `EXPO_PUBLIC_ASSISTANT_CHAT` | `extra.assistantChatEnabled` | `src/lib/featureFlags.ts` (`"false"` apaga el chat y la home vuelve a ser la agenda) |
 
 `runtimeVersion` usa la politica `appVersion` a proposito: resuelve igual
 tenga o no `EAS_PROJECT_ID` definido, para que todos los builds y updates sean
@@ -112,7 +113,14 @@ que crearla a mano en Supabase.
 
 ## Pantallas
 
-- **Agenda** (`app/index.tsx`, issue #030) — reservas del dia agrupadas por
+- **Chat del asistente** (`app/index.tsx` → `src/screens/ChatScreen.tsx`,
+  issue #78) — la home tras el login. Usa `useAssistantChat` de shared-core
+  con `assistantClient` (`expo/fetch`, streaming). Sin tabs: el menu de la
+  cabecera lleva a nueva conversacion, agenda, ajustes y cerrar sesion. Si
+  `EXPO_PUBLIC_ASSISTANT_CHAT=false` (hoy en los perfiles `preview` y
+  `production` de `eas.json`), la home es la agenda.
+- **Ajustes** (`app/settings.tsx`) — cuenta y cierre de sesion.
+- **Agenda** (`src/screens/AgendaScreen.tsx`, en `/agenda`, issue #030) — reservas del dia agrupadas por
   hora, navegacion entre dias y pull-to-refresh.
 - **Detalle de reserva** (`app/reservation/[id].tsx`) — acciones reales del
   dominio: Completar / Revertir / Eliminar. El modelo no tiene un estado
