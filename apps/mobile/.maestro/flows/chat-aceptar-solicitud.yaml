@@ -1,0 +1,17 @@
+appId: com.businext.mobile
+name: Chat - aceptar una solicitud de reserva desde su tarjeta
+---
+- launchApp:
+    clearState: true
+- runFlow: ../subflows/login.yaml
+- tapOn: "Solicitudes pendientes"
+- extendedWaitUntil:
+    visible:
+      id: "card-booking-request"
+    timeout: 30000
+- tapOn:
+    id: "booking-request-accept"
+    index: 0
+- extendedWaitUntil:
+    visible: "Aceptada"
+    timeout: 20000

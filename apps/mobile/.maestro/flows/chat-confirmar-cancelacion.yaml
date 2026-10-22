@@ -1,0 +1,26 @@
+appId: com.businext.mobile
+name: Chat - confirmar la cancelacion de una reserva
+---
+- launchApp:
+    clearState: true
+- runFlow: ../subflows/login.yaml
+- tapOn:
+    id: "chat-input"
+- inputText: "Cancela la próxima reserva de hoy"
+- tapOn:
+    id: "chat-send"
+- extendedWaitUntil:
+    visible:
+      id: "card-confirmation"
+    timeout: 30000
+- tapOn:
+    id: "confirmation-confirm"
+- extendedWaitUntil:
+    visible: "Confirmada"
+    timeout: 30000
+- extendedWaitUntil:
+    notVisible:
+      id: "chat-typing"
+    timeout: 30000
+- assertNotVisible:
+    id: "chat-retry"

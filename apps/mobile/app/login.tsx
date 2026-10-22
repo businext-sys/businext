@@ -58,6 +58,7 @@ export default function LoginScreen() {
           value={email}
           onChangeText={setEmail}
           editable={!submitting}
+          testID="login-email"
         />
         <TextInput
           style={styles.input}
@@ -67,6 +68,7 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
           editable={!submitting}
+          testID="login-password"
         />
 
         {error && <Text style={styles.error}>{error}</Text>}
@@ -75,6 +77,7 @@ export default function LoginScreen() {
           style={[styles.button, submitting && styles.buttonDisabled]}
           onPress={handleSubmit}
           disabled={submitting}
+          testID="login-submit"
         >
           {submitting ? (
             <ActivityIndicator color="#fff" />
