@@ -38,6 +38,7 @@ export type AssistantChat = {
   confirm(actionId: string, decision: ConfirmActionRequest["decision"]): Promise<void>;
   stop(): void;
   retry(): Promise<void>;
+  reset(conversation?: { id: string; messages: ChatMessage[] }): void;
 };
 
 export const ASSISTANT_ERROR_TEXT = "No se ha podido conectar con el asistente.";
@@ -158,13 +159,13 @@ export function createAssistantChat(options: AssistantChatOptions): AssistantCha
         return;
       } catch (error) {
         if (controller.signal.aborted) {
-          setState({ status: "idle" });
+          if (abortController === controller) setState({ status: "idle" });
           return;
         }
         if (!received && attempt < maxRetries && isRetryable(error)) {
           await wait(retryDelayMs * 2 ** attempt, controller.signal);
           if (controller.signal.aborted) {
-            setState({ status: "idle" });
+            if (abortController === controller) setState({ status: "idle" });
             return;
           }
           continue;
@@ -224,6 +225,17 @@ export function createAssistantChat(options: AssistantChatOptions): AssistantCha
 
     stop() {
       abortController?.abort();
+    },
+
+    reset(conversation) {
+      abortController?.abort();
+      lastRun = null;
+      setState({
+        conversationId: conversation?.id ?? null,
+        messages: conversation?.messages ?? [],
+        status: "idle",
+        error: null,
+      });
     },
 
     async retry() {

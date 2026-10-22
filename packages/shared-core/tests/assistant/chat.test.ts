@@ -203,4 +203,40 @@ describe("createAssistantChat", () => {
     await chat.confirm("a-1", "cancel");
     expect(t.confirmAction).not.toHaveBeenCalled();
   });
+
+  it("reset vacia la conversacion o carga otra", async () => {
+    const chat = createAssistantChat({ transport: transport() });
+    await chat.send("Hola");
+    chat.reset();
+    expect(chat.getState()).toMatchObject({ conversationId: null, messages: [], status: "idle" });
+
+    const messages = [
+      {
+        id: "m-9",
+        conversation_id: "c-9",
+        role: "assistant" as const,
+        blocks: [{ type: "text" as const, text: "Antes" }],
+        created_at: "2026-10-21",
+      },
+    ];
+    chat.reset({ id: "c-9", messages });
+    expect(chat.getState()).toMatchObject({ conversationId: "c-9", messages });
+  });
+
+  it("reset durante un stream lo cancela sin pasar a error", async () => {
+    const chat = createAssistantChat({
+      transport: transport({
+        sendMessage: async function* (_request, s) {
+          yield reply[0];
+          await new Promise((resolve) => s.addEventListener("abort", resolve));
+          throw new DOMException("Aborted", "AbortError");
+        },
+      }),
+    });
+    const pending = chat.send("Hola");
+    await vi.waitFor(() => expect(chat.getState().messages).toHaveLength(2));
+    chat.reset();
+    await pending;
+    expect(chat.getState()).toMatchObject({ messages: [], status: "idle", error: null });
+  });
 });

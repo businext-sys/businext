@@ -33,5 +33,6 @@ export function useAssistantChat({ client, conversationId, messages }: UseAssist
     confirm: chat.confirm,
     stop: chat.stop,
     retry: chat.retry,
+    reset: chat.reset,
   };
 }
