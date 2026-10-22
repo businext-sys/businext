@@ -3,7 +3,7 @@ import * as Notifications from "expo-notifications";
 import { useRouter } from "expo-router";
 import { useAccessContext } from "@businext/shared-core/hooks";
 import { pushTokenApi } from "@businext/shared-core/api";
-import { assistantChatEnabled } from "@/lib/featureFlags";
+import { isAssistantChatEnabledFor } from "@/lib/featureFlags";
 import { registerForPushNotificationsAsync } from "@/lib/pushNotifications";
 
 export type PushRegistrationState =
@@ -66,6 +66,7 @@ export function usePushRegistration(): PushRegistrationState {
   useEffect(() => {
     if (
       !lastResponse ||
+      !context ||
       lastResponse.actionIdentifier !== Notifications.DEFAULT_ACTION_IDENTIFIER
     ) {
       return;
@@ -75,19 +76,20 @@ export function usePushRegistration(): PushRegistrationState {
     handledRef.current = notificationId;
     Notifications.clearLastNotificationResponse();
 
+    const chatEnabled = isAssistantChatEnabledFor(context?.businessId);
     const data = lastResponse.notification.request.content.data as
       | { type?: string; bookingRequestId?: number; conversationId?: string }
       | undefined;
-    if (assistantChatEnabled && data?.conversationId) {
+    if (chatEnabled && data?.conversationId) {
       router.navigate({ pathname: "/", params: { conversation: data.conversationId } });
     } else if (data?.type === "booking_request") {
       router.navigate(
-        assistantChatEnabled && data.bookingRequestId
+        chatEnabled && data.bookingRequestId
           ? { pathname: "/", params: { bookingRequest: String(data.bookingRequestId) } }
           : "/"
       );
     }
-  }, [lastResponse, router]);
+  }, [lastResponse, router, context]);
 
   return state;
 }

@@ -75,6 +75,12 @@ const config: ExpoConfig = {
     // Chat del asistente como home (issue #78). Activo salvo que se
     // apague explicitamente; ver src/lib/featureFlags.ts.
     assistantChatEnabled: process.env.EXPO_PUBLIC_ASSISTANT_CHAT !== "false",
+    // Negocios piloto del chat (issue #86), ids separados por comas. Vacio:
+    // todos los negocios.
+    assistantPilotBusinesses: (process.env.EXPO_PUBLIC_ASSISTANT_PILOT_BUSINESSES ?? "")
+      .split(",")
+      .map((id: string) => id.trim())
+      .filter(Boolean),
     ...(EAS_PROJECT_ID ? { eas: { projectId: EAS_PROJECT_ID } } : {}),
   },
 };
