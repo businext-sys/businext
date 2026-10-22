@@ -60,6 +60,7 @@ export default function ChatScreen() {
           <MessageBubble
             message={item}
             onQuickReply={item.id === lastAssistantId && !streaming ? chat.send : undefined}
+            onConfirm={streaming ? undefined : chat.confirm}
           />
         )}
         onContentSizeChange={() => listRef.current?.scrollToEnd({ animated: true })}

@@ -13,9 +13,10 @@ function spokenText(message: ChatMessage): string {
 type Props = {
   message: ChatMessage;
   onQuickReply?: (message: string) => void;
+  onConfirm?: (actionId: string, decision: "confirm" | "cancel") => void;
 };
 
-export function MessageBubble({ message, onQuickReply }: Props) {
+export function MessageBubble({ message, onQuickReply, onConfirm }: Props) {
   const isUser = message.role === "user";
   if (message.blocks.length === 0) return null;
   const textOnly = message.blocks.every((block) => block.type === "text");
@@ -28,7 +29,13 @@ export function MessageBubble({ message, onQuickReply }: Props) {
     >
       <View style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}>
         {message.blocks.map((block, index) => (
-          <ChatBlockView key={index} block={block} isUser={isUser} onQuickReply={onQuickReply} />
+          <ChatBlockView
+            key={index}
+            block={block}
+            isUser={isUser}
+            onQuickReply={onQuickReply}
+            onConfirm={onConfirm}
+          />
         ))}
       </View>
     </View>
