@@ -101,7 +101,12 @@ local.
 
 `src/lib/pushNotifications.ts` + `src/hooks/usePushRegistration.ts`: registro
 automatico del token al autenticarse, manejo explicito del rechazo de permisos
-(banner en la Agenda) y deep link basico al tocar una notificacion.
+(banner en la home) y deep link al tocar una notificacion, tambien con la app
+cerrada (`useLastNotificationResponse`). Con el chat activo (issue #83), la
+push de una solicitud (`{ type: "booking_request", bookingRequestId }`) abre
+el chat en una conversacion nueva con un mensaje que la explica y su tarjeta
+con Aceptar/Rechazar; si la push trae `conversationId`, abre esa
+conversacion. Con el chat apagado, abre la agenda.
 
 Backend: `POST`/`DELETE /users/{id}/push-tokens` en `businext-backend`, mas el
 envio de notificacion al crear un `BookingRequest`.
