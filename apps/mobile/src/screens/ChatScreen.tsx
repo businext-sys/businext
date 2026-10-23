@@ -1,6 +1,16 @@
-import { useRef } from "react";
-import { FlatList, KeyboardAvoidingView, Platform, StyleSheet, Text, View } from "react-native";
-import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { assistantApi } from "@businext/shared-core/api";
 import { quickActionsFor, type ChatMessage } from "@businext/shared-core/assistant";
 import { useAccessContext, useAssistantChat } from "@businext/shared-core/hooks";
 import { ChatErrorBanner } from "@/components/chat/ChatErrorBanner";
@@ -23,6 +33,25 @@ export default function ChatScreen() {
   const pushState = usePushRegistration();
   const chat = useAssistantChat({ client: assistantClient });
   const listRef = useRef<FlatList<ChatMessage>>(null);
+  const { conversation } = useLocalSearchParams<{ conversation?: string }>();
+  const [loadingConversation, setLoadingConversation] = useState(false);
+  const { reset } = chat;
+
+  useEffect(() => {
+    if (!conversation) return;
+    router.setParams({ conversation: undefined });
+    if (conversation === "new") {
+      reset();
+      return;
+    }
+    setLoadingConversation(true);
+    assistantApi
+      .getConversation(conversation, assistantClient)
+      .then((loaded) => reset({ id: loaded.id, messages: loaded.messages }))
+      .catch(() => Alert.alert("No se ha podido abrir la conversación."))
+      .finally(() => setLoadingConversation(false));
+  }, [conversation, reset, router]);
+
   const { context } = useAccessContext();
   const quickActions = quickActionsFor(context?.capabilities ?? null);
   const streaming = chat.status === "streaming";
@@ -40,6 +69,7 @@ export default function ChatScreen() {
       <ChatHeader
         menuItems={[
           { label: "Nueva conversación", onPress: () => chat.reset() },
+          { label: "Historial", onPress: () => router.push("/conversations") },
           { label: "Agenda", onPress: () => router.push("/agenda") },
           { label: "Ajustes", onPress: () => router.push("/settings") },
           { label: "Cerrar sesión", onPress: logout, destructive: true },
@@ -68,12 +98,16 @@ export default function ChatScreen() {
         keyboardDismissMode="interactive"
         contentContainerStyle={chat.messages.length === 0 ? styles.emptyContainer : styles.list}
         ListEmptyComponent={
-          <View style={styles.emptyContent}>
-            <Text style={styles.empty} accessibilityRole="header">
-              ¿En qué te ayudo hoy?
-            </Text>
-            <QuickActions chips={quickActions} onPress={chat.send} wrap />
-          </View>
+          loadingConversation ? (
+            <ActivityIndicator color={colors.primary} />
+          ) : (
+            <View style={styles.emptyContent}>
+              <Text style={styles.empty} accessibilityRole="header">
+                ¿En qué te ayudo hoy?
+              </Text>
+              <QuickActions chips={quickActions} onPress={chat.send} wrap />
+            </View>
+          )
         }
         ListFooterComponent={
           <>

@@ -126,9 +126,12 @@ que crearla a mano en Supabase.
   (Aceptar/Rechazar contra `/booking-requests`) y confirmacion de acciones
   (Confirmar/Cancelar llama a `confirm` del chat).
   Colores de `src/theme/colors.ts` (paleta BN de la web). Sin tabs: el menu de la
-  cabecera lleva a nueva conversacion, agenda, ajustes y cerrar sesion. Si
+  cabecera lleva a nueva conversacion, historial, agenda, ajustes y cerrar sesion. Si
   `EXPO_PUBLIC_ASSISTANT_CHAT=false` (hoy en los perfiles `preview` y
   `production` de `eas.json`), la home es la agenda.
+- **Historial** (`app/conversations.tsx`, issue #82) — conversaciones con el
+  asistente (`useAssistantConversations`): abrir (`/?conversation=<id>`),
+  borrar con confirmacion o empezar una nueva (`/?conversation=new`).
 - **Ajustes** (`app/settings.tsx`) — cuenta y cierre de sesion.
 - **Agenda** (`src/screens/AgendaScreen.tsx`, en `/agenda`, issue #030) — reservas del dia agrupadas por
   hora, navegacion entre dias y pull-to-refresh.
