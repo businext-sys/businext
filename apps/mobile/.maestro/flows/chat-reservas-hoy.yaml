@@ -1,0 +1,11 @@
+appId: com.businext.mobile
+name: Chat - chip Reservas de hoy devuelve la tarjeta de reservas
+---
+- launchApp:
+    clearState: true
+- runFlow: ../subflows/login.yaml
+- tapOn: "Reservas de hoy"
+- extendedWaitUntil:
+    visible:
+      id: "card-reservation-list"
+    timeout: 30000
