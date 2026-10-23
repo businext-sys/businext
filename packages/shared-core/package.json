@@ -18,6 +18,7 @@
     "./access": "./src/access/index.ts",
     "./intelligence": "./src/intelligence/index.ts",
     "./google-reviews": "./src/google-reviews/index.ts",
+    "./assistant": "./src/assistant/index.ts",
     "./schemas": "./src/schemas/index.ts",
     "./mappers": "./src/mappers/index.ts",
     "./api": "./src/api/index.ts",
