@@ -5,25 +5,30 @@ import { ChatBlockView } from "./ChatBlockView";
 
 function spokenText(message: ChatMessage): string {
   const text = message.blocks
-    .map((block) => (block.type === "text" ? block.text : block.fallback_text ?? ""))
-    .filter(Boolean)
+    .map((block) => (block.type === "text" ? block.text : ""))
     .join(". ");
   return `${message.role === "user" ? "Tú" : "Asistente"}: ${text}`;
 }
 
-export function MessageBubble({ message }: { message: ChatMessage }) {
+type Props = {
+  message: ChatMessage;
+  onQuickReply?: (message: string) => void;
+};
+
+export function MessageBubble({ message, onQuickReply }: Props) {
   const isUser = message.role === "user";
   if (message.blocks.length === 0) return null;
+  const textOnly = message.blocks.every((block) => block.type === "text");
 
   return (
     <View
       style={[styles.row, isUser ? styles.userRow : styles.assistantRow]}
-      accessible
-      accessibilityLabel={spokenText(message)}
+      accessible={textOnly}
+      accessibilityLabel={textOnly ? spokenText(message) : undefined}
     >
       <View style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}>
         {message.blocks.map((block, index) => (
-          <ChatBlockView key={index} block={block} isUser={isUser} />
+          <ChatBlockView key={index} block={block} isUser={isUser} onQuickReply={onQuickReply} />
         ))}
       </View>
     </View>

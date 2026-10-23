@@ -90,6 +90,13 @@ desconocidos, que se ignoran.
 `ConversationSummary { id, title, last_message_preview \| null, updated_at }` y
 `Conversation { id, title, messages, updated_at }`.
 
+**Acciones rapidas** (issue #80): `QUICK_ACTIONS` y
+`quickActionsFor(capabilities)` dan los chips del chat filtrados por las
+capacidades de `/auth/me` (la caja y el resumen semanal requieren
+`canManageFinances`; solicitudes y nueva reserva, `canManageReservations`;
+resenas, `canManageReviews`). Es solo UX: los permisos reales los aplica el
+backend en cada herramienta.
+
 **Endpoints** (`assistantApi`, issue #76): `POST /assistant/chat` y
 `POST /assistant/actions/{action_id}/confirm` responden en SSE;
 `GET /assistant/conversations`, `GET` y `DELETE /assistant/conversations/{id}`.
