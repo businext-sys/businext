@@ -69,7 +69,9 @@ export default function AgendaScreen() {
         </Pressable>
 
         <Pressable onPress={() => setSelectedDay(new Date())}>
-          <Text style={styles.dayLabel}>{formatDayLabel(selectedDay)}</Text>
+          <Text style={styles.dayLabel} testID="agenda-day-label">
+            {formatDayLabel(selectedDay)}
+          </Text>
           {isToday(selectedDay) && <Text style={styles.todayHint}>Hoy</Text>}
         </Pressable>
 

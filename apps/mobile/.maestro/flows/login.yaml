@@ -1,0 +1,6 @@
+appId: com.businext.mobile
+name: Login - credenciales correctas llevan a la home
+---
+- launchApp:
+    clearState: true
+- runFlow: ../subflows/login.yaml

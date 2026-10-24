@@ -187,7 +187,25 @@ el piloto.
 (`src/screens/AgendaScreen.tsx`, `app/agenda.tsx`, la entrada del menu) y
 `HomeScreen`, y dejar `app/index.tsx` apuntando al chat.
 
-## Tests E2E (Maestro, issue #85)
+## Tests E2E (Maestro, issues #32 y #85)
+
+Flows base en `.maestro/flows/`: `launch.yaml` (la app abre en el login, sin
+credenciales), `login.yaml` (login → home) y `agenda.yaml` (login → menu →
+Agenda).
+
+**En CI:** Actions → `qa-mobile` → Run workflow (suite `base`, `chat` o
+`all`). Construye el APK con el chat activo (`expo prebuild` + Gradle, solo
+`x86_64`), lo instala en un emulador Android (API 34) y ejecuta los flows; el
+informe JUnit y las capturas de los fallos quedan en el artefacto
+`maestro-results`. Necesita, en Settings → Secrets and variables → Actions:
+
+| Tipo | Nombre | Para que |
+|---|---|---|
+| Variable | `QA_API_BASE_URL` | Backend contra el que se prueba (para `chat`, uno con `ASSISTANT_LLM_MODE=mock`) |
+| Variable | `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY` | Login |
+| Secret | `QA_MAESTRO_EMAIL`, `QA_MAESTRO_PASSWORD` | Usuario de prueba |
+
+Sin el usuario de prueba solo corre `launch.yaml` (humo del pipeline).
 
 Flows del chat en `.maestro/flows/` (el login es el subflow
 `.maestro/subflows/login.yaml`):
@@ -213,6 +231,5 @@ python -m src.services.assistant.e2e_seed --business-id <user id del owner de pr
 maestro test -e MAESTRO_EMAIL=<email> -e MAESTRO_PASSWORD=<password> apps/mobile/.maestro/flows
 ```
 
-**Pendiente:** ejecutarlos en CI depende de la base de Maestro y del workflow
-`qa-mobile.yml` (issue #32).
+En CI, con la suite `chat` de `qa-mobile`.
 

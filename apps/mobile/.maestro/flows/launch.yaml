@@ -1,0 +1,10 @@
+appId: com.businext.mobile
+name: Arranque - la app abre en el login
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible: "Inicia sesion para continuar"
+    timeout: 30000
+- assertVisible:
+    id: "login-email"
