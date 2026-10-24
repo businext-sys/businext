@@ -25,7 +25,7 @@ on:
 jobs:
   maestro:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     env:
       EXPO_PUBLIC_API_BASE_URL: ${{ vars.QA_API_BASE_URL }}
       EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
@@ -60,7 +60,9 @@ jobs:
         working-directory: apps/mobile
         run: |
           npx expo prebuild --platform android --no-install
-          cd android && ./gradlew assembleRelease --no-daemon
+          # La JVM por defecto del template se queda sin Metaspace en el runner.
+          sed -i 's/^org.gradle.jvmargs=.*/org.gradle.jvmargs=-Xmx4g -XX:MaxMetaspaceSize=1g/' android/gradle.properties
+          cd android && ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures=x86_64
 
       - name: Elegir flows
         id: flows
