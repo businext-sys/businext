@@ -11,8 +11,6 @@ name: qa-mobile
 # Sin el usuario de prueba solo se ejecuta launch.yaml (humo del pipeline).
 
 on:
-  push:
-    branches: [chore/032-maestro-qa-mobile]
   workflow_dispatch:
     inputs:
       suite:
