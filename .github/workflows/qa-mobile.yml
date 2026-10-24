@@ -1,0 +1,111 @@
+name: qa-mobile
+
+# E2E de apps/mobile con Maestro en un emulador Android (issue #32).
+# Construye el APK con el chat activo, ejecuta los flows de
+# apps/mobile/.maestro/flows y sube el informe y las capturas de los fallos.
+#
+# Configuracion (Settings > Secrets and variables > Actions):
+# - Variables: QA_API_BASE_URL (backend; para la suite "chat", uno con
+#   ASSISTANT_LLM_MODE=mock), EXPO_PUBLIC_SUPABASE_URL, EXPO_PUBLIC_SUPABASE_ANON_KEY.
+# - Secrets: QA_MAESTRO_EMAIL, QA_MAESTRO_PASSWORD (usuario de prueba).
+# Sin el usuario de prueba solo se ejecuta launch.yaml (humo del pipeline).
+
+on:
+  push:
+    branches: [chore/032-maestro-qa-mobile]
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: "Flows a ejecutar: base (arranque, login, agenda), chat o all"
+        required: false
+        default: "base"
+        type: choice
+        options: [base, chat, all]
+
+jobs:
+  maestro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      EXPO_PUBLIC_API_BASE_URL: ${{ vars.QA_API_BASE_URL }}
+      EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
+      EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+      EXPO_PUBLIC_ASSISTANT_CHAT: "true"
+      MAESTRO_EMAIL: ${{ secrets.QA_MAESTRO_EMAIL }}
+      MAESTRO_PASSWORD: ${{ secrets.QA_MAESTRO_PASSWORD }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build APK
+        working-directory: apps/mobile
+        run: |
+          npx expo prebuild --platform android --no-install
+          cd android && ./gradlew assembleRelease --no-daemon
+
+      - name: Elegir flows
+        id: flows
+        run: |
+          base="apps/mobile/.maestro/flows/launch.yaml"
+          if [ -n "$MAESTRO_EMAIL" ] && [ -n "$MAESTRO_PASSWORD" ]; then
+            case "${{ inputs.suite || 'base' }}" in
+              base) flows="$base apps/mobile/.maestro/flows/login.yaml apps/mobile/.maestro/flows/agenda.yaml" ;;
+              chat) flows="$base $(ls apps/mobile/.maestro/flows/chat-*.yaml | tr '\n' ' ')" ;;
+              all)  flows="$(ls apps/mobile/.maestro/flows/*.yaml | tr '\n' ' ')" ;;
+            esac
+          else
+            echo "::warning::Faltan los secrets QA_MAESTRO_EMAIL/QA_MAESTRO_PASSWORD: solo se ejecuta launch.yaml."
+            flows="$base"
+          fi
+          echo "flows=$flows" >> "$GITHUB_OUTPUT"
+
+      - name: Instalar Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: Habilitar KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Ejecutar Maestro en el emulador
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 34
+          arch: x86_64
+          target: google_apis
+          disable-animations: true
+          script: |
+            adb install apps/mobile/android/app/build/outputs/apk/release/app-release.apk
+            maestro test --format junit --output maestro-report.xml -e MAESTRO_EMAIL="$MAESTRO_EMAIL" -e MAESTRO_PASSWORD="$MAESTRO_PASSWORD" ${{ steps.flows.outputs.flows }}
+
+      - name: Subir informe y capturas
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-results
+          path: |
+            maestro-report.xml
+            ~/.maestro/tests/
+          if-no-files-found: ignore
