@@ -5,7 +5,10 @@ export type QuickAction = {
   label: string;
   message: string;
   requires?: keyof AccessCapabilitiesFull;
+  roles?: string[];
 };
+
+const MANAGEMENT_ROLES = ["owner", "manager"];
 
 export const QUICK_ACTIONS: QuickAction[] = [
   { id: "today-reservations", label: "Reservas de hoy", message: "¿Qué reservas tengo hoy?" },
@@ -13,7 +16,7 @@ export const QUICK_ACTIONS: QuickAction[] = [
     id: "cash",
     label: "¿Cómo va mi caja?",
     message: "¿Cómo va mi caja hoy?",
-    requires: "canManageFinances",
+    roles: MANAGEMENT_ROLES,
   },
   {
     id: "pending-requests",
@@ -31,7 +34,7 @@ export const QUICK_ACTIONS: QuickAction[] = [
     id: "weekly-summary",
     label: "Resumen de la semana",
     message: "Dame el resumen de esta semana.",
-    requires: "canManageFinances",
+    roles: MANAGEMENT_ROLES,
   },
   {
     id: "recent-reviews",
@@ -41,8 +44,12 @@ export const QUICK_ACTIONS: QuickAction[] = [
   },
 ];
 
-export function quickActionsFor(capabilities: AccessCapabilitiesFull | null): QuickAction[] {
+export function quickActionsFor(
+  context: { role: string; capabilities: AccessCapabilitiesFull } | null
+): QuickAction[] {
   return QUICK_ACTIONS.filter(
-    (action) => !action.requires || Boolean(capabilities?.[action.requires])
+    (action) =>
+      (!action.requires || Boolean(context?.capabilities[action.requires])) &&
+      (!action.roles || (context !== null && action.roles.includes(context.role)))
   );
 }

@@ -75,7 +75,7 @@ export default function ChatScreen() {
   }, [bookingRequest, reset, router]);
 
   const { context } = useAccessContext();
-  const quickActions = quickActionsFor(context?.capabilities ?? null);
+  const quickActions = quickActionsFor(context);
   const streaming = chat.status === "streaming";
   const lastAssistantId = [...chat.messages].reverse().find((m) => m.role === "assistant")?.id;
 

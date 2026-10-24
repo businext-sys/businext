@@ -91,11 +91,12 @@ desconocidos, que se ignoran.
 `Conversation { id, title, messages, updated_at }`.
 
 **Acciones rapidas** (issue #80): `QUICK_ACTIONS` y
-`quickActionsFor(capabilities)` dan los chips del chat filtrados por las
-capacidades de `/auth/me` (la caja y el resumen semanal requieren
-`canManageFinances`; solicitudes y nueva reserva, `canManageReservations`;
-resenas, `canManageReviews`). Es solo UX: los permisos reales los aplica el
-backend en cada herramienta.
+`quickActionsFor(context)` dan los chips del chat filtrados con el contexto
+de `/auth/me`: la caja y el resumen semanal solo para owner y manager (el rol
+employee tiene `canManageFinances`, pero el asistente no le da la caja);
+solicitudes y nueva reserva con `canManageReservations`; resenas con
+`canManageReviews`. Es solo UX: los permisos reales los aplica el backend en
+cada herramienta (matriz en el README de `businext-backend`).
 
 **Endpoints** (`assistantApi`, issue #76): `POST /assistant/chat` y
 `POST /assistant/actions/{action_id}/confirm` responden en SSE;
