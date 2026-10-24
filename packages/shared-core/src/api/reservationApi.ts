@@ -1,5 +1,5 @@
 import type { ApiClient } from "./client";
-import { apiClient } from "./client";
+import { apiClient, resourcePath } from "./client";
 import type { Reservation } from "../reservation";
 import { mapReservationFromApi, mapReservationToApi } from "../mappers/reservation";
 
@@ -26,14 +26,14 @@ export const reservationApi = {
   ): Promise<Reservation> => {
     const { id, ...updateData } = mapReservationToApi(reservation);
     const data = await client.patch<Record<string, unknown>>(
-      `${PATH}?id=${id}`,
+      resourcePath(client, PATH, id),
       updateData
     );
     return mapReservationFromApi(data);
   },
 
   remove: (id: number, client: ApiClient = apiClient): Promise<void> =>
-    client.delete(`${PATH}?id=${id}`),
+    client.delete(resourcePath(client, PATH, id)),
 
   revert: async (
     id: number,

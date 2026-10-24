@@ -1,5 +1,5 @@
 import type { ApiClient } from "./client";
-import { apiClient } from "./client";
+import { apiClient, resourcePath } from "./client";
 import type { Configuration } from "../configuration";
 import {
   mapConfigurationFromApi,
@@ -31,14 +31,14 @@ export const configurationApi = {
   ): Promise<Configuration> => {
     const { id, ...updateData } = configuration;
     const data = await client.patch<Record<string, unknown>>(
-      `${PATH}?id=${id}`,
+      resourcePath(client, PATH, id),
       updateData
     );
     return mapConfigurationFromApi(data);
   },
 
   remove: (id: number, client: ApiClient = apiClient): Promise<void> =>
-    client.delete(`${PATH}?id=${id}`),
+    client.delete(resourcePath(client, PATH, id)),
 };
 
 export { mapConfigurationToApi };

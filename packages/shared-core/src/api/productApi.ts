@@ -1,5 +1,5 @@
 import type { ApiClient } from "./client";
-import { apiClient } from "./client";
+import { apiClient, resourcePath } from "./client";
 import type { Product } from "../product";
 
 const PATH = "/products";
@@ -46,14 +46,14 @@ export const productApi = {
   ): Promise<Product> => {
     const { id, ...rest } = product;
     const data = await client.patch<Record<string, unknown>>(
-      `${PATH}?id=${id}`,
+      resourcePath(client, PATH, id),
       mapProductToApi(rest)
     );
     return mapProductFromApi(data);
   },
 
   remove: (id: number, client: ApiClient = apiClient): Promise<void> =>
-    client.delete(`${PATH}?id=${id}`),
+    client.delete(resourcePath(client, PATH, id)),
 
   /**
    * Sube la imagen ya convertida a JPEG (la conversion en si —

@@ -1,5 +1,5 @@
 import type { ApiClient } from "./client";
-import { apiClient } from "./client";
+import { apiClient, resourcePath } from "./client";
 import type { LocationData, LocationCreate, LocationUpdate } from "../location";
 
 const PATH = "/locations";
@@ -29,7 +29,7 @@ export const locationApi = {
     input: LocationUpdate,
     client: ApiClient = apiClient
   ): Promise<LocationData> => {
-    const response = await client.raw(`${PATH}?id=${id}`, {
+    const response = await client.raw(resourcePath(client, PATH, id), {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(input),
@@ -42,7 +42,7 @@ export const locationApi = {
   },
 
   remove: async (id: number, client: ApiClient = apiClient): Promise<void> => {
-    const response = await client.raw(`${PATH}?id=${id}`, { method: "DELETE" });
+    const response = await client.raw(resourcePath(client, PATH, id), { method: "DELETE" });
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
       throw new Error(data.error || "Error al eliminar el local");

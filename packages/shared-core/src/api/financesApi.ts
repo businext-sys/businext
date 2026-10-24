@@ -1,5 +1,5 @@
 import type { ApiClient } from "./client";
-import { apiClient } from "./client";
+import { apiClient, resourcePath } from "./client";
 import type { Finances, AnualBalances } from "../finances";
 import { mapFinanceFromApi } from "../mappers/finances";
 
@@ -32,12 +32,12 @@ export const financesApi = {
 
   update: (finance: Finances, client: ApiClient = apiClient): Promise<Finances> => {
     const { id, ...updateData } = finance;
-    return client.patch<Finances>(`${PATH}?id=${id}`, updateData);
+    return client.patch<Finances>(resourcePath(client, PATH, id), updateData);
   },
 
   /** Lanza `Error("LINKED_TO_RESERVATION")` si el backend responde 409. */
   remove: async (id: number, client: ApiClient = apiClient): Promise<void> => {
-    const response = await client.raw(`${PATH}?id=${id}`, {
+    const response = await client.raw(resourcePath(client, PATH, id), {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     });
