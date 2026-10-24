@@ -37,6 +37,8 @@ jobs:
       # configura como Variable de repo en Settings > Secrets and
       # variables > Actions > pestaña Variables.
       EAS_PROJECT_ID: ${{ vars.EAS_PROJECT_ID }}
+      # eas-cli lee el token de esta variable; no hace falta expo-github-action.
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
     steps:
       - name: Checkout repo
@@ -54,16 +56,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Setup EAS
-        uses: expo/expo-github-action@v8
-        with:
-          eas-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
-
       - name: Verificar login de EAS
         working-directory: apps/mobile
         run: |
-          if ! npx eas-cli whoami > /dev/null 2>&1; then
+          if ! npx --yes eas-cli@latest whoami > /dev/null 2>&1; then
             echo "::error::EAS no esta autenticado. Configura el secret EXPO_TOKEN en Settings > Secrets del repo (ver apps/mobile/README.md)."
             exit 1
           fi
@@ -71,7 +67,7 @@ jobs:
       - name: EAS Build (preview)
         working-directory: apps/mobile
         run: |
-          npx eas-cli build \
+          npx --yes eas-cli@latest build \
             --platform "${{ inputs.platform || 'all' }}" \
             --profile "${{ inputs.profile || 'preview' }}" \
             --non-interactive \
