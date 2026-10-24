@@ -3,12 +3,15 @@ packages:
   - "packages/*"
 
 # Fuerza una unica version de react/react-dom en todo el monorepo (issue
-# #028): apps/mobile (Expo SDK 57) requiere react 19.2.3; sin este
-# override, pnpm resuelve una copia distinta (19.1.0) para
-# packages/shared-core como peer de apps/web, lo que expo-doctor reporta
-# como dependencia nativa duplicada (riesgo real de "multiple React
-# instances" en Metro/React Native).
+# #028): apps/mobile (Expo SDK 58) requiere react 19.3.0; sin este
+# override, pnpm resuelve una copia distinta para packages/shared-core,
+# lo que expo-doctor reporta como dependencia nativa duplicada (riesgo
+# real de "multiple React instances" en Metro/React Native).
+#
+# OJO: pnpm 9 ignora `overrides` en este archivo (se lee desde pnpm 10).
+# Mientras el repo siga en pnpm 9, lo que alinea la copia de shared-core
+# es su devDependency `react`, que debe coincidir con la de apps/mobile.
 overrides:
-  react: "19.2.3"
-  react-dom: "19.2.3"
+  react: "19.3.0"
+  react-dom: "19.3.0"
 

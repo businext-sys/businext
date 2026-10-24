@@ -44,7 +44,7 @@ export default function ConversationsScreen() {
       <FlatList
         data={conversations}
         keyExtractor={(conversation) => conversation.id}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={() => mutate()} tintColor={colors.primary} />}
+        refreshControl={<RefreshControl refreshing={loading} onRefresh={async () => { await mutate(); }} tintColor={colors.primary} />}
         contentContainerStyle={conversations.length === 0 ? styles.emptyContainer : undefined}
         renderItem={({ item }) => (
           <View style={styles.row}>

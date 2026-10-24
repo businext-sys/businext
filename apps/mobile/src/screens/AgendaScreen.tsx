@@ -95,7 +95,12 @@ export default function AgendaScreen() {
           <Text style={styles.sectionHeader}>{section.title}</Text>
         )}
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={getAllReservations} />
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={async () => {
+              await getAllReservations();
+            }}
+          />
         }
         contentContainerStyle={
           sections.length === 0 ? styles.emptyContainer : styles.listContainer
@@ -105,7 +110,7 @@ export default function AgendaScreen() {
             <Text style={styles.emptyText}>
               No hay reservas para este dia.
             </Text>
-          ) : null
+          ) : undefined
         }
       />
     </View>
