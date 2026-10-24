@@ -1,0 +1,14 @@
+appId: com.businext.mobile
+---
+- tapOn:
+    id: "login-email"
+- inputText: ${MAESTRO_EMAIL}
+- tapOn:
+    id: "login-password"
+- inputText: ${MAESTRO_PASSWORD}
+- hideKeyboard
+- tapOn:
+    id: "login-submit"
+- extendedWaitUntil:
+    visible: "¿En qué te ayudo hoy?"
+    timeout: 20000

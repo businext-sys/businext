@@ -12,13 +12,16 @@ import { getValidAccessToken } from "./session";
  * `app/_layout.tsx`), antes de que se monte cualquier componente que use
  * los hooks de `@businext/shared-core/hooks`.
  */
-export function bootstrapApiClient(): void {
-  const apiBaseUrl =
+export function getApiBaseUrl(): string {
+  return (
     (Constants.expoConfig?.extra?.apiBaseUrl as string | undefined) ??
-    "http://localhost:8000";
+    "http://localhost:8000"
+  );
+}
 
+export function bootstrapApiClient(): void {
   configureApiClient({
-    baseURL: apiBaseUrl,
+    baseURL: getApiBaseUrl(),
     // Mobile llama directo al backend real, sin las rutas proxy /api/...
     // del BFF de Next.js que usa apps/web.
     apiPrefix: "",

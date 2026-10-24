@@ -9,3 +9,5 @@ export * from "./useWeeklySummary";
 export * from "./useWorkingHours";
 export * from "./useGoogleReviews";
 export * from "./useAccessContext";
+export * from "./useAssistantChat";
+export * from "./useAssistantConversations";

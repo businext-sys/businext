@@ -68,3 +68,7 @@ export function parseChatEvent(raw: unknown): ChatEvent | null {
   const parsed = ChatEventSchema.safeParse(raw);
   return parsed.success ? parsed.data : null;
 }
+
+export * from "./chat";
+export * from "./quickActions";
+export * from "./notificationContext";

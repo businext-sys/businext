@@ -76,6 +76,20 @@ describe("ChatBlockSchema", () => {
     expect(ChatBlockSchema.parse(block).type).toBe(block.type);
   });
 
+  it("cash_summary admite previous_balance opcional o nulo", () => {
+    const base = {
+      type: "cash_summary",
+      period_label: "Esta semana",
+      total_income: 500,
+      total_expense: 100,
+      balance: 400,
+      currency: "EUR",
+    };
+    expect(() => ChatBlockSchema.parse({ ...base, previous_balance: 350 })).not.toThrow();
+    expect(() => ChatBlockSchema.parse({ ...base, previous_balance: null })).not.toThrow();
+    expect(() => ChatBlockSchema.parse({ ...base, previous_balance: "350" })).toThrow();
+  });
+
   it("rechaza un bloque con campos que faltan", () => {
     expect(() => ChatBlockSchema.parse({ type: "cash_summary", balance: 1 })).toThrow();
   });
@@ -160,6 +174,8 @@ describe("ChatEventSchema / parseChatEvent", () => {
     { type: "message_start", conversation_id: "c-1", message_id: "m-1" },
     { type: "text_delta", message_id: "m-1", delta: "Ho" },
     { type: "block", message_id: "m-1", block: reservationList },
+    { type: "tool_status", message_id: "m-1", label: "Consultando reservas…" },
+    { type: "tool_status", message_id: "m-1", label: null },
     { type: "message_end", message_id: "m-1" },
     { type: "error", code: "rate_limited", message: "Demasiadas peticiones" },
   ])("parsea el evento $type", (event) => {

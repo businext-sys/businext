@@ -22,6 +22,12 @@ export type ApiClientConfig = {
    * configurar. En mobile se le pasa una funcion que lee de SecureStore.
    */
   getAuthToken?: () => Promise<string | null> | string | null;
+  /**
+   * Implementacion de `fetch` a usar. Por defecto la global. En mobile el
+   * chat del asistente usa `expo/fetch`, que expone el body como stream
+   * (el `fetch` global de React Native no lo hace).
+   */
+  fetch?: typeof fetch;
 };
 
 export type ApiClient = {
@@ -70,7 +76,8 @@ export function createApiClient(config: ApiClientConfig = {}): ApiClient {
 
   const raw = async (path: string, init: RequestInit = {}): Promise<Response> => {
     const authHeaders = await resolveAuthHeaders(getAuthToken);
-    return fetch(buildUrl(path), {
+    const fetchImpl = config.fetch ?? fetch;
+    return fetchImpl(buildUrl(path), {
       ...init,
       headers: {
         ...authHeaders,

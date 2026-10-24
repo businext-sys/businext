@@ -17,6 +17,8 @@ export default function RootLayout() {
             name="reservation/[id]"
             options={{ headerShown: true, title: "Detalle de reserva" }}
           />
+          <Stack.Screen name="settings" options={{ headerShown: true, title: "Ajustes" }} />
+          <Stack.Screen name="conversations" options={{ headerShown: true, title: "Historial" }} />
         </Stack>
       </AuthGate>
     </AuthProvider>

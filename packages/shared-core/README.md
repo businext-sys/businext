@@ -67,7 +67,7 @@ se regenera `generated-types.ts` y se contrasta con estos schemas.
 |---|---|
 | `text` | `text` |
 | `reservation_list` | `title \| null`, `reservations[]: { id, client_name, service, start_time, end_time \| null, employee_name \| null, status }` |
-| `cash_summary` | `period_label`, `total_income`, `total_expense`, `balance`, `currency` |
+| `cash_summary` | `period_label`, `total_income`, `total_expense`, `balance`, `previous_balance?` (periodo anterior, para la comparativa), `currency` |
 | `booking_request` | `request: { id, client_name, service, requested_date, employee_name \| null, status }` |
 | `confirmation` | `action_id`, `title`, `description`, `status: pending \| confirmed \| cancelled \| expired` |
 | `quick_replies` | `options[]: { label, message }` |
@@ -79,7 +79,9 @@ version nueva de la app.
 
 **Eventos SSE** (cada `data:` es un JSON con `type`): `message_start
 { conversation_id, message_id }`, `text_delta { message_id, delta }`,
-`block { message_id, block }`, `message_end { message_id }`,
+`block { message_id, block }`, `tool_status { message_id, label | null }`
+(herramienta en curso, p. ej. «Consultando reservas…»; `null` la limpia),
+`message_end { message_id }`,
 `error { code, message }`. `parseChatEvent` devuelve `null` para eventos
 desconocidos, que se ignoran.
 
@@ -87,6 +89,32 @@ desconocidos, que se ignoran.
 `ConfirmActionRequest { conversation_id, decision: "confirm" | "cancel" }`,
 `ConversationSummary { id, title, last_message_preview \| null, updated_at }` y
 `Conversation { id, title, messages, updated_at }`.
+
+**Acciones rapidas** (issue #80): `QUICK_ACTIONS` y
+`quickActionsFor(capabilities)` dan los chips del chat filtrados por las
+capacidades de `/auth/me` (la caja y el resumen semanal requieren
+`canManageFinances`; solicitudes y nueva reserva, `canManageReservations`;
+resenas, `canManageReviews`). Es solo UX: los permisos reales los aplica el
+backend en cada herramienta.
+
+**Endpoints** (`assistantApi`, issue #76): `POST /assistant/chat` y
+`POST /assistant/actions/{action_id}/confirm` responden en SSE;
+`GET /assistant/conversations`, `GET` y `DELETE /assistant/conversations/{id}`.
+
+**Historial:** `useAssistantConversations({ client })` lista las
+conversaciones (SWR) y `deleteConversation(id)` las borra de forma optimista,
+con rollback si falla.
+
+**Uso:** `useAssistantChat({ client })` (de `@businext/shared-core/hooks`)
+devuelve `messages`, `status` (`idle` | `streaming` | `error`), `error`
+(distingue sin conexion de un fallo del servidor), `activity` (la
+herramienta en curso),
+`conversationId`, `send`, `confirm`, `stop` y `retry`. La logica vive en
+`createAssistantChat` (`@businext/shared-core/assistant`), sin React, y es lo
+que cubren los tests. Reintenta solo si la peticion falla antes de recibir
+eventos (red o 5xx). En mobile se le pasa `assistantClient`
+(`apps/mobile/src/lib/assistantClient.ts`), creado con `expo/fetch`, porque el
+`fetch` global de React Native no expone el body como stream.
 
 ## Generacion de tipos desde OpenAPI (issue #018)
 
