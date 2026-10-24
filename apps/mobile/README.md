@@ -201,13 +201,18 @@ Flows del chat en `.maestro/flows/` (el login es el subflow
 Cada flow espera el `testID` de su tarjeta (`card-reservation-list`,
 `card-confirmation`, `card-booking-request`), asi que falla si un chip deja de
 devolverla. Necesitan un build con el chat activo instalado en un emulador o
-dispositivo, un usuario de prueba con reservas y solicitudes, y un backend con
-el LLM mockeado para que las respuestas sean deterministas:
+dispositivo y un backend con el LLM simulado, para que las respuestas sean
+deterministas (`businext-backend`, ver su README, «E2E del chat»):
 
 ```bash
+# en businext-backend, contra una base de pruebas
+ASSISTANT_LLM_MODE=mock uvicorn src.main:app --port 8000
+python -m src.services.assistant.e2e_seed --business-id <user id del owner de prueba>
+
+# en businext, con la app apuntando a ese backend
 maestro test -e MAESTRO_EMAIL=<email> -e MAESTRO_PASSWORD=<password> apps/mobile/.maestro/flows
 ```
 
 **Pendiente:** ejecutarlos en CI depende de la base de Maestro y del workflow
-`qa-mobile.yml` (issue #32) y del backend con el LLM mockeado.
+`qa-mobile.yml` (issue #32).
 
