@@ -52,6 +52,21 @@ export type ApiClient = {
   delete<T = void>(path: string, body?: unknown): Promise<T>;
 };
 
+/**
+ * Ruta de un recurso por id. El BFF de apps/web lo recibe como query
+ * (`/api/reservations?id=5`), pero el backend real lo espera como segmento
+ * (`/reservations/5`); con `?id=` contra el backend, PATCH/DELETE caen en
+ * la ruta de coleccion y devuelven 405. Mismo criterio que
+ * `financesApi.listAnual`: `apiPrefix` vacio = backend directo (mobile).
+ */
+export function resourcePath(
+  client: ApiClient,
+  path: string,
+  id: number | string | undefined
+): string {
+  return client.apiPrefix ? `${path}?id=${id}` : `${path}/${id}`;
+}
+
 const MAX_GET_RETRIES = 3;
 
 async function resolveAuthHeaders(

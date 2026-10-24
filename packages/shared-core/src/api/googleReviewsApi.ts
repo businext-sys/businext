@@ -93,10 +93,11 @@ export const googleReviewsApi = {
     reviewId: number,
     client: ApiClient = apiClient
   ): Promise<string | null> => {
-    const response = await client.raw(
-      `/google-reviews/reviews/generate-response?id=${reviewId}`,
-      { method: "POST" }
-    );
+    // El BFF de web recibe el id como query; el backend real, como segmento.
+    const path = client.apiPrefix
+      ? `/google-reviews/reviews/generate-response?id=${reviewId}`
+      : `/google-reviews/reviews/${reviewId}/generate-response`;
+    const response = await client.raw(path, { method: "POST" });
     if (!response.ok) return null;
     const data = await response.json();
     return data.ai_generated_response as string;
