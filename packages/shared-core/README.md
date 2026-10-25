@@ -41,6 +41,14 @@ Este paquete esta en construccion (Fase 3 del plan maestro, issues #12-#20 en
 - [ ] #19 Migracion de moment-timezone a dayjs
 - [ ] #20 Verificacion de regresion cero en `apps/web`
 
+## Agente de voz (Fase 8, issue #118)
+
+`voiceAgentApi` (`get`, `update`) y `useVoiceAgentConfig()` consumen
+`GET`/`PATCH /voice-agent/config` del backend (solo owner; 403 al resto).
+`VoiceAgentConfig` es `{ enabled, bookingMode: "request" | "confirm",
+phoneNumbers }`; los numeros los asigna Businext y no se cambian desde aqui.
+En web pasa por el BFF `apps/web/src/app/api/voice-agent/config/route.ts`.
+
 ## Uso desde `apps/web`
 
 ```ts

@@ -4,3 +4,4 @@ export * from "./booking-request";
 export * from "./configuration";
 export * from "./employee";
 export * from "./assistant";
+export * from "./voice-agent";
