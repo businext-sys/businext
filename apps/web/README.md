@@ -49,7 +49,8 @@ src/
 │   ├── useConfiguration.ts  # CRUD de configuracion (SWR + UI optimista)
 │   ├── useProduct.ts        # CRUD de productos
 │   ├── useFinances.ts       # CRUD de finanzas
-│   └── useReservation.ts    # CRUD de reservas
+│   ├── useReservation.ts    # CRUD de reservas
+│   └── useVoiceAgentConfig.ts # Agente de voz: numeros, activado y modo de reserva (solo owner)
 ├── lib/
 │   ├── auth/              # Helpers de sesion en servidor
 │   ├── fetcher.ts         # Fetcher de SWR con retry (3 intentos, backoff)
