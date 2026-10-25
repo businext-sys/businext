@@ -666,6 +666,205 @@ export interface paths {
         patch: operations["update_location_locations__location_id__patch"];
         trace?: never;
     };
+    "/users/{user_id}/push-tokens": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Register Push Token
+         * @description Registra (o reasigna) un Expo push token para un usuario.
+         *
+         *     No requiere suscripcion activa (a diferencia de la mayoria de
+         *     endpoints) porque registrar el token del dispositivo debe funcionar
+         *     incluso si la suscripcion del owner esta vencida — es la propia app
+         *     quien decide que UI mostrar segun `capabilities.can_access_app`.
+         *
+         *     Solo el propio usuario puede registrar su token (`user_id` del path
+         *     debe coincidir con el del JWT).
+         */
+        post: operations["register_push_token_users__user_id__push_tokens_post"];
+        /**
+         * Unregister Push Token
+         * @description Elimina un push token (ej. al hacer logout en el dispositivo).
+         */
+        delete: operations["unregister_push_token_users__user_id__push_tokens_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assistant/chat": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Chat
+         * @description Un turno del chat, respondido en streaming SSE (eventos del contrato de shared-core).
+         */
+        post: operations["chat_assistant_chat_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assistant/actions/{action_id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm Action
+         * @description Ejecuta (o descarta) una accion propuesta por el asistente. Responde en SSE.
+         */
+        post: operations["confirm_action_assistant_actions__action_id__confirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assistant/usage": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Usage
+         * @description Coste diario del asistente para el negocio (solo owner), el dia mas reciente primero.
+         */
+        get: operations["get_usage_assistant_usage_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assistant/conversations": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Conversations
+         * @description Conversaciones del usuario, la mas reciente primero (`ConversationSummary` de shared-core).
+         */
+        get: operations["list_conversations_assistant_conversations_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/assistant/conversations/{conversation_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Conversation
+         * @description Una conversacion con sus mensajes y bloques (`Conversation` de shared-core).
+         */
+        get: operations["get_conversation_assistant_conversations__conversation_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Conversation */
+        delete: operations["delete_conversation_assistant_conversations__conversation_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/voice-agent/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Voice Agent Config
+         * @description Configuracion del agente de voz del negocio y sus numeros (sin fila: desactivado, modo solicitud).
+         */
+        get: operations["get_voice_agent_config_voice_agent_config_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Voice Agent Config
+         * @description Activa o desactiva el agente y cambia su modo de reserva (`request` o `confirm`).
+         */
+        patch: operations["update_voice_agent_config_voice_agent_config_patch"];
+        trace?: never;
+    };
+    "/retell/inbound": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Inbound Call
+         * @description Resuelve el numero marcado a su negocio; rechaza si no hay negocio o el agente esta desactivado.
+         */
+        post: operations["inbound_call_retell_inbound_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/retell/functions/{function_name}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Run Function
+         * @description Ejecuta una funcion del agente para el negocio de la llamada. Los errores
+         *     de negocio responden 200 con `ok: false` y el motivo, para que el agente se
+         *     lo diga al cliente; un fallo de Retell (no 2xx) solo le diria que algo fallo.
+         */
+        post: operations["run_function_retell_functions__function_name__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -774,10 +973,36 @@ export interface components {
             /** Commission Service */
             commission_service?: number | null;
         };
+        /** CallInbound */
+        CallInbound: {
+            /** Call Id */
+            call_id?: string | null;
+            /** From Number */
+            from_number?: string | null;
+            /** To Number */
+            to_number?: string | null;
+        };
+        /** ChatRequest */
+        ChatRequest: {
+            /** Conversation Id */
+            conversation_id?: string | null;
+            /** Message */
+            message: string;
+        };
         /** CompleteEmployeeOnboardingInput */
         CompleteEmployeeOnboardingInput: {
             /** Password */
             password: string;
+        };
+        /** ConfirmActionRequest */
+        ConfirmActionRequest: {
+            /** Conversation Id */
+            conversation_id: string;
+            /**
+             * Decision
+             * @enum {string}
+             */
+            decision: "confirm" | "cancel";
         };
         /** EmployeePublic */
         EmployeePublic: {
@@ -869,6 +1094,16 @@ export interface components {
             customer_name?: string | null;
             /** Product Id */
             product_id?: number | null;
+        };
+        /** FunctionCall */
+        FunctionCall: {
+            /** Name */
+            name?: string | null;
+            call: components["schemas"]["RetellCall"];
+            /** Args */
+            args?: {
+                [key: string]: unknown;
+            };
         };
         /** GenerateResponseResult */
         GenerateResponseResult: {
@@ -977,6 +1212,12 @@ export interface components {
         HTTPValidationError: {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
+        };
+        /** InboundWebhook */
+        InboundWebhook: {
+            /** Event */
+            event: string;
+            call_inbound?: components["schemas"]["CallInbound"] | null;
         };
         /** InviteEmployeeInput */
         InviteEmployeeInput: {
@@ -1099,6 +1340,25 @@ export interface components {
             /** Seller */
             seller?: string | null;
         };
+        /** PushTokenCreate */
+        PushTokenCreate: {
+            /** Token */
+            token: string;
+        };
+        /** PushTokenPublic */
+        PushTokenPublic: {
+            /** Id */
+            id: number;
+            /** User Id */
+            user_id: string;
+            /** Token */
+            token: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
         /** ReservationBase */
         ReservationBase: {
             /** Customer Name */
@@ -1164,6 +1424,19 @@ export interface components {
             /** Service */
             service?: string | null;
         };
+        /** RetellCall */
+        RetellCall: {
+            /** Call Id */
+            call_id?: string | null;
+            /** From Number */
+            from_number?: string | null;
+            /** To Number */
+            to_number?: string | null;
+            /** Retell Llm Dynamic Variables */
+            retell_llm_dynamic_variables?: {
+                [key: string]: string;
+            };
+        };
         /** SignupInput */
         SignupInput: {
             /** Email */
@@ -1209,6 +1482,25 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /** VoiceAgentConfigPublic */
+        VoiceAgentConfigPublic: {
+            /** Enabled */
+            enabled: boolean;
+            /**
+             * Booking Mode
+             * @enum {string}
+             */
+            booking_mode: "request" | "confirm";
+            /** Phone Numbers */
+            phone_numbers: string[];
+        };
+        /** VoiceAgentConfigUpdate */
+        VoiceAgentConfigUpdate: {
+            /** Enabled */
+            enabled?: boolean | null;
+            /** Booking Mode */
+            booking_mode?: ("request" | "confirm") | null;
         };
         /** WeeklySummaryPublic */
         WeeklySummaryPublic: {
@@ -3156,6 +3448,412 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LocationPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    register_push_token_users__user_id__push_tokens_post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PushTokenCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PushTokenPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unregister_push_token_users__user_id__push_tokens_delete: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PushTokenCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    chat_assistant_chat_post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ChatRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    confirm_action_assistant_actions__action_id__confirm_post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                action_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmActionRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_usage_assistant_usage_get: {
+        parameters: {
+            query?: {
+                days?: number;
+            };
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_conversations_assistant_conversations_get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_conversation_assistant_conversations__conversation_id__get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                conversation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_conversation_assistant_conversations__conversation_id__delete: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                conversation_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_voice_agent_config_voice_agent_config_get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VoiceAgentConfigPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_voice_agent_config_voice_agent_config_patch: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VoiceAgentConfigUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VoiceAgentConfigPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    inbound_call_retell_inbound_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["InboundWebhook"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    run_function_retell_functions__function_name__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                function_name: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FunctionCall"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
             /** @description Validation Error */

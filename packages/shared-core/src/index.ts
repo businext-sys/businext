@@ -16,6 +16,7 @@ export * from "./access";
 export * from "./intelligence";
 export * from "./google-reviews";
 export * from "./assistant";
+export * from "./voice-agent";
 export * from "./schemas";
 export * from "./mappers";
 export * from "./services";
