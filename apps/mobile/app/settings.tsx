@@ -1,10 +1,11 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useAccessContext } from "@businext/shared-core/hooks";
 import { useAuth } from "@/context/AuthContext";
+import { VoiceAgentSection } from "@/components/VoiceAgentSection";
 import { colors } from "@/theme/colors";
 
 /**
- * Ajustes (issue #78): cuenta y cierre de sesion.
+ * Ajustes (issue #78): cuenta, agente de voz (solo owner) y cierre de sesion.
  */
 export default function SettingsScreen() {
   const { logout } = useAuth();
@@ -18,6 +19,7 @@ export default function SettingsScreen() {
           <Text style={styles.value}>{context.profile?.email ?? context.profile?.displayName}</Text>
         </View>
       )}
+      {context?.role === "owner" && <VoiceAgentSection />}
       <Pressable style={styles.logout} onPress={logout} accessibilityRole="button">
         <Text style={styles.logoutText}>Cerrar sesión</Text>
       </Pressable>
