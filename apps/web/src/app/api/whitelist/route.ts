@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 
 const INTERESTS: Record<string, string> = {
   businext: "Businext completo (con web incluida)",
-  web: "Solo la web (desde 150 €)",
+  web: "Solo la web",
 };
 
 const clean = (value: unknown, max: number) => (typeof value === "string" ? value.trim().slice(0, max) : "");
