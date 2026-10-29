@@ -6,34 +6,59 @@ colors:
   background: "#0F0E0C"
   surface: "#1C1A17"
   surface-raised: "#2A2621"
-  sidebar: "#171513"
   border: "#3A3530"
+  border-subtle: "#24211D"
+  input: "#3A3530"
+  ring: "#41D9D6"
   foreground: "#F4F1EC"
-  foreground-muted: "#B5ABA0"
+  foreground-muted: "#D6CEC5"
+  foreground-subtle: "#A89E93"
   primary: "#41D9D6"
   primary-hover: "#7FE8E5"
   primary-foreground: "#0F0E0C"
-  accent: "#D08B5B"
+  secondary: "#D08B5B"
+  secondary-hover: "#DFA47A"
+  secondary-foreground: "#0F0E0C"
+  accent: "#12302F"
+  accent-hover: "#1A4140"
+  accent-foreground: "#F4F1EC"
+  muted: "#171513"
+  muted-foreground: "#B5ABA0"
   success: "#34D399"
+  success-foreground: "#0F0E0C"
   danger: "#F4574B"
+  danger-foreground: "#0F0E0C"
   warning: "#F5A623"
+  warning-foreground: "#0F0E0C"
+  highlight: "#F97316"
   light-background: "#F4F1EC"
   light-surface: "#FBF9F6"
   light-surface-raised: "#EFE3D8"
-  light-sidebar: "#F4F1EC"
   light-border: "#E2DBD2"
-  light-border-strong: "#CFC5B9"
+  light-border-subtle: "#EAE4DC"
+  light-input: "#CFC5B9"
+  light-ring: "#8A5A3C"
   light-foreground: "#14110E"
-  light-foreground-muted: "#5E554D"
+  light-foreground-muted: "#3F3832"
+  light-foreground-subtle: "#5E554D"
   light-primary: "#8A5A3C"
   light-primary-hover: "#74492F"
   light-primary-foreground: "#FBF9F6"
-  light-accent: "#0E6E6E"
-  light-accent-soft: "#DCEDEC"
-  light-accent-soft-foreground: "#0B4F4F"
-  light-success: "#1F7A4D"
+  light-secondary: "#0E6E6E"
+  light-secondary-hover: "#0B5A5A"
+  light-secondary-foreground: "#FBF9F6"
+  light-accent: "#DCEDEC"
+  light-accent-hover: "#CBE3E1"
+  light-accent-foreground: "#0B4F4F"
+  light-muted: "#EAE4DC"
+  light-muted-foreground: "#5E554D"
+  light-success: "#1A6B43"
+  light-success-foreground: "#FBF9F6"
   light-danger: "#B3261E"
+  light-danger-foreground: "#FBF9F6"
   light-warning: "#8A5A00"
+  light-warning-foreground: "#FBF9F6"
+  light-highlight: "#C2410C"
 typography:
   display:
     fontFamily: Big Shoulders Display
@@ -164,17 +189,22 @@ Dos modos con la misma estructura, tipografía y forma; cambia la paleta:
 ## Colors
 
 Los tokens sin prefijo son el modo oscuro; los `light-*` son su equivalente en modo claro, con
-el mismo papel. Todos los pares de texto pasan WCAG AA (4.5:1) sobre su fondo.
+el mismo papel. En código viven en `packages/shared-core/src/theme` (`themeColors.dark` y
+`themeColors.light`, en camelCase) y un test comprueba que todo par de texto pasa WCAG AA
+(4.5:1) en los dos modos.
 
 - **Background / surface / surface-raised:** tres alturas de negro cálido (nunca azul noche).
   En claro, blanco roto, blanco de papel y un tinte coñac para lo destacado.
 - **Primary:** la acción principal. Turquesa del logo en oscuro (con texto negro encima);
   coñac del cuero en claro (con texto blanco roto). Una sola acción primaria por vista.
-- **Accent:** el otro color de la marca, siempre en poca superficie: etiquetas, fechas, datos
-  destacados. Coñac en oscuro, turquesa oscuro en claro.
-- **Lo que hace el asistente** (citas reservadas por él, sus métricas) se marca con el
-  turquesa: relleno `primary` en oscuro, `light-accent-soft` en claro.
-- **Success, danger, warning:** solo para estado; nunca decorativos.
+- **Secondary:** el otro color de la marca, siempre en poca superficie: etiquetas, fechas,
+  datos destacados. Coñac en oscuro, turquesa oscuro en claro.
+- **Accent:** superficie teñida de turquesa con su `accent-foreground`. Marca lo que hace el
+  asistente (citas reservadas por él, sus métricas).
+- **Muted:** fondos neutros secundarios (chips, zonas vacías) con `muted-foreground`.
+- **Success, danger, warning:** solo para estado; nunca decorativos. Cada uno con su
+  `*-foreground` para texto sobre el relleno.
+- **Highlight:** naranja para avisos puntuales que deben saltar a la vista.
 
 ## Typography
 
@@ -182,7 +212,7 @@ el mismo papel. Todos los pares de texto pasan WCAG AA (4.5:1) sobre su fondo.
   mayúsculas en los titulares grandes. Recoge el carácter del graffiti sin imitarlo.
 - **DM Sans** (400, 500, 700) para todo lo demás: texto, etiquetas, botones, formularios.
 - `eyebrow`: la línea pequeña en mayúsculas sobre un título (fecha, contexto), en color
-  `accent`.
+  `secondary`.
 - Las cifras grandes (`metric`) van en Big Shoulders: se leen de un vistazo.
 
 ## Layout

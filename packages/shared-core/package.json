@@ -20,6 +20,7 @@
     "./google-reviews": "./src/google-reviews/index.ts",
     "./assistant": "./src/assistant/index.ts",
     "./voice-agent": "./src/voice-agent/index.ts",
+    "./theme": "./src/theme/index.ts",
     "./schemas": "./src/schemas/index.ts",
     "./mappers": "./src/mappers/index.ts",
     "./api": "./src/api/index.ts",
