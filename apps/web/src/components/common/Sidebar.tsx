@@ -124,7 +124,7 @@ export function Sidebar() {
       <div className="flex items-center gap-2 px-5 py-5 border-b border-border-subtle">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src="/logo-bn.png" alt="" width={42} height={28} className="shrink-0" />
-        <span className="font-heading text-h4 font-bold text-foreground tracking-tight select-none">
+        <span className="font-heading text-h3 font-black uppercase text-foreground select-none">
           Businext
         </span>
         <button
@@ -151,14 +151,14 @@ export function Sidebar() {
               className={cn(
                 "flex items-center gap-3 px-4 py-2.5 rounded-lg text-body-sm font-medium transition-all duration-150 ease-snappy",
                 active
-                  ? "bg-primary/20 text-foreground border-l-2 border-primary shadow-sm"
-                  : "text-foreground-muted hover:bg-surface-raised hover:text-accent"
+                  ? "bg-primary text-primary-foreground font-semibold"
+                  : "text-foreground-muted hover:bg-surface-raised hover:text-foreground"
               )}
             >
               <Icon className="w-5 h-5 flex-shrink-0" />
               {label}
               {badge > 0 && (
-                <span className="ml-auto inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-danger rounded-full">
+                <span className="ml-auto inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-danger-foreground bg-danger rounded-full">
                   {badge > 99 ? "99+" : badge}
                 </span>
               )}
@@ -218,7 +218,7 @@ export function Sidebar() {
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <div className="fixed inset-0 bg-black/60" aria-hidden="true" />
+            <div className="fixed inset-0 bg-background/80" aria-hidden="true" />
           </TransitionChild>
 
           {/* Sliding panel */}
