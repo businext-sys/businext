@@ -1,6 +1,6 @@
-import { StyleSheet, Text } from "react-native";
+import { Text } from "react-native";
 import type { ChatBlock } from "@businext/shared-core/assistant";
-import { colors } from "@/theme/colors";
+import { themedStyles } from "@/theme/ThemeContext";
 import { BookingRequestCard } from "./cards/BookingRequestCard";
 import { CashSummaryCard } from "./cards/CashSummaryCard";
 import { ConfirmationCard } from "./cards/ConfirmationCard";
@@ -16,6 +16,7 @@ type Props = {
 };
 
 export function ChatBlockView({ block, isUser, onQuickReply, onConfirm }: Props) {
+  const styles = useStyles();
   const textStyle = isUser ? styles.userText : styles.assistantText;
 
   switch (block.type) {
@@ -50,7 +51,7 @@ export function ChatBlockView({ block, isUser, onQuickReply, onConfirm }: Props)
   }
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   userText: { fontSize: 16, lineHeight: 22, color: colors.primaryForeground },
   assistantText: { fontSize: 16, lineHeight: 22, color: colors.foreground },
-});
+}));

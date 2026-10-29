@@ -41,6 +41,19 @@ La logica de dominio no se reescribe aqui: las pantallas consumen
 [`@businext/shared-core`](../../packages/shared-core/README.md), los mismos
 hooks que usa `apps/web`.
 
+## Tema
+
+La identidad está en [`DESIGN.md`](../../DESIGN.md): oscuro *Noche de barrio* por
+defecto y claro *Taller*. `src/theme/ThemeContext.tsx` lee los colores de
+`@businext/shared-core/theme` y guarda el modo en el dispositivo; se cambia en
+**Ajustes → Apariencia**. Los estilos que usan colores se declaran con
+`themedStyles((colors) => ({ ... }))`, que devuelve un hook (`useStyles()`) con la
+hoja del modo activo; nada de hex sueltos.
+
+Las fuentes (Big Shoulders para titulares, DM Sans para el texto) se cargan con
+`expo-font` en `app/_layout.tsx` desde `src/theme/fonts.ts`. El plugin `expo-font`
+cambia el binario: tras este cambio hace falta un build nuevo de EAS.
+
 ## Comandos
 
 ```bash
@@ -53,6 +66,12 @@ pnpm --filter @businext/mobile lint
 
 Con Metro corriendo, `a` / `i` / `w` abren en emulador Android, simulador iOS
 o navegador.
+
+`lint` es `expo lint`, y la app aún no tiene configuración de ESLint: el comando
+la crea e instala `eslint-config-expo`, lo que deja `eslint-plugin-react-hooks@7` en
+la raíz de `node_modules`. Con eso `pnpm lint:web` y `pnpm build:web` fallan en
+código que no ha cambiado. Si pasa, no commitees esos cambios: deja
+`pnpm-lock.yaml` y `package.json` como en `main` y ejecuta `pnpm install`.
 
 ## Distribucion via EAS
 
@@ -131,7 +150,8 @@ que crearla a mano en Supabase.
   (balance, ingresos frente a gastos y comparativa), solicitud de reserva
   (Aceptar/Rechazar contra `/booking-requests`) y confirmacion de acciones
   (Confirmar/Cancelar llama a `confirm` del chat).
-  Colores de `src/theme/colors.ts` (paleta BN de la web). Sin tabs: el menu de la
+  Colores del tema (ver *Tema* abajo); la cabecera lleva el avatar del asistente
+  (`assets/avatar-asistente.png`). Sin tabs: el menu de la
   cabecera lleva a nueva conversacion, historial, agenda, ajustes y cerrar sesion. Si
   `EXPO_PUBLIC_ASSISTANT_CHAT=false` (hoy en los perfiles `preview` y
   `production` de `eas.json`), la home es la agenda.

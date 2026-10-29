@@ -8,9 +8,8 @@
  * En SSR no hay CSSOM: los lectores devuelven "" y el valor real se resuelve en
  * el primer render de cliente, que es donde se pinta el canvas.
  *
- * Los valores se cachean tras la primera lectura en el navegador porque la app
- * tiene un unico theme (dark). Si algun dia hay theme switching, habra que
- * invalidar `cache` / `paletteCache` al cambiar de theme.
+ * Los valores se cachean tras la primera lectura en el navegador;
+ * `clearThemeTokenCache()` los descarta al cambiar de modo (claro/oscuro).
  */
 
 /** Tope de series que se intenta leer de la paleta (`--color-chart-N`). */
@@ -58,6 +57,11 @@ export function colorToken(name: string): string {
 }
 
 let paletteCache: readonly string[] | null = null;
+
+export function clearThemeTokenCache(): void {
+  cache.clear();
+  paletteCache = null;
+}
 
 /**
  * Paleta categorica de charts (`--color-chart-1..N`) en orden de prioridad.

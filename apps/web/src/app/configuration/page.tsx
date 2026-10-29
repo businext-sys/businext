@@ -14,6 +14,7 @@ import {
   MapPin,
   CalendarClock,
   PhoneCall,
+  Palette,
 } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { SectionSkeleton } from "@/components/common/SkeletonLoader";
@@ -28,6 +29,7 @@ import { ProductsSection } from "@/components/configuration/ProductsSection";
 import { WorkingHoursEditor } from "@/components/configuration/WorkingHoursEditor";
 import { LocationsSection } from "@/components/configuration/LocationsSection";
 import { VoiceAgentSection } from "@/components/configuration/VoiceAgentSection";
+import { AppearanceSection } from "@/components/configuration/AppearanceSection";
 import { Modal, ModalHeader, ModalContent } from "@/components/ui/modal";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { useGlobalToast } from "@/context/ToastContext";
@@ -49,7 +51,7 @@ const INITIAL_EMPLOYEE_FORM: InviteEmployeeInput = {
   role: "employee",
 };
 
-type SectionId = "profile" | "business" | "products" | "hours" | "team" | "locations" | "booking" | "voice";
+type SectionId = "profile" | "business" | "products" | "hours" | "team" | "locations" | "booking" | "voice" | "appearance";
 
 type NavItem = {
   id: SectionId;
@@ -68,6 +70,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "team", label: "Equipo", icon: ShieldUser, cap: "canManageTeam" },
   { id: "booking", label: "Reserva online", icon: Link2, ownerOnly: true },
   { id: "voice", label: "Agente de voz", icon: PhoneCall, ownerOnly: true },
+  { id: "appearance", label: "Apariencia", icon: Palette },
 ];
 
 type ConfirmState = {
@@ -679,6 +682,9 @@ export default function ConfigurationPage() {
 
               {/* ═══ Voice agent ═══ */}
               {activeSection === "voice" && <VoiceAgentSection />}
+
+              {/* ═══ Appearance ═══ */}
+              {activeSection === "appearance" && <AppearanceSection />}
             </div>
           </div>
         )}

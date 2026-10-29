@@ -1,7 +1,8 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import { colors } from "@/theme/colors";
+import { Pressable, Text, View } from "react-native";
+import { themedStyles } from "@/theme/ThemeContext";
 
 export function ChatErrorBanner({ message, onRetry }: { message: string; onRetry: () => void }) {
+  const styles = useStyles();
   return (
     <View style={styles.banner} accessibilityRole="alert" accessibilityLiveRegion="assertive">
       <Text style={styles.text}>{message}</Text>
@@ -18,7 +19,7 @@ export function ChatErrorBanner({ message, onRetry }: { message: string; onRetry
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   banner: {
     flexDirection: "row",
     alignItems: "center",
@@ -40,4 +41,4 @@ const styles = StyleSheet.create({
     backgroundColor: colors.danger,
   },
   retryText: { fontSize: 14, fontWeight: "700", color: colors.primaryForeground },
-});
+}));

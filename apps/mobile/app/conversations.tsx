@@ -1,10 +1,10 @@
-import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import type { ConversationSummary } from "@businext/shared-core/assistant";
 import { useAssistantConversations } from "@businext/shared-core/hooks";
 import { assistantClient } from "@/lib/assistantClient";
 import { formatHour, isSameDay } from "@/lib/date";
-import { colors } from "@/theme/colors";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 function formatUpdatedAt(dateStr: string): string {
   if (isSameDay(dateStr, new Date())) return `Hoy, ${formatHour(dateStr)}`;
@@ -15,6 +15,8 @@ function formatUpdatedAt(dateStr: string): string {
  * Historial de conversaciones con el asistente (issue #82).
  */
 export default function ConversationsScreen() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const router = useRouter();
   const { conversations, loading, error, mutate, deleteConversation } = useAssistantConversations({
     client: assistantClient,
@@ -89,7 +91,7 @@ export default function ConversationsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   flex: { flex: 1, backgroundColor: colors.background },
   newButton: {
     margin: 16,
@@ -115,4 +117,4 @@ const styles = StyleSheet.create({
   deleteText: { fontSize: 14, color: colors.danger },
   emptyContainer: { flexGrow: 1, justifyContent: "center" },
   empty: { textAlign: "center", fontSize: 14, color: colors.foregroundMuted },
-});
+}));

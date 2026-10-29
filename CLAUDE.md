@@ -2,6 +2,8 @@
 
 Monorepo de Businext: `apps/web` (Next.js), `apps/mobile` (Expo) y `packages/shared-core`.
 Setup, variables y comandos en `README.md`; convenciones de cada parte en sus README.
+Antes de crear o cambiar UI en web o móvil, lee `DESIGN.md`: es la identidad visual (tokens y
+reglas) y no se usan valores fuera de ella.
 
 ## Proceso de contribución
 

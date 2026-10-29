@@ -1,17 +1,29 @@
 import { useState } from "react";
-import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
-import { colors } from "@/theme/colors";
+import { Image, Modal, Pressable, Text, View } from "react-native";
+import { themedStyles } from "@/theme/ThemeContext";
+import { fonts } from "@/theme/fonts";
 
 export type ChatMenuItem = { label: string; onPress: () => void; destructive?: boolean };
 
 export function ChatHeader({ menuItems }: { menuItems: ChatMenuItem[] }) {
+  const styles = useStyles();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <View style={styles.header}>
-      <Text style={styles.title} accessibilityRole="header">
-        Businext
-      </Text>
+      <View style={styles.identity}>
+        <Image
+          source={require("../../../assets/avatar-asistente.png")}
+          style={styles.avatar}
+          accessibilityLabel="Avatar del asistente"
+        />
+        <View>
+          <Text style={styles.title} accessibilityRole="header">
+            Tu asistente
+          </Text>
+          <Text style={styles.subtitle}>Businext</Text>
+        </View>
+      </View>
       <Pressable
         style={styles.menuButton}
         onPress={() => setMenuOpen(true)}
@@ -48,7 +60,7 @@ export function ChatHeader({ menuItems }: { menuItems: ChatMenuItem[] }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -60,10 +72,28 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
+  identity: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 999,
+    borderWidth: 2,
+    borderColor: colors.primary,
+  },
   title: {
-    fontSize: 20,
-    fontWeight: "700",
+    fontFamily: fonts.display,
+    fontSize: 24,
+    textTransform: "uppercase",
     color: colors.foreground,
+  },
+  subtitle: {
+    fontFamily: fonts.bodyBold,
+    fontSize: 13,
+    color: colors.secondary,
   },
   menuButton: {
     width: 44,
@@ -77,7 +107,7 @@ const styles = StyleSheet.create({
   },
   backdrop: {
     flex: 1,
-    backgroundColor: "rgba(12, 17, 23, 0.6)",
+    backgroundColor: `${colors.background}99`,
     alignItems: "flex-end",
     paddingTop: 100,
     paddingHorizontal: 16,
@@ -101,4 +131,4 @@ const styles = StyleSheet.create({
   destructive: {
     color: colors.danger,
   },
-});
+}));

@@ -1,7 +1,9 @@
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { colors } from "@/theme/colors";
+import { ActivityIndicator, Text, View } from "react-native";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 export function TypingIndicator({ activity }: { activity: string | null }) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const label = activity ?? "Escribiendo…";
   return (
     <View
@@ -16,7 +18,7 @@ export function TypingIndicator({ activity }: { activity: string | null }) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   row: {
     flexDirection: "row",
     alignItems: "center",
@@ -25,4 +27,4 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   text: { fontSize: 14, color: colors.foregroundMuted },
-});
+}));

@@ -5,49 +5,20 @@ import { useRef, useState } from "react";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
 
-// ── Shared token styles ──────────────────────────────────────────────────────
-const INPUT_STYLE: React.CSSProperties = {
-  width: "100%",
-  background: "rgba(255,255,255,0.06)",
-  border: "1px solid rgba(255,255,255,0.12)",
-  borderRadius: 10,
-  padding: "13px 16px",
-  color: "#f8fafc",
-  fontSize: "0.95rem",
-  outline: "none",
-  transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-  boxSizing: "border-box",
-};
+const INPUT_CLASS =
+  "w-full rounded-sm border border-input bg-surface px-4 py-3 text-body text-foreground placeholder:text-foreground-subtle transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/25";
 
-const LABEL_STYLE: React.CSSProperties = {
-  display: "block",
-  marginBottom: 6,
-  color: "rgba(255,255,255,0.55)",
-  fontSize: "0.78rem",
-  fontWeight: 600,
-  letterSpacing: "0.06em",
-  textTransform: "uppercase",
-};
+const LABEL_CLASS =
+  "mb-1.5 block text-caption font-bold uppercase tracking-[0.1em] text-foreground-muted";
 
-const ERROR_STYLE: React.CSSProperties = {
-  background: "rgba(244,87,75,0.10)",
-  border: "1px solid rgba(244,87,75,0.25)",
-  borderRadius: 8,
-  padding: "10px 14px",
-  color: "#f4574b",
-  fontSize: "0.82rem",
-  textAlign: "center",
-};
+const ERROR_CLASS =
+  "rounded-md border border-danger/30 bg-danger/10 px-3.5 py-2.5 text-center text-body-sm text-danger";
 
-const SUCCESS_STYLE: React.CSSProperties = {
-  background: "rgba(52,211,153,0.10)",
-  border: "1px solid rgba(52,211,153,0.25)",
-  borderRadius: 8,
-  padding: "10px 14px",
-  color: "#34d399",
-  fontSize: "0.82rem",
-  textAlign: "center",
-};
+const SUCCESS_CLASS =
+  "rounded-md border border-success/30 bg-success/10 px-3.5 py-2.5 text-center text-body-sm text-success";
+
+const PRIMARY_BUTTON_CLASS =
+  "inline-flex w-full items-center justify-center gap-2.5 rounded-sm bg-primary px-8 py-3.5 text-body font-bold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-60";
 
 export default function LoginPage() {
   const [loginState,  loginAction,  loginPending]  = useActionState(login,  { error: "" });
@@ -56,7 +27,6 @@ export default function LoginPage() {
   const [showRecovery, setShowRecovery] = useState(false);
   const [recoveryState, setRecoveryState] = useState<{ error?: string; success?: string }>({});
   const [recoveryLoading, setRecoveryLoading] = useState(false);
-  const [focusedField, setFocusedField] = useState<string | null>(null);
   const recoveryEmailRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
@@ -85,157 +55,96 @@ export default function LoginPage() {
     }
   }
 
-  const inputStyle = (name: string): React.CSSProperties => ({
-    ...INPUT_STYLE,
-    borderColor: focusedField === name ? "rgba(65,217,214,0.70)" : "rgba(255,255,255,0.12)",
-    boxShadow: focusedField === name ? "0 0 0 3px rgba(65,217,214,0.15)" : "none",
-  });
-
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "#07080f",
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "24px 16px",
-      position: "relative",
-      overflow: "hidden",
-    }}>
-      {/* Ambient glow */}
-      <div style={{ position: "absolute", top: "20%", left: "50%", transform: "translateX(-50%)", width: 600, height: 400, background: "radial-gradient(ellipse, rgba(65,217,214,0.12) 0%, transparent 70%)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", bottom: "10%", right: "10%", width: 300, height: 300, background: "radial-gradient(ellipse, rgba(34,184,200,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
-
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 py-6">
       {/* Card */}
-      <div style={{
-        position: "relative",
-        zIndex: 1,
-        width: "100%",
-        maxWidth: 440,
-        background: "rgba(255,255,255,0.05)",
-        backdropFilter: "blur(40px) saturate(200%) brightness(1.15)",
-        WebkitBackdropFilter: "blur(40px) saturate(200%) brightness(1.15)",
-        borderRadius: 24,
-        border: "1px solid rgba(255,255,255,0.10)",
-        boxShadow: "0 8px 48px rgba(0,0,0,0.55), inset 0 1.5px 0 rgba(255,255,255,0.12)",
-        padding: "clamp(32px,7vw,52px) clamp(24px,6vw,44px)",
-      }}>
+      <div className="w-full max-w-[440px] rounded-lg border border-border-subtle bg-surface px-[clamp(24px,6vw,44px)] py-[clamp(32px,7vw,52px)]">
 
         {/* Back button */}
         <button
           type="button"
           onClick={() => router.push("/")}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 6,
-            background: "rgba(255,255,255,0.06)",
-            border: "1px solid rgba(255,255,255,0.10)",
-            borderRadius: 8,
-            padding: "7px 14px",
-            color: "rgba(255,255,255,0.55)",
-            fontSize: "0.78rem",
-            fontWeight: 600,
-            letterSpacing: "0.04em",
-            cursor: "pointer",
-            marginBottom: 28,
-            transition: "color 0.2s, border-color 0.2s",
-          }}
-          onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = "#f8fafc"; (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.25)"; }}
-          onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = "rgba(255,255,255,0.55)"; (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(255,255,255,0.10)"; }}
+          className="mb-7 inline-flex items-center gap-1.5 rounded-sm border border-border px-3.5 py-2 text-caption font-semibold tracking-wide text-foreground-muted transition-colors hover:border-foreground-subtle hover:text-foreground"
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
           Volver
         </button>
 
         {/* Headline */}
-        <div style={{ marginBottom: 32 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+        <div className="mb-8">
+          <div className="mb-2.5 flex items-center gap-2">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-bn.png" alt="" width={33} height={22} />
-            <p style={{ margin: 0, color: "#22b8c8", fontSize: 11, fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" }}>
+            <p className="m-0 text-caption font-bold uppercase tracking-[0.18em] text-secondary">
               Businext
             </p>
           </div>
-          <h1 style={{
-            margin: 0,
-            fontFamily: "var(--font-heading), system-ui, sans-serif",
-            fontSize: "clamp(1.9rem, 7vw, 2.6rem)",
-            fontWeight: 800,
-            lineHeight: 1.0,
-            letterSpacing: "-0.03em",
-            color: "#f8fafc",
-          }}>
+          <h1 className="m-0 font-heading text-[clamp(2.4rem,9vw,3.25rem)] font-black uppercase leading-[0.95] text-foreground">
             {mode === "login" ? (
-              <>Bienvenido<br /><span style={{ background: "var(--gradient-text)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>de vuelta.</span></>
+              <>Bienvenido<br /><span className="text-primary">de vuelta.</span></>
             ) : (
-              <>Crea tu<br /><span style={{ background: "var(--gradient-text)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>cuenta.</span></>
+              <>Crea tu<br /><span className="text-primary">cuenta.</span></>
             )}
           </h1>
         </div>
 
         {/* Recovery panel */}
         {showRecovery && (
-          <div style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.10)", borderRadius: 14, padding: "20px", marginBottom: 24, display: "flex", flexDirection: "column", gap: 12 }}>
-            <p style={{ margin: 0, color: "#f8fafc", fontSize: "0.9rem", fontWeight: 700 }}>Recuperar contraseña</p>
-            {recoveryState.error   && <div style={ERROR_STYLE}>{recoveryState.error}</div>}
-            {recoveryState.success && <div style={SUCCESS_STYLE}>{recoveryState.success}</div>}
+          <div className="mb-6 flex flex-col gap-3 rounded-md border border-border-subtle bg-surface-raised p-5">
+            <p className="m-0 text-body-sm font-bold text-foreground">Recuperar contraseña</p>
+            {recoveryState.error   && <div className={ERROR_CLASS}>{recoveryState.error}</div>}
+            {recoveryState.success && <div className={SUCCESS_CLASS}>{recoveryState.success}</div>}
             <input
               ref={recoveryEmailRef}
               type="email"
               placeholder="Tu correo electrónico"
-              style={inputStyle("recovery")}
-              onFocus={() => setFocusedField("recovery")}
-              onBlur={() => setFocusedField(null)}
+              aria-label="Tu correo electrónico"
+              className={INPUT_CLASS}
             />
             <button
               type="button"
               onClick={handleRecovery}
               disabled={recoveryLoading}
-              style={{ background: "var(--gradient-primary)", color: "#fff", border: "none", borderRadius: 10, padding: "12px", fontWeight: 700, fontSize: "0.9rem", cursor: recoveryLoading ? "not-allowed" : "pointer", opacity: recoveryLoading ? 0.7 : 1 }}
+              className={PRIMARY_BUTTON_CLASS}
             >
               {recoveryLoading ? "Enviando..." : "Enviar correo de recuperación"}
             </button>
-            <button type="button" onClick={() => setShowRecovery(false)} style={{ background: "none", border: "none", color: "rgba(255,255,255,0.45)", fontSize: "0.78rem", cursor: "pointer", textDecoration: "underline" }}>
+            <button type="button" onClick={() => setShowRecovery(false)} className="text-caption text-foreground-muted underline hover:text-foreground">
               Cerrar
             </button>
           </div>
         )}
 
         {/* Form errors */}
-        {mode === "login"  && loginState?.error  && <div style={{ ...ERROR_STYLE, marginBottom: 16 }}>{loginState.error}</div>}
-        {mode === "signup" && signupState?.error  && <div style={{ ...ERROR_STYLE, marginBottom: 16 }}>{signupState.error}</div>}
+        {mode === "login"  && loginState?.error  && <div className={`${ERROR_CLASS} mb-4`}>{loginState.error}</div>}
+        {mode === "signup" && signupState?.error  && <div className={`${ERROR_CLASS} mb-4`}>{signupState.error}</div>}
 
         {/* Form */}
-        <form style={{ display: "flex", flexDirection: "column", gap: 18 }} action={handleSubmitAction}>
+        <form className="flex flex-col gap-[18px]" action={handleSubmitAction}>
 
           <div>
-            <label htmlFor="email" style={LABEL_STYLE}>Email</label>
+            <label htmlFor="email" className={LABEL_CLASS}>Email</label>
             <input
               id="email" name="email" type="email" required
               placeholder="tucorreo@ejemplo.com"
               autoComplete="email"
-              style={inputStyle("email")}
-              onFocus={() => setFocusedField("email")}
-              onBlur={() => setFocusedField(null)}
+              className={INPUT_CLASS}
             />
           </div>
 
           <div>
-            <label htmlFor="password" style={LABEL_STYLE}>Contraseña</label>
+            <label htmlFor="password" className={LABEL_CLASS}>Contraseña</label>
             <input
               id="password" name="password" type="password" required
               placeholder="••••••••"
               autoComplete="current-password"
-              style={inputStyle("password")}
-              onFocus={() => setFocusedField("password")}
-              onBlur={() => setFocusedField(null)}
+              className={INPUT_CLASS}
             />
             {mode === "login" && !showRecovery && (
               <button
                 type="button"
                 onClick={() => setShowRecovery(true)}
-                style={{ background: "none", border: "none", color: "#41d9d6", fontSize: "0.78rem", cursor: "pointer", marginTop: 8, padding: 0, float: "right" }}
+                className="float-right mt-2 p-0 text-caption text-primary hover:underline"
               >
                 ¿Olvidaste tu contraseña?
               </button>
@@ -244,14 +153,12 @@ export default function LoginPage() {
 
           {mode === "signup" && (
             <div>
-              <label htmlFor="fullName" style={LABEL_STYLE}>Nombre completo</label>
+              <label htmlFor="fullName" className={LABEL_CLASS}>Nombre completo</label>
               <input
                 id="fullName" name="fullName" type="text" required
                 placeholder="Tu nombre completo"
                 autoComplete="name"
-                style={inputStyle("fullName")}
-                onFocus={() => setFocusedField("fullName")}
-                onBlur={() => setFocusedField(null)}
+                className={INPUT_CLASS}
               />
             </div>
           )}
@@ -259,42 +166,24 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={formLoading}
-            style={{
-              width: "100%",
-              marginTop: 6,
-              display: "inline-flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-              background: formLoading ? "rgba(65,217,214,0.5)" : "var(--gradient-primary)",
-              color: "#fff",
-              border: "none",
-              borderRadius: 12,
-              padding: "15px 32px",
-              fontWeight: 700,
-              fontSize: "1rem",
-              cursor: formLoading ? "not-allowed" : "pointer",
-              letterSpacing: "0.02em",
-              boxShadow: formLoading ? "none" : "0 4px 32px rgba(65,217,214,0.35), inset 0 1px 0 rgba(255,255,255,0.20)",
-              transition: "opacity 0.2s, box-shadow 0.2s",
-            }}
+            className={`${PRIMARY_BUTTON_CLASS} mt-1.5`}
           >
             {formLoading
               ? (mode === "login" ? "Iniciando..." : "Creando...")
               : (mode === "login" ? "Iniciar sesión" : "Crear cuenta")}
             {!formLoading && (
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             )}
           </button>
         </form>
 
         {/* Mode toggle */}
-        <p style={{ margin: "24px 0 0", textAlign: "center", color: "rgba(255,255,255,0.35)", fontSize: "0.82rem" }}>
+        <p className="mt-6 text-center text-body-sm text-foreground-muted">
           {mode === "login" ? "¿No tienes cuenta? " : "¿Ya tienes cuenta? "}
           <button
             type="button"
             onClick={() => setMode(mode === "login" ? "signup" : "login")}
-            style={{ background: "none", border: "none", color: "#41d9d6", fontWeight: 600, cursor: "pointer", padding: 0, fontSize: "inherit" }}
+            className="p-0 font-semibold text-primary hover:underline"
           >
             {mode === "login" ? "Regístrate" : "Inicia sesión"}
           </button>

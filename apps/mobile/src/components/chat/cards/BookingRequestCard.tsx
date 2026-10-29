@@ -3,8 +3,8 @@ import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { bookingRequestApi } from "@businext/shared-core/api";
 import type { BookingRequestBlock } from "@businext/shared-core/assistant";
 import { formatDayLabel, formatHour } from "@/lib/date";
-import { colors } from "@/theme/colors";
-import { cardStyles } from "./cardStyles";
+import { useTheme } from "@/theme/ThemeContext";
+import { useCardStyles } from "./cardStyles";
 
 type Status = BookingRequestBlock["request"]["status"];
 
@@ -16,6 +16,8 @@ const STATUS_LABELS: Record<Status, string> = {
 };
 
 export function BookingRequestCard({ block }: { block: BookingRequestBlock }) {
+  const cardStyles = useCardStyles();
+  const { colors } = useTheme();
   const { request } = block;
   const [status, setStatus] = useState<Status>(request.status);
   const [submitting, setSubmitting] = useState(false);

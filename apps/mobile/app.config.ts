@@ -21,7 +21,7 @@ const config: ExpoConfig = {
   orientation: "portrait",
   icon: "./assets/icon.png",
   scheme: "businext",
-  userInterfaceStyle: "light",
+  userInterfaceStyle: "automatic",
   ios: {
     supportsTablet: true,
     // Placeholder — confirmar bundle id real antes de EAS Build (#33).
@@ -44,6 +44,7 @@ const config: ExpoConfig = {
   plugins: [
     "expo-router",
     "expo-secure-store",
+    "expo-font",
     [
       "expo-notifications",
       {

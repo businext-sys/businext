@@ -1,5 +1,5 @@
-import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { colors } from "@/theme/colors";
+import { Pressable, ScrollView, Text, View } from "react-native";
+import { themedStyles } from "@/theme/ThemeContext";
 
 type Chip = { label: string; message: string };
 
@@ -11,6 +11,7 @@ type Props = {
 };
 
 export function QuickActions({ chips, onPress, wrap = false, disabled = false }: Props) {
+  const styles = useStyles();
   if (chips.length === 0) return null;
 
   const items = chips.map((chip) => (
@@ -41,7 +42,7 @@ export function QuickActions({ chips, onPress, wrap = false, disabled = false }:
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   row: { gap: 8, paddingHorizontal: 12, paddingVertical: 8 },
   wrap: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 8 },
   chip: {
@@ -55,4 +56,4 @@ const styles = StyleSheet.create({
   },
   disabled: { opacity: 0.4 },
   chipText: { fontSize: 14, fontWeight: "600", color: colors.accentForeground },
-});
+}));

@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
-import { colors } from "@/theme/colors";
+import { themedStyles } from "@/theme/ThemeContext";
+import { fonts } from "@/theme/fonts";
 
-export const cardStyles = StyleSheet.create({
+export const useCardStyles = themedStyles((colors) => ({
   card: {
     borderRadius: 14,
     borderWidth: 1,
@@ -10,7 +10,7 @@ export const cardStyles = StyleSheet.create({
     padding: 12,
     gap: 10,
   },
-  title: { fontSize: 15, fontWeight: "700", color: colors.foreground },
+  title: { fontFamily: fonts.display, fontSize: 20, textTransform: "uppercase", color: colors.foreground },
   muted: { fontSize: 13, color: colors.foregroundMuted },
   subtle: { fontSize: 12, color: colors.foregroundSubtle },
   actions: { flexDirection: "row", gap: 8 },
@@ -33,4 +33,4 @@ export const cardStyles = StyleSheet.create({
     backgroundColor: colors.surfaceRaised,
   },
   pillText: { fontSize: 11, fontWeight: "700", color: colors.foregroundMuted },
-});
+}));

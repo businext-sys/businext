@@ -49,6 +49,14 @@ Este paquete esta en construccion (Fase 3 del plan maestro, issues #12-#20 en
 phoneNumbers }`; los numeros los asigna Businext y no se cambian desde aqui.
 En web pasa por el BFF `apps/web/src/app/api/voice-agent/config/route.ts`.
 
+## Tema (issue #124)
+
+`@businext/shared-core/theme` exporta los tokens de [`DESIGN.md`](../../DESIGN.md):
+`themeColors.dark` (*Noche de barrio*, por defecto) y `themeColors.light`
+(*Taller*), `fontFamilies`, `radii` y `spacing`. Son datos, sin dependencias de
+estilos: la web los replica en `globals.css` y el móvil los usa directamente. Un
+test comprueba que cada par de texto pasa WCAG AA en los dos modos.
+
 ## Uso desde `apps/web`
 
 ```ts

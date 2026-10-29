@@ -108,6 +108,22 @@ ver `src/api/auth.py` en `businext-backend`.
 - **`SectionSkeleton` / `ProductGridSkeleton` / `TeamListSkeleton`** — estados
   de carga por seccion.
 
+### Tema: oscuro y claro
+
+La identidad está en [`DESIGN.md`](../../DESIGN.md). Los colores viven en
+`src/app/globals.css`: el `@theme` es el modo oscuro *Noche de barrio* (por
+defecto) y `:root[data-theme="light"]` el claro *Taller*, con los mismos valores
+que `themeColors` de `@businext/shared-core/theme`. Las utilidades (`bg-surface`,
+`text-primary`…) cambian solas con el modo; no se escriben hex ni clases de la
+paleta por defecto de Tailwind.
+
+- El modo se elige en **Configuración → Apariencia** y se guarda en el navegador
+  (`src/lib/theme-mode.ts`); un script en `<head>` lo aplica antes de pintar.
+- `useThemeMode()` da el modo activo a lo que no lee CSS: el theme de MUI
+  (`createMuiTheme(mode)`) y los charts (`theme-tokens.ts` vacía su caché al
+  cambiar).
+- La landing (`.landing`) mantiene su paleta y Sora en cualquier modo.
+
 ## Landing (`src/app/page.tsx`)
 
 Una portada y cuatro capítulos: asistente telefónico con IA, tendencias y

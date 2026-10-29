@@ -1,7 +1,7 @@
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { useAccessContext } from "@businext/shared-core/hooks";
 import { assistantChatEnabled, isAssistantChatEnabledFor } from "@/lib/featureFlags";
-import { colors } from "@/theme/colors";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
 import AgendaScreen from "./AgendaScreen";
 import ChatScreen from "./ChatScreen";
 
@@ -9,6 +9,8 @@ import ChatScreen from "./ChatScreen";
  * Elige la home segun el flag del chat y el negocio piloto (issue #86).
  */
 export default function HomeScreen() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { context, loading } = useAccessContext({ enabled: assistantChatEnabled });
 
   if (!assistantChatEnabled) return <AgendaScreen />;
@@ -24,11 +26,11 @@ export default function HomeScreen() {
   return isAssistantChatEnabledFor(context?.businessId) ? <ChatScreen /> : <AgendaScreen />;
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   center: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.background,
   },
-});
+}));

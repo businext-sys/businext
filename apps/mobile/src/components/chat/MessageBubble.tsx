@@ -1,6 +1,6 @@
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import type { ChatMessage } from "@businext/shared-core/assistant";
-import { colors } from "@/theme/colors";
+import { themedStyles } from "@/theme/ThemeContext";
 import { ChatBlockView } from "./ChatBlockView";
 
 function spokenText(message: ChatMessage): string {
@@ -17,6 +17,7 @@ type Props = {
 };
 
 export function MessageBubble({ message, onQuickReply, onConfirm }: Props) {
+  const styles = useStyles();
   const isUser = message.role === "user";
   if (message.blocks.length === 0) return null;
   const textOnly = message.blocks.every((block) => block.type === "text");
@@ -42,7 +43,7 @@ export function MessageBubble({ message, onQuickReply, onConfirm }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   row: { paddingHorizontal: 12, paddingVertical: 4, flexDirection: "row" },
   userRow: { justifyContent: "flex-end" },
   assistantRow: { justifyContent: "flex-start" },
@@ -55,4 +56,4 @@ const styles = StyleSheet.create({
   },
   userBubble: { backgroundColor: colors.primary, borderBottomRightRadius: 4 },
   assistantBubble: { backgroundColor: colors.surface, borderBottomLeftRadius: 4 },
-});
+}));

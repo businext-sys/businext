@@ -1,6 +1,6 @@
-import { ActivityIndicator, Linking, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Linking, Pressable, Text, View } from "react-native";
 import { useVoiceAgentConfig } from "@businext/shared-core/hooks";
-import { colors } from "@/theme/colors";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 /**
  * Agente de voz (issue #119): llama al numero del negocio desde el
@@ -8,6 +8,8 @@ import { colors } from "@/theme/colors";
  * un cliente. Solo owners: `/voice-agent/config` rechaza al resto con 403.
  */
 export function VoiceAgentSection() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { config, loading, error } = useVoiceAgentConfig();
 
   return (
@@ -43,7 +45,7 @@ export function VoiceAgentSection() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   section: {
     padding: 16,
     borderRadius: 12,
@@ -63,4 +65,4 @@ const styles = StyleSheet.create({
   },
   callText: { fontSize: 15, fontWeight: "600", color: colors.primaryForeground },
   callNumber: { fontSize: 12, color: colors.primaryForeground },
-});
+}));

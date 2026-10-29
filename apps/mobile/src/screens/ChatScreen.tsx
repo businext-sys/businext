@@ -5,7 +5,6 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -26,12 +25,14 @@ import { TypingIndicator } from "@/components/chat/TypingIndicator";
 import { useAuth } from "@/context/AuthContext";
 import { usePushRegistration } from "@/hooks/usePushRegistration";
 import { assistantClient } from "@/lib/assistantClient";
-import { colors } from "@/theme/colors";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 /**
  * Home de la app (issue #78): el chat del asistente.
  */
 export default function ChatScreen() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const router = useRouter();
   const { logout } = useAuth();
   const pushState = usePushRegistration();
@@ -149,7 +150,7 @@ export default function ChatScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   flex: { flex: 1, backgroundColor: colors.background },
   pushBanner: {
     backgroundColor: colors.accent,
@@ -173,4 +174,4 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: "700",
   },
-});
+}));
