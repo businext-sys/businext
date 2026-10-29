@@ -32,7 +32,8 @@ import {
 } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle } from "lucide-react";
-import { muiTheme } from "@/lib/mui-theme";
+import { createMuiTheme } from "@/lib/mui-theme";
+import { useThemeMode } from "@/hooks/useThemeMode";
 
 export const ReservationModal = ({
   handleOpenModal,
@@ -65,6 +66,8 @@ export const ReservationModal = ({
   const { createFinance } = useFinances();
   const { reservationData: allReservations } = useReservation();
   const { showToast } = useGlobalToast();
+  const { mode } = useThemeMode();
+  const muiTheme = useMemo(() => createMuiTheme(mode), [mode]);
 
   const productOptions = Object.assign(
     {},

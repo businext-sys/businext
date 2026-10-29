@@ -1,5 +1,6 @@
 import "./globals.css";
-import { sora, dmSans } from "./fonts";
+import { bigShoulders, dmSans, sora } from "./fonts";
+import { THEME_MODE_SCRIPT } from "@/lib/theme-mode";
 import { AppShell } from "@/components/common/AppShell";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 
@@ -66,8 +67,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${sora.variable} ${dmSans.variable} antialiased`}>
+    <html
+      lang="es"
+      className={`${bigShoulders.variable} ${dmSans.variable} ${sora.variable} antialiased`}
+      suppressHydrationWarning
+    >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_MODE_SCRIPT }} />
         <meta
           name="google-site-verification"
           content="-6Ifr3rBdu0PZbkiYVIKT03g9hN9bdKczlTyVcaXCVM"

@@ -61,22 +61,22 @@ colors:
   light-highlight: "#C2410C"
 typography:
   display:
-    fontFamily: Big Shoulders Display
+    fontFamily: Big Shoulders
     fontSize: 4rem
     fontWeight: 900
     lineHeight: 0.95
   h1:
-    fontFamily: Big Shoulders Display
+    fontFamily: Big Shoulders
     fontSize: 2.75rem
     fontWeight: 800
     lineHeight: 1
   h2:
-    fontFamily: Big Shoulders Display
+    fontFamily: Big Shoulders
     fontSize: 1.625rem
     fontWeight: 800
     lineHeight: 1.1
   metric:
-    fontFamily: Big Shoulders Display
+    fontFamily: Big Shoulders
     fontSize: 2.75rem
     fontWeight: 800
     lineHeight: 1
@@ -208,7 +208,7 @@ el mismo papel. En código viven en `packages/shared-core/src/theme` (`themeColo
 
 ## Typography
 
-- **Big Shoulders Display** (800–900) para titulares, nombres de sección y cifras. En
+- **Big Shoulders** (800–900) para titulares, nombres de sección y cifras. En
   mayúsculas en los titulares grandes. Recoge el carácter del graffiti sin imitarlo.
 - **DM Sans** (400, 500, 700) para todo lo demás: texto, etiquetas, botones, formularios.
 - `eyebrow`: la línea pequeña en mayúsculas sobre un título (fecha, contexto), en color

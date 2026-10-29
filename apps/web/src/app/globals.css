@@ -8,38 +8,39 @@
   /* Reset default colors */
   --color-*: initial;
 
-  /* ── Semantic Colors ── */
-  --color-background: #0c1117;
-  --color-surface: #1b2733;
-  --color-surface-raised: #24333f;
-  --color-surface-overlay: rgba(12, 17, 23, 0.95);
+  /* ── Semantic Colors ──
+     Modo oscuro "Noche de barrio" (por defecto). Mismos valores que
+     `themeColors.dark` de @businext/shared-core/theme, cuyo test comprueba el
+     contraste AA; el modo claro esta en :root[data-theme="light"]. */
+  --color-background: #0f0e0c;
+  --color-surface: #1c1a17;
+  --color-surface-raised: #2a2621;
+  --color-surface-overlay: rgba(15, 14, 12, 0.95);
   --color-primary: #41d9d6;
-  --color-primary-hover: #6be5e2;
-  --color-primary-foreground: #0c1117;
-  --color-secondary: #22b8c8;
-  --color-secondary-hover: #3fcddb;
-  --color-secondary-foreground: #0c1117;
-  --color-accent: #123d47;
-  --color-accent-hover: #1a5765;
-  --color-accent-foreground: #f5fafc;
-  --color-foreground: #f5fafc;
-  --color-foreground-muted: #c3d5dc;
-  --color-foreground-subtle: #7e97a1;
-  --color-border: #24333f;
-  --color-border-subtle: #16202a;
-  /* Estado. Ratios AA verificados sobre --color-background (#0c1117) y
-     --color-surface (#1b2733): success 9.86 / 7.89, danger 5.70 / 4.56,
-     warning 9.35 / 7.48. Los *-foreground son el texto sobre el fill. */
+  --color-primary-hover: #7fe8e5;
+  --color-primary-foreground: #0f0e0c;
+  --color-secondary: #d08b5b;
+  --color-secondary-hover: #dfa47a;
+  --color-secondary-foreground: #0f0e0c;
+  --color-accent: #12302f;
+  --color-accent-hover: #1a4140;
+  --color-accent-foreground: #f4f1ec;
+  --color-foreground: #f4f1ec;
+  --color-foreground-muted: #d6cec5;
+  --color-foreground-subtle: #a89e93;
+  --color-border: #3a3530;
+  --color-border-subtle: #24211d;
+  /* Estado. Los *-foreground son el texto sobre el fill. */
   --color-success: #34d399;
-  --color-success-foreground: #0c1117;
+  --color-success-foreground: #0f0e0c;
   --color-danger: #f4574b;
-  --color-danger-foreground: #0c1117;
+  --color-danger-foreground: #0f0e0c;
   --color-warning: #f5a623;
-  --color-warning-foreground: #0c1117;
+  --color-warning-foreground: #0f0e0c;
   --color-highlight: #f97316;
-  --color-muted: #16202a;
-  --color-muted-foreground: #9eb6bf;
-  --color-input: #24333f;
+  --color-muted: #171513;
+  --color-muted-foreground: #b5aba0;
+  --color-input: #3a3530;
   --color-ring: #41d9d6;
   /* Deep sapphire fill for the landing's calls to action: white text on it is 7.98:1. */
   --color-brand: #2c4a8a;
@@ -108,20 +109,72 @@
    Todas >= 4.5:1 sobre #0c1117 y #1b2733. Anadir --color-chart-6 aqui la
    extiende sin tocar TS. */
 @theme static {
-  --gradient-primary: linear-gradient(135deg, #41d9d6, #22b8c8, #123d47);
+  --gradient-primary: linear-gradient(135deg, #41d9d6, #12302f);
   /* Solo primary -> secondary, sin el stop oscuro de accent: pensado para
      `background-clip: text`. Con --gradient-primary, la cola del texto cae
      sobre #123d47 (~1.1:1 de contraste contra los fondos oscuros, WCAG pide
      3:1 minimo) y se vuelve casi invisible. Los dos extremos de este
      gradiente ya superan 7:1, asi que cualquier punto intermedio queda
      legible. */
-  --gradient-text: linear-gradient(to right, #41d9d6, #22b8c8);
+  --gradient-text: linear-gradient(to right, #41d9d6, #7fe8e5);
 
   --color-chart-1: #41d9d6;
-  --color-chart-2: #22b8c8;
+  --color-chart-2: #d08b5b;
   --color-chart-3: #6c8eff;
   --color-chart-4: #f5a623;
   --color-chart-5: #e85d9e;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+/* ── Modo claro "Taller" ──
+   Mismos valores que `themeColors.light` de @businext/shared-core/theme. Lo
+   activa `data-theme="light"` en <html> (lib/theme-mode.ts). */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --color-background: #f4f1ec;
+  --color-surface: #fbf9f6;
+  --color-surface-raised: #efe3d8;
+  --color-surface-overlay: rgba(244, 241, 236, 0.95);
+  --color-primary: #8a5a3c;
+  --color-primary-hover: #74492f;
+  --color-primary-foreground: #fbf9f6;
+  --color-secondary: #0e6e6e;
+  --color-secondary-hover: #0b5a5a;
+  --color-secondary-foreground: #fbf9f6;
+  --color-accent: #dcedec;
+  --color-accent-hover: #cbe3e1;
+  --color-accent-foreground: #0b4f4f;
+  --color-foreground: #14110e;
+  --color-foreground-muted: #3f3832;
+  --color-foreground-subtle: #5e554d;
+  --color-border: #e2dbd2;
+  --color-border-subtle: #eae4dc;
+  --color-success: #1a6b43;
+  --color-success-foreground: #fbf9f6;
+  --color-danger: #b3261e;
+  --color-danger-foreground: #fbf9f6;
+  --color-warning: #8a5a00;
+  --color-warning-foreground: #fbf9f6;
+  --color-highlight: #c2410c;
+  --color-muted: #eae4dc;
+  --color-muted-foreground: #5e554d;
+  --color-input: #cfc5b9;
+  --color-ring: #8a5a3c;
+  --gradient-primary: linear-gradient(135deg, #8a5a3c, #efe3d8);
+  --gradient-text: linear-gradient(to right, #8a5a3c, #74492f);
+  --color-chart-1: #0e6e6e;
+  --color-chart-2: #8a5a3c;
+  --color-chart-3: #3f5bd6;
+  --color-chart-4: #8a5a00;
+  --color-chart-5: #b5306e;
+  --shadow-sm: 0 1px 3px 0 rgb(20 17 14 / 0.08);
+  --shadow-md: 0 4px 8px -1px rgb(20 17 14 / 0.1);
+  --shadow-lg: 0 12px 24px -4px rgb(20 17 14 / 0.12);
+  --shadow-glow-primary: 0 0 20px rgba(138, 90, 60, 0.2);
+  --shadow-glow-accent: 0 0 20px rgba(14, 110, 110, 0.15);
 }
 
 /* ── Skeleton shimmer keyframe ── */
@@ -212,8 +265,28 @@ h4 {
    utilities read these variables, so everything under .landing picks them up. The scenes
    are graded to match (cyans moved to sapphire, see public/assets.manifest.json).
    AA measured on #0a0c16 / #121828: text 17.7, muted 10.9, subtle 6.2 / 5.6, primary 9.0 /
-   8.2, gradient end 5.6, success 9.7, danger 5.3. */
+   8.2, gradient end 5.6, success 9.7, danger 5.3. The landing keeps its own palette and Sora,
+   in dark, whatever mode the app is in. */
 .landing {
+  color-scheme: dark;
+  --font-heading: var(--font-landing), system-ui, sans-serif;
+  --color-surface-overlay: rgba(12, 17, 23, 0.95);
+  --color-secondary: #22b8c8;
+  --color-secondary-hover: #3fcddb;
+  --color-secondary-foreground: #0c1117;
+  --color-muted: #16202a;
+  --color-muted-foreground: #9eb6bf;
+  --color-input: #252e46;
+  --color-danger: #f4574b;
+  --color-danger-foreground: #0c1117;
+  --color-warning: #f5a623;
+  --color-warning-foreground: #0c1117;
+  --color-success-foreground: #0c1117;
+  --color-highlight: #f97316;
+  --gradient-primary: linear-gradient(135deg, #41d9d6, #22b8c8, #123d47);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 8px -1px rgb(0 0 0 / 0.4);
+  --shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.5);
   --color-background: #0a0c16;
   --color-surface: #121828;
   --color-surface-raised: #1a2236;

@@ -106,7 +106,7 @@ export const themeColors: Record<ThemeMode, ThemeColors> = {
 };
 
 export const fontFamilies = {
-  display: "Big Shoulders Display",
+  display: "Big Shoulders",
   body: "DM Sans",
 } as const;
 
