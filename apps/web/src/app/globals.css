@@ -38,6 +38,7 @@
   --color-warning: #f5a623;
   --color-warning-foreground: #0f0e0c;
   --color-highlight: #f97316;
+  --color-logo: #41d9d6;
   --color-muted: #171513;
   --color-muted-foreground: #b5aba0;
   --color-input: #3a3530;
@@ -159,6 +160,7 @@
   --color-warning: #8a5a00;
   --color-warning-foreground: #fbf9f6;
   --color-highlight: #c2410c;
+  --color-logo: #0e6e6e;
   --color-muted: #eae4dc;
   --color-muted-foreground: #5e554d;
   --color-input: #cfc5b9;

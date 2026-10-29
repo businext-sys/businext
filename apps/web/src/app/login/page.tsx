@@ -4,6 +4,7 @@ import { login, signup } from "@/app/login/actions";
 import { useRef, useState } from "react";
 import { useActionState } from "react";
 import { useRouter } from "next/navigation";
+import { BrandMark } from "@/components/common/BrandMark";
 
 const INPUT_CLASS =
   "w-full rounded-sm border border-input bg-surface px-4 py-3 text-body text-foreground placeholder:text-foreground-subtle transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/25";
@@ -73,8 +74,7 @@ export default function LoginPage() {
         {/* Headline */}
         <div className="mb-8">
           <div className="mb-2.5 flex items-center gap-2">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-bn.png" alt="" width={33} height={22} />
+            <BrandMark className="h-[22px] w-[27px] text-logo" />
             <p className="m-0 text-caption font-bold uppercase tracking-[0.18em] text-secondary">
               Businext
             </p>

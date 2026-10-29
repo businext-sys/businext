@@ -38,6 +38,7 @@ export interface ThemeColors {
   warning: string;
   warningForeground: string;
   highlight: string;
+  logo: string;
 }
 
 export const themeColors: Record<ThemeMode, ThemeColors> = {
@@ -71,6 +72,7 @@ export const themeColors: Record<ThemeMode, ThemeColors> = {
     warning: "#F5A623",
     warningForeground: "#0F0E0C",
     highlight: "#F97316",
+    logo: "#41D9D6",
   },
   light: {
     background: "#F4F1EC",
@@ -102,6 +104,7 @@ export const themeColors: Record<ThemeMode, ThemeColors> = {
     warning: "#8A5A00",
     warningForeground: "#FBF9F6",
     highlight: "#C2410C",
+    logo: "#0E6E6E",
   },
 };
 

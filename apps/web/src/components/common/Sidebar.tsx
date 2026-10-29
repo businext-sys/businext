@@ -26,6 +26,7 @@ import { useAccessContext } from "@/hooks/useAccessContext";
 import { useBookingRequests } from "@/hooks/useBookingRequests";
 import { logout } from "@/app/login/logout";
 import { cn } from "@/lib/utils";
+import { BrandMark } from "@/components/common/BrandMark";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "@/components/ui/modal";
@@ -122,8 +123,7 @@ export function Sidebar() {
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="flex items-center gap-2 px-5 py-5 border-b border-border-subtle">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-bn.png" alt="" width={42} height={28} className="shrink-0" />
+        <BrandMark className="h-7 w-[35px] shrink-0 text-logo" />
         <span className="font-heading text-h3 font-black uppercase text-foreground select-none">
           Businext
         </span>

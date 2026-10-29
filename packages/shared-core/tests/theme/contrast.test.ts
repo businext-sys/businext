@@ -24,6 +24,7 @@ const textTokens: (keyof ThemeColors)[] = [
   "success",
   "danger",
   "warning",
+  "logo",
 ];
 const groundTokens: (keyof ThemeColors)[] = ["background", "surface", "surfaceRaised"];
 const fillPairs: [keyof ThemeColors, keyof ThemeColors][] = [
