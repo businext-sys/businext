@@ -24,17 +24,12 @@ Estado de la web y la app móvil antes de redefinir la identidad
 - **Logo a tamaño pequeño** (33×22 px en login, 42×28 px en el sidebar): el graffiti pierde el
   detalle.
 
-### App móvil: dos apps visualmente distintas
+### App móvil
 
-- **El chat** (16 ficheros importan `theme/colors.ts`) es oscuro y turquesa.
-- **Agenda, login y detalle de reserva** usan grises claros escritos a mano, sin tokens:
-  `#fff`, `#111`, `#888`, `#999`, `#ddd`, `#f5f5f5`, rojo `#c0392b`, y verdes y ámbar de la
-  paleta de Tailwind (`#D1FAE5`, `#065F46`, `#FEF3C7`, `#92400E`). Concentrados en
-  `src/screens/AgendaScreen.tsx` (17), `src/components/ReservationListItem.tsx` (12),
-  `app/reservation/[id].tsx` (10) y `app/login.tsx` (10).
-- **La app se declara clara** (`userInterfaceStyle: "light"`) pero su paleta es oscura.
-- **Sin tipografía propia**: el móvil usa la del sistema; la web, Sora y DM Sans.
-- **Radios sueltos**: 4, 8, 10, 12, 14, 18, 22 y 999 px, sin escala.
+- Resuelto en #124 y #128: el chat, la agenda, la lista y el detalle de reservas, el
+  login y la pantalla de carga usan el tema (`ThemeContext` + `themedStyles`) en
+  oscuro y claro, sin hex sueltos.
+- Icono y splash: siguen los de Expo por defecto (#129).
 
 ### Web
 
