@@ -1,13 +1,16 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useAccessContext } from "@businext/shared-core/hooks";
 import { useAuth } from "@/context/AuthContext";
 import { VoiceAgentSection } from "@/components/VoiceAgentSection";
-import { colors } from "@/theme/colors";
+import { AppearanceSection } from "@/components/AppearanceSection";
+import { themedStyles } from "@/theme/ThemeContext";
 
 /**
- * Ajustes (issue #78): cuenta, agente de voz (solo owner) y cierre de sesion.
+ * Ajustes (issue #78): cuenta, agente de voz (solo owner), apariencia y
+ * cierre de sesion.
  */
 export default function SettingsScreen() {
+  const styles = useStyles();
   const { logout } = useAuth();
   const { context } = useAccessContext();
 
@@ -20,6 +23,7 @@ export default function SettingsScreen() {
         </View>
       )}
       {context?.role === "owner" && <VoiceAgentSection />}
+      <AppearanceSection />
       <Pressable style={styles.logout} onPress={logout} accessibilityRole="button">
         <Text style={styles.logoutText}>Cerrar sesión</Text>
       </Pressable>
@@ -27,7 +31,7 @@ export default function SettingsScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   flex: { flex: 1, backgroundColor: colors.background, padding: 16, gap: 16 },
   section: {
     padding: 16,
@@ -44,4 +48,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   logoutText: { fontSize: 15, fontWeight: "600", color: colors.danger },
-});
+}));

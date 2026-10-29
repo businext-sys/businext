@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 import type { ConfirmationBlock } from "@businext/shared-core/assistant";
-import { cardStyles } from "./cardStyles";
+import { useCardStyles } from "./cardStyles";
 
 const STATUS_LABELS: Record<Exclude<ConfirmationBlock["status"], "pending">, string> = {
   confirmed: "Confirmada",
@@ -14,6 +14,7 @@ type Props = {
 };
 
 export function ConfirmationCard({ block, onDecide }: Props) {
+  const cardStyles = useCardStyles();
   return (
     <View style={cardStyles.card} testID="card-confirmation">
       <Text style={cardStyles.title}>{block.title}</Text>

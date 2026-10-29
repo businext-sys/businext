@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import type { CashSummaryBlock } from "@businext/shared-core/assistant";
-import { colors } from "@/theme/colors";
-import { cardStyles } from "./cardStyles";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
+import { useCardStyles } from "./cardStyles";
 
 function formatMoney(amount: number, currency: string): string {
   try {
@@ -12,6 +12,9 @@ function formatMoney(amount: number, currency: string): string {
 }
 
 export function CashSummaryCard({ block }: { block: CashSummaryBlock }) {
+  const styles = useStyles();
+  const cardStyles = useCardStyles();
+  const { colors } = useTheme();
   const money = (amount: number) => formatMoney(amount, block.currency);
   const max = Math.max(block.total_income, block.total_expense, 1);
   const previous = block.previous_balance;
@@ -43,6 +46,8 @@ export function CashSummaryCard({ block }: { block: CashSummaryBlock }) {
 }
 
 function Bar({ label, value, ratio, color }: { label: string; value: string; ratio: number; color: string }) {
+  const styles = useStyles();
+  const cardStyles = useCardStyles();
   return (
     <View style={styles.barRow}>
       <View style={styles.barLabels}>
@@ -56,7 +61,7 @@ function Bar({ label, value, ratio, color }: { label: string; value: string; rat
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   balance: { fontSize: 26, fontWeight: "700", color: colors.foreground },
   change: { fontSize: 13, fontWeight: "600" },
   bars: { gap: 8 },
@@ -65,4 +70,4 @@ const styles = StyleSheet.create({
   barValue: { fontSize: 13, fontWeight: "600", color: colors.foreground },
   track: { height: 8, borderRadius: 4, backgroundColor: colors.surfaceRaised, overflow: "hidden" },
   fill: { height: 8, borderRadius: 4 },
-});
+}));

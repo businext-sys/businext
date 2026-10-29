@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import { colors } from "@/theme/colors";
+import { Pressable, Text, TextInput, View } from "react-native";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 type Props = {
   streaming: boolean;
@@ -9,6 +9,8 @@ type Props = {
 };
 
 export function ChatInput({ streaming, onSend, onStop }: Props) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const [draft, setDraft] = useState("");
   const canSend = draft.trim().length > 0 && !streaming;
 
@@ -58,7 +60,7 @@ export function ChatInput({ streaming, onSend, onStop }: Props) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   bar: {
     flexDirection: "row",
     alignItems: "flex-end",
@@ -94,4 +96,4 @@ const styles = StyleSheet.create({
   stop: { backgroundColor: colors.surfaceRaised },
   sendText: { fontSize: 20, fontWeight: "700", color: colors.primaryForeground },
   stopText: { fontSize: 16, color: colors.foreground },
-});
+}));

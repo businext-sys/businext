@@ -1,12 +1,14 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { StatusOptions } from "@businext/shared-core";
 import type { ReservationListBlock } from "@businext/shared-core/assistant";
 import { formatHour } from "@/lib/date";
-import { colors } from "@/theme/colors";
-import { cardStyles } from "./cardStyles";
+import { themedStyles } from "@/theme/ThemeContext";
+import { useCardStyles } from "./cardStyles";
 
 export function ReservationListCard({ block }: { block: ReservationListBlock }) {
+  const styles = useStyles();
+  const cardStyles = useCardStyles();
   const router = useRouter();
 
   return (
@@ -44,7 +46,7 @@ export function ReservationListCard({ block }: { block: ReservationListBlock }) 
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   row: {
     flexDirection: "row",
     alignItems: "center",
@@ -57,4 +59,4 @@ const styles = StyleSheet.create({
   hour: { width: 48, fontSize: 14, fontWeight: "700", color: colors.primary },
   info: { flex: 1, gap: 2 },
   client: { fontSize: 15, fontWeight: "600", color: colors.foreground },
-});
+}));

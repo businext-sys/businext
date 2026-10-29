@@ -1,7 +1,6 @@
-import { StyleSheet } from "react-native";
-import { colors } from "@/theme/colors";
+import { themedStyles } from "@/theme/ThemeContext";
 
-export const cardStyles = StyleSheet.create({
+export const useCardStyles = themedStyles((colors) => ({
   card: {
     borderRadius: 14,
     borderWidth: 1,
@@ -33,4 +32,4 @@ export const cardStyles = StyleSheet.create({
     backgroundColor: colors.surfaceRaised,
   },
   pillText: { fontSize: 11, fontWeight: "700", color: colors.foregroundMuted },
-});
+}));
