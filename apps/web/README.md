@@ -122,50 +122,41 @@ paleta por defecto de Tailwind.
 - `useThemeMode()` da el modo activo a lo que no lee CSS: el theme de MUI
   (`createMuiTheme(mode)`) y los charts (`theme-tokens.ts` vacía su caché al
   cambiar).
-- La landing (`.landing`) mantiene su paleta y Sora en cualquier modo.
+- La landing (`.landing`) se ve siempre en oscuro: fija los tokens de *Noche de barrio*
+  aunque la app esté en claro.
 
 ## Landing (`src/app/page.tsx`)
 
-Una portada y cuatro capítulos: asistente telefónico con IA, tendencias y
-publicación automática, control con IA y avisos en tiempo real, y reservas y
-caja. Después, la whitelist (precio tachado, orientativo entre 50 y 70 €/mes),
-los dos anuncios de web (incluida en la suscripción, o solo la web desde 150 €,
-con La Perla y Sito como ejemplos) y las preguntas frecuentes.
+Explica Businext como la app que impulsa la barbería, con la estructura de
+`kuberse/kujobs-web`: la app superpuesta a la escena, un flujo animado y un
+recorrido por capítulos. Secciones: portada, asistente de voz (llamada →
+agenda), la app (cinco capítulos), tu web (La Perla y Sito como ejemplo),
+«Pregúntale a tu negocio», clientes fundadores y whitelist. Sin precios.
 
-- **Guion** en `src/components/landingpage/flight/stops.ts`; pantallas de la app
-  en `screens.tsx`; los capítulos en `Story.tsx`.
-- **Scroll nativo, nada por fotograma.** El primer concepto movía vídeo, texto y
-  desenfoques con cada fotograma de scroll y se notaba con retraso. Ahora un
-  capítulo se activa una sola vez, al cruzar el centro de la pantalla
-  (`IntersectionObserver`), y ese cambio cambia la escena, reproduce a su
-  velocidad el tramo que vuela hasta ella y monta su pantalla de la app. Todas
-  las transiciones son de opacidad o posición. En escritorio la escena y la
-  pantalla van en un panel fijo junto al texto; en móvil cada capítulo lleva la
-  suya.
-- **Assets por MCP de Comfy**: planchas con Nano Banana Pro y la plancha del
-  personaje (`assets-src/landing/character-reference.png`) como referencia; tramos
-  con Wan 2.7 de primer a último fotograma, así que cada tramo termina exactamente
-  en la plancha siguiente. Todo registrado en `public/assets.manifest.json`; el
-  concepto anterior queda archivado ahí con sus prompts e ids.
-- **Vídeo**: `scripts/encode-leg.sh` quita el audio y codifica AV1 para
-  escritorio y H.264 para móvil. Cada tramo se reproduce una vez al llegar a su
-  capítulo; volviendo hacia atrás se queda la plancha. Sin JavaScript, sin clip o
-  con `prefers-reduced-motion` también.
-- **Paleta**: medianoche y zafiro, solo en la landing (`.landing` en
-  `globals.css` redefine los tokens; la app conserva los suyos). Los botones usan
-  `bg-brand`. Las planchas y los tramos llevan la misma corrección de color
-  (cian → zafiro con `huesaturation`, anotada en el manifest) para casar con ella.
-- **Movimiento**, con cuentagotas: el wordmark de Businext entra letra a letra al
-  cargar y la marca pequeña de la barra aparece al dejar la portada; en
-  escritorio el capítulo activo se ilumina y los demás se atenúan; los bloques
-  del final aparecen al entrar en pantalla. Los logos de TikTok, Instagram y
-  YouTube son los reales (`SocialLogo.tsx`, trazados de Simple Icons, CC0). Todo
-  se apaga con `prefers-reduced-motion`.
+- **Solo funciones que existen.** Todo lo que muestran las pantallas está hecho
+  (agente de voz, solicitudes con push y email, respuesta a reseñas con IA, chat
+  del asistente, Inteligencia, caja). Las cifras son de ejemplo y la página lo
+  dice. Textos y datos en `src/components/landingpage/content.ts`.
+- **La app en un móvil**: `AppScreens.tsx` dibuja cada pantalla con los tokens
+  de la app; sus piezas entran en orden (`--d`) cada vez que la pantalla se
+  monta. `HeroShowcase` las recorre en la portada con su notificación,
+  `CallFlow` repite la llamada mientras está en pantalla y `Walkthrough` pasa de
+  capítulo cuando se llena su barra (`animationend`).
+- **Sin vídeo.** Las escenas `public/landing/stop1-5` son imágenes fijas con una
+  deriva lenta por CSS. Llevan grabada la corrección a zafiro del concepto
+  anterior (`public/assets.manifest.json`); `.landing-scene` la compensa con un
+  filtro. Los tramos de vídeo se borraron y siguen archivados en el manifest.
+- **Webs de ejemplo**: capturas de página completa en `public/landing/webs`
+  (escritorio y móvil) que hacen scroll solas. Al cambiar una web, se vuelven a
+  capturar y se ajusta `end` en `content.ts`.
+- **Estilo**: tokens y tipografías de `DESIGN.md`, sin degradados ni brillos.
+  Las animaciones son de opacidad y posición y se apagan con
+  `prefers-reduced-motion`.
 - **Whitelist**: el formulario envía a `/api/whitelist`, que manda un email con el
   mismo transporte de Gmail que `/api/send-contact-email`.
 - **Self-check**: `pnpm check:landing` avisa (no bloquea) de contraste de tokens,
-  peso por orientación (presupuesto 3 MB con vídeo), huecos en el manifest y alt
-  sin escribir.
+  peso por orientación (presupuesto 3 MB), huecos en el manifest y alt sin
+  escribir.
 
 ## Comandos
 
