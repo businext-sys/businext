@@ -3,7 +3,6 @@ import {
   Pressable,
   RefreshControl,
   SectionList,
-  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -12,6 +11,8 @@ import type { Reservation } from "@businext/shared-core";
 import { ReservationListItem } from "@/components/ReservationListItem";
 import { useAuth } from "@/context/AuthContext";
 import { usePushRegistration } from "@/hooks/usePushRegistration";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
+import { fonts } from "@/theme/fonts";
 import {
   addDays,
   formatDayLabel,
@@ -28,6 +29,8 @@ type Section = { title: string; data: Reservation[] };
  * Usa `useReservation` de shared-core tal cual, sin reescritura (issue #028).
  */
 export default function AgendaScreen() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { logout } = useAuth();
   const [selectedDay, setSelectedDay] = useState(new Date());
   const { reservationData, loading, getAllReservations } = useReservation();
@@ -99,6 +102,7 @@ export default function AgendaScreen() {
         refreshControl={
           <RefreshControl
             refreshing={loading}
+            tintColor={colors.primary}
             onRefresh={async () => {
               await getAllReservations();
             }}
@@ -119,8 +123,8 @@ export default function AgendaScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: "#f5f5f5" },
+const useStyles = themedStyles((colors) => ({
+  flex: { flex: 1, backgroundColor: colors.background },
   titleBar: {
     flexDirection: "row",
     alignItems: "center",
@@ -128,17 +132,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 56,
     paddingBottom: 8,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "700",
-    color: "#111",
+    fontFamily: fonts.display,
+    fontSize: 28,
+    textTransform: "uppercase",
+    color: colors.foreground,
   },
   logoutText: {
     fontSize: 14,
     fontWeight: "600",
-    color: "#c0392b",
+    color: colors.danger,
   },
   header: {
     flexDirection: "row",
@@ -147,9 +152,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 4,
     paddingBottom: 16,
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: colors.border,
   },
   navButton: {
     width: 36,
@@ -157,29 +162,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 18,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: colors.surfaceRaised,
   },
   navButtonText: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#333",
+    color: colors.foreground,
   },
   dayLabel: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#111",
+    color: colors.foreground,
     textAlign: "center",
   },
   todayHint: {
     fontSize: 11,
-    color: "#888",
+    color: colors.secondary,
     textAlign: "center",
   },
   sectionHeader: {
     fontSize: 13,
     fontWeight: "700",
-    color: "#999",
-    backgroundColor: "#f5f5f5",
+    color: colors.foregroundSubtle,
+    backgroundColor: colors.background,
     paddingHorizontal: 16,
     paddingTop: 12,
     paddingBottom: 4,
@@ -194,15 +199,15 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 14,
-    color: "#888",
+    color: colors.foregroundMuted,
   },
   pushBanner: {
-    backgroundColor: "#FEF3C7",
+    backgroundColor: `${colors.warning}26`,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
   pushBannerText: {
     fontSize: 12,
-    color: "#92400E",
+    color: colors.warning,
   },
-});
+}));

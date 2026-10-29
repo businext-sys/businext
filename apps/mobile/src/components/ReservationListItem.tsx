@@ -1,20 +1,22 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import type { Reservation } from "@businext/shared-core";
 import { StatusOptions } from "@businext/shared-core";
 import { formatHour } from "@/lib/date";
-
-const STATUS_COLORS: Record<string, { bg: string; fg: string }> = {
-  PENDING: { bg: "#FEF3C7", fg: "#92400E" },
-  COMPLETED: { bg: "#D1FAE5", fg: "#065F46" },
-};
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 export function ReservationListItem({ reservation }: { reservation: Reservation }) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const router = useRouter();
-  const statusColors = STATUS_COLORS[reservation.status] ?? {
-    bg: "#E5E7EB",
-    fg: "#374151",
+  const statusTone: Record<string, string> = {
+    PENDING: colors.warning,
+    COMPLETED: colors.success,
   };
+  const tone = statusTone[reservation.status];
+  const statusColors = tone
+    ? { bg: `${tone}26`, fg: tone }
+    : { bg: colors.muted, fg: colors.mutedForeground };
   const statusLabel =
     StatusOptions[reservation.status as keyof typeof StatusOptions] ??
     reservation.status;
@@ -41,7 +43,7 @@ export function ReservationListItem({ reservation }: { reservation: Reservation 
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   card: {
     flexDirection: "row",
     alignItems: "center",
@@ -51,8 +53,8 @@ const styles = StyleSheet.create({
     marginVertical: 6,
     borderRadius: 10,
     borderWidth: 1,
-    borderColor: "#e5e7eb",
-    backgroundColor: "#fff",
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
   },
   hourBadge: {
     width: 56,
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
   hourText: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#111",
+    color: colors.foreground,
   },
   info: {
     flex: 1,
@@ -70,15 +72,15 @@ const styles = StyleSheet.create({
   customerName: {
     fontSize: 15,
     fontWeight: "600",
-    color: "#111",
+    color: colors.foreground,
   },
   service: {
     fontSize: 13,
-    color: "#555",
+    color: colors.foregroundMuted,
   },
   inCharge: {
     fontSize: 12,
-    color: "#888",
+    color: colors.foregroundSubtle,
   },
   statusPill: {
     paddingHorizontal: 10,
@@ -89,4 +91,4 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: "700",
   },
-});
+}));

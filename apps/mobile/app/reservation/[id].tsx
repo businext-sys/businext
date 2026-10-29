@@ -5,7 +5,6 @@ import {
   Alert,
   Pressable,
   ScrollView,
-  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -15,6 +14,7 @@ import { useProduct } from "@businext/shared-core/hooks";
 import { StatusOptions } from "@businext/shared-core";
 import { buildFinanceRecordFromReservation } from "@businext/shared-core/services";
 import { formatHour } from "@/lib/date";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 /**
  * Detalle de una reserva (issue #030).
@@ -30,6 +30,8 @@ import { formatHour } from "@/lib/date";
  * quitar una reserva pendiente).
  */
 export default function ReservationDetailScreen() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
@@ -47,7 +49,7 @@ export default function ReservationDetailScreen() {
   if (!reservation) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator />
+        <ActivityIndicator color={colors.primary} />
       </View>
     );
   }
@@ -133,7 +135,7 @@ export default function ReservationDetailScreen() {
             disabled={submitting}
           >
             {submitting ? (
-              <ActivityIndicator color="#fff" />
+              <ActivityIndicator color={colors.primaryForeground} />
             ) : (
               <Text style={styles.primaryButtonText}>Completar</Text>
             )}
@@ -162,7 +164,7 @@ export default function ReservationDetailScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   center: { flex: 1, alignItems: "center", justifyContent: "center" },
   container: {
     padding: 24,
@@ -171,13 +173,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 12,
     fontWeight: "600",
-    color: "#888",
+    color: colors.foregroundSubtle,
     textTransform: "uppercase",
     marginTop: 16,
   },
   value: {
     fontSize: 16,
-    color: "#111",
+    color: colors.foreground,
   },
   actions: {
     marginTop: 32,
@@ -185,30 +187,30 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: 6,
     alignItems: "center",
   },
   primaryButton: {
-    backgroundColor: "#111",
+    backgroundColor: colors.primary,
   },
   primaryButtonText: {
-    color: "#fff",
+    color: colors.primaryForeground,
     fontWeight: "700",
   },
   secondaryButton: {
     borderWidth: 1,
-    borderColor: "#ddd",
+    borderColor: colors.border,
   },
   secondaryButtonText: {
-    color: "#333",
+    color: colors.foreground,
     fontWeight: "600",
   },
   dangerButton: {
     borderWidth: 1,
-    borderColor: "#c0392b",
+    borderColor: colors.danger,
   },
   dangerButtonText: {
-    color: "#c0392b",
+    color: colors.danger,
     fontWeight: "600",
   },
-});
+}));

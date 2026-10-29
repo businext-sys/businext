@@ -4,12 +4,13 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
-  StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
 import { useAuth } from "@/context/AuthContext";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
+import { fonts } from "@/theme/fonts";
 
 /**
  * Pantalla de login con Supabase Auth (issue #029). Al login exitoso,
@@ -18,6 +19,8 @@ import { useAuth } from "@/context/AuthContext";
  * navega manualmente.
  */
 export default function LoginScreen() {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { login } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,7 +54,7 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Email"
-          placeholderTextColor="#999"
+          placeholderTextColor={colors.foregroundSubtle}
           autoCapitalize="none"
           autoCorrect={false}
           keyboardType="email-address"
@@ -63,7 +66,7 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
-          placeholderTextColor="#999"
+          placeholderTextColor={colors.foregroundSubtle}
           secureTextEntry
           value={password}
           onChangeText={setPassword}
@@ -80,7 +83,7 @@ export default function LoginScreen() {
           testID="login-submit"
         >
           {submitting ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={colors.primaryForeground} />
           ) : (
             <Text style={styles.buttonText}>Iniciar sesion</Text>
           )}
@@ -90,8 +93,8 @@ export default function LoginScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  flex: { flex: 1, backgroundColor: "#fff" },
+const useStyles = themedStyles((colors) => ({
+  flex: { flex: 1, backgroundColor: colors.background },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -99,31 +102,35 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   title: {
-    fontSize: 28,
-    fontWeight: "700",
+    fontFamily: fonts.display,
+    fontSize: 40,
+    textTransform: "uppercase",
     textAlign: "center",
+    color: colors.foreground,
   },
   subtitle: {
     fontSize: 14,
-    color: "#666",
+    color: colors.foregroundMuted,
     textAlign: "center",
     marginBottom: 12,
   },
   input: {
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
+    borderColor: colors.input,
+    borderRadius: 6,
     padding: 12,
     fontSize: 16,
+    color: colors.foreground,
+    backgroundColor: colors.surface,
   },
   error: {
-    color: "#c0392b",
+    color: colors.danger,
     fontSize: 14,
     textAlign: "center",
   },
   button: {
-    backgroundColor: "#111",
-    borderRadius: 8,
+    backgroundColor: colors.primary,
+    borderRadius: 6,
     padding: 14,
     alignItems: "center",
     marginTop: 8,
@@ -132,8 +139,8 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   buttonText: {
-    color: "#fff",
-    fontWeight: "600",
+    color: colors.primaryForeground,
+    fontWeight: "700",
     fontSize: 16,
   },
-});
+}));

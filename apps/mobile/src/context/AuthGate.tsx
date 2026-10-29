@@ -1,7 +1,8 @@
 import { useEffect, type ReactNode } from "react";
 import { useRouter, useSegments } from "expo-router";
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { useAuth } from "./AuthContext";
+import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 /**
  * Redirige entre `/login` y la app segun el estado de sesion (issue
@@ -10,6 +11,8 @@ import { useAuth } from "./AuthContext";
  * pantalla protegida).
  */
 export function AuthGate({ children }: { children: ReactNode }) {
+  const styles = useStyles();
+  const { colors } = useTheme();
   const { status } = useAuth();
   const segments = useSegments();
   const router = useRouter();
@@ -29,7 +32,7 @@ export function AuthGate({ children }: { children: ReactNode }) {
   if (status === "loading") {
     return (
       <View style={styles.center}>
-        <ActivityIndicator />
+        <ActivityIndicator color={colors.primary} />
       </View>
     );
   }
@@ -37,11 +40,11 @@ export function AuthGate({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
-const styles = StyleSheet.create({
+const useStyles = themedStyles((colors) => ({
   center: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#fff",
+    backgroundColor: colors.background,
   },
-});
+}));
