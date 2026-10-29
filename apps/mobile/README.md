@@ -41,6 +41,15 @@ La logica de dominio no se reescribe aqui: las pantallas consumen
 [`@businext/shared-core`](../../packages/shared-core/README.md), los mismos
 hooks que usa `apps/web`.
 
+## Tema
+
+La identidad está en [`DESIGN.md`](../../DESIGN.md): oscuro *Noche de barrio* por
+defecto y claro *Taller*. `src/theme/ThemeContext.tsx` lee los colores de
+`@businext/shared-core/theme` y guarda el modo en el dispositivo; se cambia en
+**Ajustes → Apariencia**. Los estilos que usan colores se declaran con
+`themedStyles((colors) => ({ ... }))`, que devuelve un hook (`useStyles()`) con la
+hoja del modo activo; nada de hex sueltos.
+
 ## Comandos
 
 ```bash
@@ -131,7 +140,8 @@ que crearla a mano en Supabase.
   (balance, ingresos frente a gastos y comparativa), solicitud de reserva
   (Aceptar/Rechazar contra `/booking-requests`) y confirmacion de acciones
   (Confirmar/Cancelar llama a `confirm` del chat).
-  Colores de `src/theme/colors.ts` (paleta BN de la web). Sin tabs: el menu de la
+  Colores del tema (ver *Tema* abajo); la cabecera lleva el avatar del asistente
+  (`assets/avatar-asistente.png`). Sin tabs: el menu de la
   cabecera lleva a nueva conversacion, historial, agenda, ajustes y cerrar sesion. Si
   `EXPO_PUBLIC_ASSISTANT_CHAT=false` (hoy en los perfiles `preview` y
   `production` de `eas.json`), la home es la agenda.

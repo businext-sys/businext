@@ -51,16 +51,12 @@ Estado de la web y la app móvil antes de redefinir la identidad
 
 ## Capturas
 
-Pendiente: requiere levantar la web y la app con un owner de prueba (ver *Cómo empezar* en la
-story). Las capturas no deben mostrar datos de clientes reales, porque el repo es público.
+En `capturas/`, sin datos de clientes reales (el repo es público). "Antes" es
+producción con `main`; "después", la rama en local.
 
-| Pantalla | Web | Móvil |
-|---|---|---|
-| Login | | |
-| Inicio | | — |
-| Reservas / agenda | | |
-| Finanzas | | — |
-| Productos | | — |
-| Configuración | | |
-| Reserva pública `book/[businessId]` | | — |
-| Chat y sus tarjetas | — | |
+| Pantalla | Antes | Después (oscuro) | Después (claro) |
+|---|---|---|---|
+| Login web | [web-login-antes](capturas/web-login-antes.jpg) | [web-login-despues-oscuro](capturas/web-login-despues-oscuro.jpg) | [web-login-despues-claro](capturas/web-login-despues-claro.jpg) |
+
+Las pantallas con sesión (inicio, reservas, finanzas, productos, configuración y
+la app móvil) se capturan con un owner de prueba en las sub-issues #127 y #128.
