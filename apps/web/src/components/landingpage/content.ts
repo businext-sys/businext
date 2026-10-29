@@ -1,80 +1,487 @@
 // Everything the landing shows is a feature that exists today; the figures on the app screens
-// are sample data and the page says so.
+// are sample data and the page says so. Every text lives here once per language: `en` has the
+// type of `es`, so a key missing in one of them does not compile.
 
-import { Lock, MessageSquare, Sparkles, Wrench, type LucideIcon } from "lucide-react";
-
+export type Lang = "es" | "en";
 export type ScreenId = "call" | "request" | "review" | "chat" | "till";
-
-export const HERO_BEATS: { screen: ScreenId; title: string; text: string }[] = [
-  { screen: "call", title: "Llamada atendida", text: "Carlos reservó el jueves a las 18:30" },
-  { screen: "request", title: "Nueva solicitud", text: "Marcos quiere cita mañana a las 17:00" },
-  { screen: "review", title: "Reseña de 5 estrellas", text: "Tienes la respuesta lista para copiar" },
-  { screen: "chat", title: "Tu semana", text: "1.384 €, un 12 % más que la anterior" },
-];
-
-export const CALL_LINES: { who: "client" | "assistant"; text: string }[] = [
-  { who: "client", text: "Hola, ¿tenéis hueco el jueves para degradado y barba?" },
-  { who: "assistant", text: "Sí, a las 18:30 con Álex. ¿Te lo reservo a tu nombre?" },
-  { who: "client", text: "Perfecto, soy Carlos." },
-  { who: "assistant", text: "Hecho, Carlos. Te esperamos el jueves a las 18:30." },
-];
-
-export const CHAPTERS: { title: string; caption: string; screen: ScreenId; plate: string }[] = [
-  {
-    title: "No pierdes una llamada",
-    caption: "El asistente de voz coge las llamadas que tú no puedes y deja la cita en tu agenda real.",
-    screen: "call",
-    plate: "stop2",
-  },
-  {
-    title: "Te reservan online",
-    caption:
-      "Tu enlace de reserva trabaja solo. Te llega el aviso al móvil, aceptas con un toque y el cliente recibe su confirmación por email.",
-    screen: "request",
-    plate: "stop1",
-  },
-  {
-    title: "Cuidas tu reputación",
-    caption: "Tus reseñas de Google llegan a Businext y la IA te propone una respuesta en tu tono. Tú la revisas.",
-    screen: "review",
-    plate: "stop3",
-  },
-  {
-    title: "Sabes cómo creces",
-    caption:
-      "Pregúntale al asistente cómo fue la semana, cuánto llevas en caja o qué reservas tienes mañana. Y en Inteligencia ves qué clientes fieles llevan tiempo sin venir.",
-    screen: "chat",
-    plate: "stop4",
-  },
-  {
-    title: "Reservas y caja, solas",
-    caption: "Agenda por barbero y caja del día: cada corte completado suma solo.",
-    screen: "till",
-    plate: "stop5",
-  },
-];
 
 /** The sites that show what a Businext web looks like. `end` is how far each capture scrolls, in % of its height. */
 export const SHOWCASE = [
-  {
-    name: "La Perla Barber Shop Studio",
-    place: "Humanes de Madrid",
-    href: "https://la-perla-barber-website.vercel.app",
-    capture: "la-perla",
-    end: { desktop: 87, mobile: 87 },
-  },
-  {
-    name: "Sito Barbershop",
-    place: "El Quiñón, Seseña",
-    href: "https://sito-barbershop-web.vercel.app",
-    capture: "sito",
-    end: { desktop: 88, mobile: 88 },
-  },
+  { name: "La Perla Barber Shop Studio", place: "Humanes de Madrid", href: "https://la-perla-barber-website.vercel.app", capture: "la-perla", end: { desktop: 87, mobile: 87 } },
+  { name: "Sito Barbershop", place: "El Quiñón, Seseña", href: "https://sito-barbershop-web.vercel.app", capture: "sito", end: { desktop: 88, mobile: 88 } },
 ];
 
-export const FOUNDER_PERKS: { icon: LucideIcon; title: string; text: string }[] = [
-  { icon: Lock, title: "Tarifa de fundador", text: "Mantienes para siempre las condiciones con las que entras." },
-  { icon: Wrench, title: "Lo montamos contigo", text: "Configuramos tus servicios, barberos, horarios y el asistente de voz por ti." },
-  { icon: MessageSquare, title: "Línea directa", text: "Hablas con quien construye Businext, y lo que pides entra en el plan." },
-  { icon: Sparkles, title: "Primero en lo nuevo", text: "Cada función nueva llega antes a tu barbería." },
-];
+const es = {
+  meta: {
+    title: "Businext · La app que impulsa tu barbería",
+    description:
+      "Un asistente de voz que coge las llamadas que tú no puedes, respuestas a tus reseñas redactadas por IA, un asistente al que preguntar cómo va tu negocio y tu web a medida. Reservas y caja, de serie. Plazas de fundador limitadas.",
+  },
+  skip: "Saltar a la whitelist",
+  nav: {
+    label: "Principal",
+    home: "Businext, ir al inicio",
+    sections: { calls: "Cómo funciona", app: "La app", webs: "Tu web", founders: "Fundadores" },
+    login: "Entrar",
+    join: "Apúntate",
+    language: "Idioma",
+  },
+  hero: {
+    eyebrow: "Para barberías que quieren crecer",
+    title: "Tu barbería no solo se organiza.",
+    accent: "Crece.",
+    lead: "Businext coge el teléfono cuando tú no puedes, te prepara la respuesta a cada reseña y te cuenta cómo va tu negocio. Las reservas, la caja y tu web vienen de serie.",
+    join: "Apúntate a la whitelist",
+    how: "Ver cómo funciona",
+    signature: ["Revolucionando el sector de la belleza", "Hecho con cariño en Madrid", "Sin instalar nada"],
+    plateAlt: "El barbero de Businext, de brazos cruzados junto al sillón de su barbería al anochecer.",
+    now: "ahora",
+    show: "Ver",
+    beats: [
+      { screen: "call", title: "Llamada atendida", text: "Carlos reservó el jueves a las 18:30" },
+      { screen: "request", title: "Nueva solicitud", text: "Marcos quiere cita mañana a las 17:00" },
+      { screen: "review", title: "Reseña de 5 estrellas", text: "Tienes la respuesta lista para copiar" },
+      { screen: "chat", title: "Tu semana", text: "1.384 €, un 12 % más que la anterior" },
+    ] as { screen: ScreenId; title: string; text: string }[],
+  },
+  calls: {
+    eyebrow: "Asistente de voz",
+    title: "Suena el teléfono.",
+    accent: "Tú sigues cortando.",
+    lead: "El asistente atiende con voz natural, mira tu agenda real y deja la cita. Ninguna llamada perdida es un cliente perdido.",
+    steps: [
+      ["Atiende", "Con voz natural, en español, a cualquier hora."],
+      ["Mira tu agenda", "Solo ofrece horas que de verdad tienes libres."],
+      ["Tú decides", "Reserva directa, o una solicitud que aceptas desde el móvil."],
+    ],
+    callLabel: "Llamada atendida por el asistente, datos de ejemplo",
+    assistantName: "Asistente de Businext",
+    avatarAlt: "Avatar del asistente de Businext",
+    inProgress: "Llamada en curso · 0:42",
+    client: "Cliente",
+    assistant: "Asistente",
+    lines: [
+      { who: "client", text: "Hola, ¿tenéis hueco el jueves para degradado y barba?" },
+      { who: "assistant", text: "Sí, a las 18:30 con Álex. ¿Te lo reservo a tu nombre?" },
+      { who: "client", text: "Perfecto, soy Carlos." },
+      { who: "assistant", text: "Hecho, Carlos. Te esperamos el jueves a las 18:30." },
+    ] as { who: "client" | "assistant"; text: string }[],
+    agendaLabel: "Agenda del jueves, datos de ejemplo",
+    agenda: "Agenda · jueves",
+    slots: [
+      ["17:00", "Javi R. · Corte"],
+      ["17:45", "Marcos T. · Barba"],
+    ],
+    booked: "Carlos M. · Degradado + barba",
+    bookedTag: "Reservó la IA",
+    free: "Libre",
+  },
+  app: {
+    eyebrow: "La app",
+    title: "Así",
+    accent: "impulsa",
+    rest: "tu barbería",
+    sample: "Pantallas de la app con datos de ejemplo.",
+    chapters: [
+      {
+        title: "No pierdes una llamada",
+        caption: "El asistente de voz coge las llamadas que tú no puedes y deja la cita en tu agenda real.",
+        screen: "call",
+        plate: "stop2",
+      },
+      {
+        title: "Te reservan online",
+        caption:
+          "Tu enlace de reserva trabaja solo. Te llega el aviso al móvil, aceptas con un toque y el cliente recibe su confirmación por email.",
+        screen: "request",
+        plate: "stop1",
+      },
+      {
+        title: "Cuidas tu reputación",
+        caption: "Tus reseñas de Google llegan a Businext y la IA te propone una respuesta en tu tono. Tú la revisas.",
+        screen: "review",
+        plate: "stop3",
+      },
+      {
+        title: "Sabes cómo creces",
+        caption:
+          "Pregúntale al asistente cómo fue la semana, cuánto llevas en caja o qué reservas tienes mañana. Y en Inteligencia ves qué clientes fieles llevan tiempo sin venir.",
+        screen: "chat",
+        plate: "stop4",
+      },
+      {
+        title: "Reservas y caja, solas",
+        caption: "Agenda por barbero y caja del día: cada corte completado suma solo.",
+        screen: "till",
+        plate: "stop5",
+      },
+    ] as { title: string; caption: string; screen: ScreenId; plate: string }[],
+  },
+  webs: {
+    eyebrow: "Tu web, incluida",
+    title: "Una web a tu medida.",
+    accent: "Dentro de la suscripción.",
+    lead: "Con Businext tu barbería estrena web propia, con tu estilo. Estas dos ya están funcionando.",
+    alt: (name: string) => `Web de ${name}: portada, precios, trabajos y ubicación.`,
+    mobileAlt: (name: string) => `Web de ${name} en el móvil.`,
+    visit: "Ver la web",
+    newTab: "(se abre en otra pestaña)",
+    points: [
+      ["Con tu identidad", "Tu logo, tus colores y tus fotos. Ninguna se parece a otra."],
+      ["Lo que busca tu cliente", "Precios, trabajos, horario, ubicación y cómo pedir cita."],
+      ["Pensada para el móvil", "Rápida y clara en la pantalla desde la que te buscan."],
+    ],
+    onlyTitle: "¿Solo quieres la web?",
+    onlyText: "También te la hacemos a tu medida, sin suscripción.",
+    onlyCta: "Quiero mi web",
+  },
+  ask: {
+    eyebrow: "Pregúntale a tu negocio",
+    title: "Tu negocio,",
+    accent: "en una conversación",
+    question: "¿Cuánto llevo este mes?",
+    answer: "4.910 €, un 9 % más que en septiembre a estas alturas.",
+    plateAlt: "El barbero, apoyado en el mostrador de su barbería, mira el móvil.",
+  },
+  founders: {
+    eyebrow: "Clientes fundadores",
+    title: "Las primeras barberías,",
+    accent: "con ventajas para siempre.",
+    lead: "Abrimos Businext por tandas. Las barberías que entren en la primera serán fundadoras y lo notarán mientras sigan con nosotros.",
+    seal: ["Barbería", "Fundadora", "Businext"],
+    perks: [
+      { title: "Tarifa de fundador", text: "Mantienes para siempre las condiciones con las que entras." },
+      { title: "Lo montamos contigo", text: "Configuramos tus servicios, barberos, horarios y el asistente de voz por ti." },
+      { title: "Línea directa", text: "Hablas con quien construye Businext, y lo que pides entra en el plan." },
+      { title: "Primero en lo nuevo", text: "Cada función nueva llega antes a tu barbería." },
+    ],
+    limited: "Plazas limitadas",
+    limitedText: "en la primera tanda. Apuntarte no te compromete a nada.",
+    cta: "Quiero ser fundador",
+  },
+  whitelist: {
+    eyebrow: "Acceso anticipado",
+    title: "Mañana tu barbería",
+    accent: "trabaja contigo.",
+    lead: "Apúntate y te escribimos cuando abramos tu plaza de fundador.",
+  },
+  form: {
+    name: "Tu nombre",
+    shop: "Tu barbería",
+    contact: "Email o teléfono",
+    interest: "Me interesa",
+    interests: { businext: "Businext completo", web: "Solo la web" },
+    submit: "Apuntarme a la whitelist",
+    sending: "Enviando…",
+    done: "Estás dentro. Te escribimos cuando sea el turno de tu barbería.",
+    error: "No se pudo enviar",
+    retry: "Inténtalo de nuevo en un momento.",
+  },
+  footer: {
+    tagline: "Digitalizando las barberías",
+    accent: "de barrio.",
+    madeWith: "Hecho con",
+    love: "amor",
+    inMadrid: "en Madrid",
+    label: "Pie de página",
+    builtTitle: "Webs que hemos hecho",
+    join: "Apúntate a la whitelist",
+    motto: "Revolucionando el sector de la belleza, una barbería a la vez.",
+  },
+  screens: {
+    call: {
+      answering: "Atendiendo llamada",
+      ask: "¿Hueco el jueves para degradado y barba?",
+      offer: "Sí, a las 18:30 con Álex. ¿Te lo reservo?",
+      name: "Perfecto, soy Carlos.",
+      created: "Reserva creada",
+      tag: "IA",
+      when: "Jueves 18:30 · Álex",
+    },
+    request: {
+      eyebrow: "Solicitudes",
+      title: "Nueva reserva",
+      tag: "Reserva online",
+      detail: "Corte + barba · Mañana 17:00 · Álex",
+      decline: "Rechazar",
+      accept: "Aceptar",
+      confirmed: "Reserva confirmada",
+      emailed: "Email de confirmación enviado a Marcos",
+      slot: "Marcos T. · Corte + barba",
+    },
+    review: {
+      eyebrow: "Reseñas de Google",
+      title: "Nueva reseña",
+      ago: "hace 10 min",
+      stars: "5 estrellas",
+      quote: "«El mejor degradado que ha llevado mi hijo. Repetiremos.»",
+      draft: "Respuesta propuesta por la IA",
+      reply: "¡Gracias, Lucía! Nos alegra que le guste. Os esperamos para el próximo.",
+      edit: "Editar",
+      copy: "Copiar",
+    },
+    chat: {
+      assistant: "Asistente",
+      online: "en línea",
+      ask: "¿Cómo fue la semana?",
+      lastWeek: "Semana pasada",
+      total: "1.384 €",
+      growth: "+12 %",
+      answer: "Tu mejor día fue el viernes, con 312 €. Y mañana tienes 9 reservas.",
+      chips: ["¿Cómo va mi caja?", "Reservas de mañana"],
+    },
+    till: {
+      eyebrow: "Hoy",
+      title: "Caja del día",
+      rows: [
+        ["17:00", "Javi R. · Corte", "15 €"],
+        ["17:45", "Marcos T. · Barba", "10 €"],
+      ],
+      last: ["18:30", "Carlos M.", "22 €"],
+      total: "Total",
+      amount: "246 €",
+      growth: "+8 %",
+    },
+  },
+};
+
+export type Copy = typeof es;
+
+const en: Copy = {
+  meta: {
+    title: "Businext · The app that grows your barbershop",
+    description:
+      "A voice assistant that answers the calls you can't, AI-drafted replies to your reviews, an assistant you can ask how business is going, and a website made for you. Bookings and till built in. Limited founder spots.",
+  },
+  skip: "Skip to the waitlist",
+  nav: {
+    label: "Main",
+    home: "Businext, back to top",
+    sections: { calls: "How it works", app: "The app", webs: "Your website", founders: "Founders" },
+    login: "Sign in",
+    join: "Join",
+    language: "Language",
+  },
+  hero: {
+    eyebrow: "For barbershops that want to grow",
+    title: "Don't just run your barbershop.",
+    accent: "Grow it.",
+    lead: "Businext picks up the phone when you can't, drafts the reply to every review and tells you how business is going. Bookings, the till and your website come built in.",
+    join: "Join the waitlist",
+    how: "See how it works",
+    signature: ["Shaking up the beauty industry", "Made with love in Madrid", "Nothing to install"],
+    plateAlt: "The Businext barber, arms crossed next to the chair in his barbershop at dusk.",
+    now: "now",
+    show: "Show",
+    beats: [
+      { screen: "call", title: "Call answered", text: "Carlos booked Thursday at 18:30" },
+      { screen: "request", title: "New request", text: "Marcos wants an appointment tomorrow at 17:00" },
+      { screen: "review", title: "5-star review", text: "Your reply is ready to copy" },
+      { screen: "chat", title: "Your week", text: "€1,384, 12% more than the week before" },
+    ],
+  },
+  calls: {
+    eyebrow: "Voice assistant",
+    title: "The phone rings.",
+    accent: "You keep cutting.",
+    lead: "The assistant answers in a natural voice, checks your real calendar and books the appointment. No missed call, no missed client.",
+    steps: [
+      ["It answers", "In a natural voice, at any hour."],
+      ["It checks your calendar", "It only offers times you actually have free."],
+      ["You decide", "A direct booking, or a request you accept from your phone."],
+    ],
+    callLabel: "Call answered by the assistant, sample data",
+    assistantName: "Businext assistant",
+    avatarAlt: "Avatar of the Businext assistant",
+    inProgress: "Call in progress · 0:42",
+    client: "Client",
+    assistant: "Assistant",
+    lines: [
+      { who: "client", text: "Hi, do you have anything on Thursday for a fade and beard?" },
+      { who: "assistant", text: "Yes, 18:30 with Álex. Shall I book it under your name?" },
+      { who: "client", text: "Perfect, I'm Carlos." },
+      { who: "assistant", text: "Done, Carlos. See you Thursday at 18:30." },
+    ],
+    agendaLabel: "Thursday's calendar, sample data",
+    agenda: "Calendar · Thursday",
+    slots: [
+      ["17:00", "Javi R. · Haircut"],
+      ["17:45", "Marcos T. · Beard"],
+    ],
+    booked: "Carlos M. · Fade + beard",
+    bookedTag: "Booked by AI",
+    free: "Free",
+  },
+  app: {
+    eyebrow: "The app",
+    title: "How it",
+    accent: "grows",
+    rest: "your barbershop",
+    sample: "App screens with sample data.",
+    chapters: [
+      {
+        title: "Never miss a call",
+        caption: "The voice assistant picks up the calls you can't and puts the appointment in your real calendar.",
+        screen: "call",
+        plate: "stop2",
+      },
+      {
+        title: "Get booked online",
+        caption:
+          "Your booking link works on its own. You get a notification on your phone, accept with one tap and the client gets a confirmation email.",
+        screen: "request",
+        plate: "stop1",
+      },
+      {
+        title: "Look after your reputation",
+        caption: "Your Google reviews come into Businext and the AI drafts a reply in your tone. You review it.",
+        screen: "review",
+        plate: "stop3",
+      },
+      {
+        title: "Know how you're growing",
+        caption:
+          "Ask the assistant how the week went, what's in the till or what bookings you have tomorrow. And Insights shows which loyal clients haven't been back for a while.",
+        screen: "chat",
+        plate: "stop4",
+      },
+      {
+        title: "Bookings and till, on autopilot",
+        caption: "A calendar per barber and the day's till: every finished cut adds itself up.",
+        screen: "till",
+        plate: "stop5",
+      },
+    ],
+  },
+  webs: {
+    eyebrow: "Your website, included",
+    title: "A website made for you.",
+    accent: "Included in the subscription.",
+    lead: "With Businext your barbershop gets its own website, in your style. These two are already live.",
+    alt: (name: string) => `${name} website: home, prices, work and location.`,
+    mobileAlt: (name: string) => `${name} website on a phone.`,
+    visit: "Visit website",
+    newTab: "(opens in a new tab)",
+    points: [
+      ["Your identity", "Your logo, your colors and your photos. No two look alike."],
+      ["What clients look for", "Prices, work, opening hours, location and how to book."],
+      ["Built for mobile", "Fast and clear on the screen they find you on."],
+    ],
+    onlyTitle: "Just want the website?",
+    onlyText: "We'll build one made for you too, no subscription needed.",
+    onlyCta: "I want my website",
+  },
+  ask: {
+    eyebrow: "Ask your business",
+    title: "Your business,",
+    accent: "in one conversation",
+    question: "How much have I made this month?",
+    answer: "€4,910, 9% more than September at this point.",
+    plateAlt: "The barber, leaning on the counter of his barbershop, looks at his phone.",
+  },
+  founders: {
+    eyebrow: "Founding members",
+    title: "The first barbershops,",
+    accent: "with perks for life.",
+    lead: "We're opening Businext in rounds. Barbershops that join the first round become founders, and they'll feel it for as long as they stay with us.",
+    seal: ["Founding", "Barbershop", "Businext"],
+    perks: [
+      { title: "Founder rate", text: "Keep the terms you join with, forever." },
+      { title: "We set it up with you", text: "We configure your services, barbers, opening hours and voice assistant for you." },
+      { title: "Direct line", text: "Talk to the people building Businext, and what you ask for goes on the roadmap." },
+      { title: "First in line", text: "Every new feature reaches your barbershop first." },
+    ],
+    limited: "Limited spots",
+    limitedText: "in the first round. Joining doesn't commit you to anything.",
+    cta: "Become a founder",
+  },
+  whitelist: {
+    eyebrow: "Early access",
+    title: "Tomorrow your barbershop",
+    accent: "works with you.",
+    lead: "Join and we'll write to you when your founder spot opens.",
+  },
+  form: {
+    name: "Your name",
+    shop: "Your barbershop",
+    contact: "Email or phone",
+    interest: "I'm interested in",
+    interests: { businext: "Full Businext", web: "Just the website" },
+    submit: "Join the waitlist",
+    sending: "Sending…",
+    done: "You're in. We'll write to you when it's your barbershop's turn.",
+    error: "Couldn't send",
+    retry: "Please try again in a moment.",
+  },
+  footer: {
+    tagline: "Digitizing neighborhood",
+    accent: "barbershops.",
+    madeWith: "Made with",
+    love: "love",
+    inMadrid: "in Madrid",
+    label: "Footer",
+    builtTitle: "Websites we've built",
+    join: "Join the waitlist",
+    motto: "Shaking up the beauty industry, one barbershop at a time.",
+  },
+  screens: {
+    call: {
+      answering: "Answering call",
+      ask: "Anything on Thursday for a fade and beard?",
+      offer: "Yes, 18:30 with Álex. Shall I book it?",
+      name: "Perfect, I'm Carlos.",
+      created: "Booking created",
+      tag: "AI",
+      when: "Thursday 18:30 · Álex",
+    },
+    request: {
+      eyebrow: "Requests",
+      title: "New booking",
+      tag: "Online booking",
+      detail: "Haircut + beard · Tomorrow 17:00 · Álex",
+      decline: "Decline",
+      accept: "Accept",
+      confirmed: "Booking confirmed",
+      emailed: "Confirmation email sent to Marcos",
+      slot: "Marcos T. · Haircut + beard",
+    },
+    review: {
+      eyebrow: "Google reviews",
+      title: "New review",
+      ago: "10 min ago",
+      stars: "5 stars",
+      quote: "“Best fade my son has ever had. We'll be back.”",
+      draft: "Reply drafted by AI",
+      reply: "Thanks, Lucía! So glad he loves it. See you next time.",
+      edit: "Edit",
+      copy: "Copy",
+    },
+    chat: {
+      assistant: "Assistant",
+      online: "online",
+      ask: "How was the week?",
+      lastWeek: "Last week",
+      total: "€1,384",
+      growth: "+12%",
+      answer: "Your best day was Friday, with €312. And you have 9 bookings tomorrow.",
+      chips: ["How's my till?", "Tomorrow's bookings"],
+    },
+    till: {
+      eyebrow: "Today",
+      title: "Today's till",
+      rows: [
+        ["17:00", "Javi R. · Haircut", "€15"],
+        ["17:45", "Marcos T. · Beard", "€10"],
+      ],
+      last: ["18:30", "Carlos M.", "€22"],
+      total: "Total",
+      amount: "€246",
+      growth: "+8%",
+    },
+  },
+};
+
+export const COPY: Record<Lang, Copy> = { es, en };
+
+/** Where each language's landing lives. */
+export const LANDING_PATH: Record<Lang, string> = { es: "/", en: "/en" };

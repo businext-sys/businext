@@ -136,7 +136,14 @@ agenda), la app (cinco capítulos), tu web (La Perla y Sito como ejemplo),
 - **Solo funciones que existen.** Todo lo que muestran las pantallas está hecho
   (agente de voz, solicitudes con push y email, respuesta a reseñas con IA, chat
   del asistente, Inteligencia, caja). Las cifras son de ejemplo y la página lo
-  dice. Textos y datos en `src/components/landingpage/content.ts`.
+  dice.
+- **Español en `/` e inglés en `/en`.** Las dos rutas pintan `Landing.tsx` con su
+  `lang`; todos los textos, también los de las pantallas de la app, están una vez
+  por idioma en `src/components/landingpage/content.ts` (`en` tiene el tipo de
+  `es`, así que si falta una clave no compila). La barra lleva el selector
+  ES / EN, cada página declara su `hreflang` y `/en` está en `publicRoutes`. El
+  `<html lang>` del layout sigue en `es`; la versión inglesa marca `lang="en"` en
+  su contenedor.
 - **La app en un móvil**: `AppScreens.tsx` dibuja cada pantalla con los tokens
   de la app; sus piezas entran en orden (`--d`) cada vez que la pantalla se
   monta. `HeroShowcase` las recorre en la portada con su notificación,
@@ -153,7 +160,8 @@ agenda), la app (cinco capítulos), tu web (La Perla y Sito como ejemplo),
   Las animaciones son de opacidad y posición y se apagan con
   `prefers-reduced-motion`.
 - **Whitelist**: el formulario envía a `/api/whitelist`, que manda un email con el
-  mismo transporte de Gmail que `/api/send-contact-email`.
+  mismo transporte de Gmail que `/api/send-contact-email` e indica el idioma de
+  la página desde la que se apuntaron.
 - **Self-check**: `pnpm check:landing` avisa (no bloquea) de contraste de tokens,
   peso por orientación (presupuesto 3 MB), huecos en el manifest y alt sin
   escribir.

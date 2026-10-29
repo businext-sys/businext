@@ -6,6 +6,8 @@ const INTERESTS: Record<string, string> = {
   web: "Solo la web",
 };
 
+const LANGUAGES: Record<string, string> = { es: "español", en: "inglés" };
+
 const clean = (value: unknown, max: number) => (typeof value === "string" ? value.trim().slice(0, max) : "");
 
 export async function POST(request: Request) {
@@ -21,6 +23,7 @@ export async function POST(request: Request) {
   const shop = clean(body.shop, 120);
   const contact = clean(body.contact, 160);
   const interest = INTERESTS[clean(body.interest, 20)] ?? INTERESTS.businext;
+  const language = LANGUAGES[clean(body.lang, 5)] ?? LANGUAGES.es;
   if (!name || !shop || !contact) {
     return NextResponse.json({ error: "Faltan datos: nombre, barbería y un email o teléfono" }, { status: 400 });
   }
@@ -38,7 +41,7 @@ export async function POST(request: Request) {
       from: process.env.GMAIL_BUSINEXT_USER,
       to: "greenfourtech@gmail.com",
       subject: `Whitelist Businext: ${shop}`,
-      text: `Nombre: ${name}\nBarbería: ${shop}\nContacto: ${contact}\nLe interesa: ${interest}`,
+      text: `Nombre: ${name}\nBarbería: ${shop}\nContacto: ${contact}\nLe interesa: ${interest}\nIdioma de la web: ${language}`,
     });
     return NextResponse.json({ success: true });
   } catch {

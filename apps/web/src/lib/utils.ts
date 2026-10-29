@@ -23,6 +23,7 @@ export const authOnlyRoutes = [
 
 export const publicRoutes = [
   "/",
+  "/en",
   "/login",
   "/login/verify",
   "/auth/confirm",
