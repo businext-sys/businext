@@ -50,6 +50,10 @@ defecto y claro *Taller*. `src/theme/ThemeContext.tsx` lee los colores de
 `themedStyles((colors) => ({ ... }))`, que devuelve un hook (`useStyles()`) con la
 hoja del modo activo; nada de hex sueltos.
 
+Las fuentes (Big Shoulders para titulares, DM Sans para el texto) se cargan con
+`expo-font` en `app/_layout.tsx` desde `src/theme/fonts.ts`. El plugin `expo-font`
+cambia el binario: tras este cambio hace falta un build nuevo de EAS.
+
 ## Comandos
 
 ```bash

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Image, Modal, Pressable, Text, View } from "react-native";
 import { themedStyles } from "@/theme/ThemeContext";
+import { fonts } from "@/theme/fonts";
 
 export type ChatMenuItem = { label: string; onPress: () => void; destructive?: boolean };
 
@@ -84,13 +85,14 @@ const useStyles = themedStyles((colors) => ({
     borderColor: colors.primary,
   },
   title: {
-    fontSize: 20,
-    fontWeight: "700",
+    fontFamily: fonts.display,
+    fontSize: 24,
+    textTransform: "uppercase",
     color: colors.foreground,
   },
   subtitle: {
+    fontFamily: fonts.bodyBold,
     fontSize: 13,
-    fontWeight: "600",
     color: colors.secondary,
   },
   menuButton: {

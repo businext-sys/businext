@@ -1,9 +1,11 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { useFonts } from "expo-font";
 import { bootstrapApiClient } from "@/lib/bootstrapApiClient";
 import { AuthProvider } from "@/context/AuthContext";
 import { AuthGate } from "@/context/AuthGate";
 import { ThemeProvider, useTheme } from "@/theme/ThemeContext";
+import { fontAssets } from "@/theme/fonts";
 
 // Se ejecuta una unica vez, al cargar este modulo (que Expo Router carga
 // antes de montar cualquier pantalla), configurando el apiClient
@@ -11,6 +13,9 @@ import { ThemeProvider, useTheme } from "@/theme/ThemeContext";
 bootstrapApiClient();
 
 export default function RootLayout() {
+  const [fontsLoaded] = useFonts(fontAssets);
+  if (!fontsLoaded) return null;
+
   return (
     <ThemeProvider>
       <AuthProvider>

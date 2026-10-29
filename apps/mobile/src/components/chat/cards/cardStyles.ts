@@ -1,4 +1,5 @@
 import { themedStyles } from "@/theme/ThemeContext";
+import { fonts } from "@/theme/fonts";
 
 export const useCardStyles = themedStyles((colors) => ({
   card: {
@@ -9,7 +10,7 @@ export const useCardStyles = themedStyles((colors) => ({
     padding: 12,
     gap: 10,
   },
-  title: { fontSize: 15, fontWeight: "700", color: colors.foreground },
+  title: { fontFamily: fonts.display, fontSize: 20, textTransform: "uppercase", color: colors.foreground },
   muted: { fontSize: 13, color: colors.foregroundMuted },
   subtle: { fontSize: 12, color: colors.foregroundSubtle },
   actions: { flexDirection: "row", gap: 8 },
