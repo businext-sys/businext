@@ -184,9 +184,9 @@ export default function PublicBookingPage({
     return (
       <Shell>
         <div className="text-center py-16 px-4">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-red-500/10 mb-4">
+          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-danger/10 mb-4">
             <svg
-              className="w-7 h-7 text-red-400"
+              className="w-7 h-7 text-danger"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -287,7 +287,7 @@ export default function PublicBookingPage({
                     isCompleted
                       ? "bg-success text-success-foreground"
                       : isActive
-                        ? "bg-secondary text-white"
+                        ? "bg-secondary text-secondary-foreground"
                         : "bg-border text-foreground-subtle"
                   }`}
                 >
@@ -557,7 +557,7 @@ export default function PublicBookingPage({
                   }}
                   className={`flex-shrink-0 flex flex-col items-center w-[58px] py-2.5 rounded-xl border-2 transition-all duration-200 ${
                     isSelected
-                      ? "border-secondary bg-secondary text-white shadow-md shadow-secondary/20"
+                      ? "border-secondary bg-secondary text-secondary-foreground shadow-md shadow-secondary/20"
                       : "border-border bg-surface text-foreground-muted hover:border-secondary/40"
                   }`}
                 >
@@ -651,7 +651,7 @@ export default function PublicBookingPage({
             <button
               onClick={() => setStep("details")}
               disabled={!selectedSlot}
-              className="px-5 py-2.5 bg-secondary text-white rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-secondary-hover transition-colors shadow-sm shadow-secondary/20"
+              className="px-5 py-2.5 bg-secondary text-secondary-foreground rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-secondary-hover transition-colors shadow-sm shadow-secondary/20"
             >
               Continuar
             </button>
@@ -665,7 +665,7 @@ export default function PublicBookingPage({
           <StepTitle>Tus datos</StepTitle>
 
           {error && (
-            <div className="mb-5 p-3.5 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
+            <div className="mb-5 p-3.5 bg-danger/10 border border-danger/30 rounded-xl text-danger text-sm">
               {error}
             </div>
           )}
@@ -726,10 +726,10 @@ export default function PublicBookingPage({
             <button
               onClick={handleSubmit}
               disabled={submitting || !clientName || !clientEmail || !clientPhone}
-              className="px-5 py-2.5 bg-secondary text-white rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-secondary-hover transition-colors shadow-sm shadow-secondary/20 flex items-center gap-2"
+              className="px-5 py-2.5 bg-secondary text-secondary-foreground rounded-xl text-sm font-semibold disabled:opacity-40 disabled:cursor-not-allowed hover:bg-secondary-hover transition-colors shadow-sm shadow-secondary/20 flex items-center gap-2"
             >
               {submitting && (
-                <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                <div className="h-4 w-4 border-2 border-secondary-foreground border-t-transparent rounded-full animate-spin" />
               )}
               {submitting ? "Enviando..." : "Enviar solicitud"}
             </button>
