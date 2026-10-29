@@ -13,7 +13,6 @@ import {
   Link2,
   MapPin,
   CalendarClock,
-  PhoneCall,
   Palette,
 } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -28,7 +27,6 @@ import { Employee, InviteEmployeeInput } from "@/lib/employee/types";
 import { ProductsSection } from "@/components/configuration/ProductsSection";
 import { WorkingHoursEditor } from "@/components/configuration/WorkingHoursEditor";
 import { LocationsSection } from "@/components/configuration/LocationsSection";
-import { VoiceAgentSection } from "@/components/configuration/VoiceAgentSection";
 import { AppearanceSection } from "@/components/configuration/AppearanceSection";
 import { Modal, ModalHeader, ModalContent } from "@/components/ui/modal";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
@@ -51,7 +49,7 @@ const INITIAL_EMPLOYEE_FORM: InviteEmployeeInput = {
   role: "employee",
 };
 
-type SectionId = "profile" | "business" | "products" | "hours" | "team" | "locations" | "booking" | "voice" | "appearance";
+type SectionId = "profile" | "business" | "products" | "hours" | "team" | "locations" | "booking" | "appearance";
 
 type NavItem = {
   id: SectionId;
@@ -69,7 +67,6 @@ const NAV_ITEMS: NavItem[] = [
   { id: "hours", label: "Horario", icon: Clock, ownerOnly: true },
   { id: "team", label: "Equipo", icon: ShieldUser, cap: "canManageTeam" },
   { id: "booking", label: "Reserva online", icon: Link2, ownerOnly: true },
-  { id: "voice", label: "Agente de voz", icon: PhoneCall, ownerOnly: true },
   { id: "appearance", label: "Apariencia", icon: Palette },
 ];
 
@@ -679,9 +676,6 @@ export default function ConfigurationPage() {
               {activeSection === "booking" && (
                 <BookingLinkSection businessId={context?.businessId ?? ""} />
               )}
-
-              {/* ═══ Voice agent ═══ */}
-              {activeSection === "voice" && <VoiceAgentSection />}
 
               {/* ═══ Appearance ═══ */}
               {activeSection === "appearance" && <AppearanceSection />}
