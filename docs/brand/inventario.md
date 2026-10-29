@@ -54,5 +54,6 @@ producción con `main`; "después", la rama en local.
 | Login web | [web-login-antes](capturas/web-login-antes.jpg) | [web-login-despues-oscuro](capturas/web-login-despues-oscuro.jpg) | [web-login-despues-claro](capturas/web-login-despues-claro.jpg) |
 | KPIs de Reservas (#127) | [web-kpis-antes](capturas/web-kpis-antes.jpg) (claro) | — | [web-kpis-despues](capturas/web-kpis-despues.jpg) |
 | Reserva pública, datos (#127) | — | [web-reserva-publica-datos-oscuro](capturas/web-reserva-publica-datos-oscuro.jpg) | — |
+| Logo plano en el login (#129) | [web-login-antes](capturas/web-login-antes.jpg) | [web-logo-plano-login-oscuro](capturas/web-logo-plano-login-oscuro.png) | [web-logo-plano-login-claro](capturas/web-logo-plano-login-claro.png) |
 
 Las pantallas de la app móvil se capturan en #128.
