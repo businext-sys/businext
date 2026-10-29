@@ -24,7 +24,8 @@ relieve y las gotas se pierden y queda una mancha turquesa.
 Una figura 3D en cuatro vistas (frente, tres cuartos, perfil, espalda): pelo con degradado
 (fade) y barba perfilada, chaqueta de cuero coñac con puños de rayas y un monograma bordado,
 camiseta blanca, pantalón negro, zapatillas blancas y negras, sobre fondo de estudio gris claro.
-No está en el repo: ver *Pendiente* abajo.
+En el repo solo está el recorte de la cara, `docs/brand/assets/avatar-cara.png`; la hoja
+completa no se sube porque las zapatillas llevan el logo de Nike.
 
 | Papel | Color aproximado |
 |---|---|
@@ -79,8 +80,10 @@ fija qué color domina, cuál acentúa, la pareja tipográfica y la forma.
    con sombra suave y relieve, negro y blanco para la estructura, coñac para la acción y
    turquesa solo en el logo. Cercana y táctil.
 
-La elegida se escribe en [`/DESIGN.md`](../../DESIGN.md) (tokens + razones), que es lo que
-leen los agentes antes de generar UI.
+**Elegidas por el product owner (2026-10-29):** *Noche de barrio* para el modo oscuro, que es
+el modo por defecto, y *Taller* para el modo claro. Comparten estructura, tipografía (la de
+Noche de barrio) y forma; cambia la paleta. Están escritas en [`/DESIGN.md`](../../DESIGN.md)
+(tokens + razones), que es lo que leen los agentes antes de generar UI.
 
 ## Cómo se usan los agentes para mantener la identidad
 
@@ -96,9 +99,8 @@ leen los agentes antes de generar UI.
 
 ## Pendiente
 
-- **Logo de Nike en el avatar.** Las zapatillas llevan el logo de Nike: el avatar no puede
-  usarse así en la marca. Hay que regenerarlo sin logos de terceros.
-- **Permiso de imagen.** El avatar parece representar a una persona real. Hay que confirmar el
-  permiso para usarlo como cara pública. Hasta entonces no se sube al repo, que es público.
-- **Logo.** Decidir si se mantiene el graffiti, se crea una versión simplificada para tamaños
-  pequeños o se rediseña (el rediseño queda fuera de la story salvo que se pida).
+- **Avatar.** Permiso de uso confirmado por el product owner (2026-10-29). Solo se usan
+  recortes sin las zapatillas, que llevan el logo de Nike.
+- **Logo.** Se mantiene el graffiti; falta una versión plana sin gotas para tamaños pequeños
+  (sidebar, login, icono de la app). El rediseño del logo queda fuera de la story salvo que se
+  pida.
