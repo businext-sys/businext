@@ -1,8 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown, Heart, MapPin, Smartphone, Sparkles } from "lucide-react";
 import { CallFlow } from "@/components/landingpage/CallFlow";
-import { FOUNDER_PERKS } from "@/components/landingpage/content";
+import { FOUNDER_PERKS, SHOWCASE } from "@/components/landingpage/content";
 import { HeroShowcase } from "@/components/landingpage/HeroShowcase";
 import { ShopWebs } from "@/components/landingpage/ShopWebs";
 import { Walkthrough } from "@/components/landingpage/Walkthrough";
@@ -22,6 +22,13 @@ const wrap = "mx-auto w-full max-w-[74rem] px-5 md:px-10";
 const section = "py-20 md:py-[120px]";
 const headline = "m-0 font-heading text-[clamp(2.375rem,5vw,4.25rem)] font-extrabold uppercase leading-[0.95] text-balance text-foreground";
 const lead = "m-0 max-w-[34rem] text-body text-foreground-muted md:text-[1.125rem]";
+
+const SECTIONS = [
+  ["#llamadas", "Cómo funciona"],
+  ["#la-app", "La app"],
+  ["#webs", "Tu web"],
+  ["#fundadores", "Fundadores"],
+];
 
 function Eyebrow({ children }: { children: string }) {
   return <p className="m-0 text-caption font-bold uppercase tracking-[0.1em] text-secondary">{children}</p>;
@@ -44,12 +51,7 @@ export default function Home() {
             <img src="/logo-bn.png" alt="" width={54} height={36} className="h-9 w-auto" />
           </a>
           <div className="hidden gap-[26px] text-label text-foreground-subtle lg:flex">
-            {[
-              ["#llamadas", "Cómo funciona"],
-              ["#la-app", "La app"],
-              ["#webs", "Tu web"],
-              ["#fundadores", "Fundadores"],
-            ].map(([href, label]) => (
+            {SECTIONS.map(([href, label]) => (
               <a key={href} href={href} className="hover:text-foreground">
                 {label}
               </a>
@@ -101,7 +103,18 @@ export default function Home() {
                 Ver cómo funciona <ChevronDown aria-hidden className="h-4 w-4" />
               </a>
             </div>
-            <p className="m-0 text-body-sm text-foreground-subtle">Sin instalar nada. Desde el móvil o el ordenador.</p>
+            <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 border-t border-border-subtle p-0 pt-5 text-body-sm text-foreground-muted">
+              {[
+                { icon: Sparkles, text: "Revolucionando el sector de la belleza" },
+                { icon: MapPin, text: "Hecho con cariño en Madrid" },
+                { icon: Smartphone, text: "Sin instalar nada" },
+              ].map(({ icon: Icon, text }) => (
+                <li key={text} className="flex items-center gap-2">
+                  <Icon aria-hidden className="h-4 w-4 shrink-0 text-primary" />
+                  {text}
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
@@ -267,11 +280,44 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="border-t border-border-subtle py-8 text-body-sm text-foreground-subtle">
-        <div className={`${wrap} flex flex-wrap items-center justify-between gap-4`}>
-          {/* eslint-disable-next-line @next/next/no-img-element -- static logo */}
-          <img src="/logo-bn.png" alt="Businext" width={54} height={36} className="h-9 w-auto" />
+      <footer className="border-t border-border-subtle pb-8 pt-16 text-body-sm text-foreground-subtle">
+        <div className={`${wrap} grid gap-10 md:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(0,1fr)]`}>
+          <div className="flex flex-col gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element -- static logo */}
+            <img src="/logo-bn.png" alt="Businext" width={72} height={48} className="h-12 w-auto self-start" />
+            <p className="m-0 max-w-[22rem] font-heading text-[clamp(1.75rem,3vw,2.25rem)] font-extrabold uppercase leading-none text-foreground">
+              Digitalizando las barberías <span className="text-primary">de barrio.</span>
+            </p>
+            <p className="m-0 flex items-center gap-2 text-foreground-muted">
+              Hecho con <Heart aria-label="amor" className="h-4 w-4 fill-secondary text-secondary" /> en Madrid
+            </p>
+          </div>
+          <nav aria-label="Pie de página" className="flex flex-col gap-3">
+            <p className="m-0 text-caption font-bold uppercase tracking-[0.1em] text-secondary">Businext</p>
+            {SECTIONS.map(([href, label]) => (
+              <a key={href} href={href} className="hover:text-foreground">
+                {label}
+              </a>
+            ))}
+            <Link href="/login" className="hover:text-foreground">
+              Entrar
+            </Link>
+          </nav>
+          <div className="flex flex-col gap-3">
+            <p className="m-0 text-caption font-bold uppercase tracking-[0.1em] text-secondary">Webs que hemos hecho</p>
+            {SHOWCASE.map((site) => (
+              <a key={site.href} href={site.href} target="_blank" rel="noopener noreferrer" className="hover:text-foreground">
+                {site.name} ↗<span className="sr-only"> (se abre en otra pestaña)</span>
+              </a>
+            ))}
+            <a href="#whitelist" className="mt-2 font-bold text-primary hover:underline">
+              Apúntate a la whitelist
+            </a>
+          </div>
+        </div>
+        <div className={`${wrap} mt-12 flex flex-wrap justify-between gap-3 border-t border-border-subtle pt-6 text-caption`}>
           <span>© {new Date().getFullYear()} Businext</span>
+          <span>Revolucionando el sector de la belleza, una barbería a la vez.</span>
         </div>
       </footer>
     </div>
