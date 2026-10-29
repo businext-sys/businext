@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="es" data-resolution="portrait"
+  data-composition-variables='[{"id":"lang","type":"enum","label":"Idioma","default":"es","options":[{"value":"es","label":"Español"},{"value":"en","label":"English"}]}]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Big Shoulders"; font-weight: 800; src: url("assets/fonts/BigShoulders_800ExtraBold.ttf"); }
+      @font-face { font-family: "Big Shoulders"; font-weight: 900; src: url("assets/fonts/BigShoulders_900Black.ttf"); }
+      @font-face { font-family: "DM Sans"; font-weight: 400; src: url("assets/fonts/DMSans_400Regular.ttf"); }
+      @font-face { font-family: "DM Sans"; font-weight: 500; src: url("assets/fonts/DMSans_500Medium.ttf"); }
+      @font-face { font-family: "DM Sans"; font-weight: 700; src: url("assets/fonts/DMSans_700Bold.ttf"); }
+      :root {
+        --bg: #0F0E0C; --surface: #1C1A17; --raised: #2A2621; --border: #3A3530; --border-subtle: #24211D;
+        --fg: #F4F1EC; --fg-muted: #D6CEC5; --fg-subtle: #A89E93; --primary: #41D9D6; --primary-fg: #0F0E0C;
+        --secondary: #D08B5B; --accent: #12302F; --accent-hover: #1A4140; --accent-fg: #F4F1EC; --muted: #171513;
+        --muted-fg: #B5ABA0; --success: #34D399; --warning: #F5A623;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); font-family: "DM Sans"; color: var(--fg); }
+
+      /* Plates (the barbershop) */
+      .plate { position: absolute; inset: 0; overflow: hidden; }
+      .plate .ken { position: absolute; inset: 0; }
+      .plate img { position: absolute; left: 0; top: 0; width: 1080px; height: 1935px; object-fit: cover; }
+      .ptitle { position: absolute; left: 76px; top: 236px; width: 940px; font-family: "Big Shoulders"; font-weight: 900; font-size: 150px; line-height: 0.92; text-transform: uppercase; }
+      .ptitle .w { display: inline-block; margin-right: 0.18em; }
+      .acc { color: var(--primary); }
+      .hour { color: var(--secondary); }
+
+      /* Phone world */
+      #world { position: absolute; inset: 0; background: var(--bg); opacity: 0; }
+      #line { position: absolute; left: 40px; right: 40px; top: 178px; height: 110px; text-align: center; font-family: "Big Shoulders"; font-weight: 900; font-size: 92px; line-height: 110px; text-transform: uppercase; white-space: nowrap; }
+      #line .ln { position: absolute; left: 0; right: 0; top: 0; opacity: 0; }
+      #phone { position: absolute; left: 120px; top: 330px; width: 840px; height: 1792px; padding: 12px; border-radius: 64px; border: 2px solid var(--border); background: var(--raised); }
+      #screen { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: 52px; background: var(--bg); font-size: 40px; }
+      .status { position: absolute; left: 38px; right: 38px; top: 30px; display: flex; justify-content: space-between; font-size: 0.82em; font-weight: 700; z-index: 2; }
+      .status .st { position: absolute; left: 0; top: 0; }
+      .scr { position: absolute; left: 0; right: 0; top: 0; padding: 104px 38px 0; display: flex; flex-direction: column; gap: 0.75em; opacity: 0; }
+      .pc { opacity: 0; }
+      .eb { display: block; font-size: 0.68em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--secondary); }
+      .ttl { display: block; font-family: "Big Shoulders"; font-weight: 800; font-size: 1.55em; line-height: 1; text-transform: uppercase; }
+      .bub { max-width: 86%; border-radius: 0.875rem; padding: 0.55em 0.7em; font-size: 0.86em; line-height: 1.375; }
+      .bub.cl { align-self: flex-end; border-bottom-right-radius: 4px; background: var(--raised); }
+      .bub.as { align-self: flex-start; border-bottom-left-radius: 4px; background: var(--accent); color: var(--accent-fg); }
+      .card { border-radius: 8px; background: var(--surface); padding: 0.65em 0.75em; font-size: 0.84em; }
+      .aicard { border-radius: 8px; background: var(--accent); color: var(--accent-fg); padding: 0.65em 0.75em; font-size: 0.84em; }
+      .row { display: flex; align-items: center; justify-content: space-between; gap: 0.6em; }
+      .tag { margin-left: auto; white-space: nowrap; border-radius: 999px; background: var(--primary); color: var(--primary-fg); padding: 0.15em 0.55em; font-size: 0.78em; font-weight: 700; }
+      .tagd { margin-left: auto; white-space: nowrap; border-radius: 999px; background: var(--secondary); color: var(--primary-fg); padding: 0.15em 0.55em; font-size: 0.78em; font-weight: 700; }
+      .sub { display: block; font-size: 0.88em; color: var(--fg-subtle); }
+      .acts { display: flex; gap: 0.4em; text-align: center; font-size: 0.9em; font-weight: 700; }
+      .acts span { flex: 1; border-radius: 6px; background: var(--raised); padding: 0.5em 0; }
+      .acts .pri { background: var(--primary); color: var(--primary-fg); }
+      .slot { display: flex; align-items: center; gap: 0.6em; border-radius: 8px; background: var(--surface); padding: 0.5em 0.65em; font-size: 0.84em; }
+      .slot.ai { background: var(--accent); color: var(--accent-fg); }
+      .slot b { width: 2.8em; flex-shrink: 0; }
+      .big { font-family: "Big Shoulders"; font-weight: 800; font-size: 2.1em; line-height: 1; }
+      .bars { display: flex; align-items: flex-end; gap: 0.3em; height: 2.4em; margin-top: 0.5em; }
+      .bars i { flex: 1; border-radius: 3px; background: var(--accent-hover); transform-origin: 50% 100%; }
+      .bars i:last-child { background: var(--primary); }
+      #av { position: relative; width: 6em; height: 6em; margin: 0.4em auto 0.2em; }
+      #av img { width: 100%; height: 100%; border-radius: 999px; border: 2px solid var(--primary); object-fit: cover; }
+      .ring { position: absolute; inset: -0.5em; border-radius: 999px; border: 2px solid var(--primary); opacity: 0; }
+      .wave { display: flex; justify-content: center; align-items: center; gap: 0.18em; height: 1.8em; }
+      .wave i { width: 0.22em; height: 100%; border-radius: 3px; background: var(--primary); transform-origin: 50% 50%; }
+      #scr-call .num { display: block; font-family: "Big Shoulders"; font-weight: 800; font-size: 1.3em; line-height: 1; }
+
+      /* Push banner */
+      .banner { position: absolute; left: 22px; right: 22px; top: 86px; z-index: 3; border-radius: 28px; background: var(--raised); border: 1px solid var(--border); padding: 22px 26px; display: flex; gap: 20px; align-items: center; opacity: 0; }
+      .banner .ic { width: 72px; height: 72px; border-radius: 18px; background: var(--bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+      .banner .ic svg { width: 46px; height: 37px; color: var(--primary); }
+      .banner b { display: block; font-size: 34px; }
+      .banner span { display: block; font-size: 30px; color: var(--fg-muted); line-height: 1.3; }
+      .banner .now { position: absolute; right: 26px; top: 22px; font-size: 24px; color: var(--fg-subtle); }
+
+      /* End card */
+      #end { position: absolute; inset: 0; background: var(--bg); opacity: 0; }
+      #end-logo { position: absolute; left: 290px; top: 190px; width: 500px; }
+      #end-eb { position: absolute; left: 0; right: 0; top: 590px; text-align: center; font-size: 34px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--secondary); }
+      #end-title { position: absolute; left: 0; right: 0; top: 650px; text-align: center; font-family: "Big Shoulders"; font-weight: 900; font-size: 168px; line-height: 0.92; text-transform: uppercase; }
+      #end-title .w { display: inline-block; margin: 0 0.08em; }
+      #end-text { position: absolute; left: 110px; right: 110px; top: 970px; text-align: center; font-size: 44px; line-height: 1.35; color: var(--fg-muted); }
+      #end-cta { position: absolute; left: 190px; width: 700px; top: 1100px; height: 116px; border-radius: 10px; background: var(--primary); color: var(--primary-fg); font-size: 46px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+      #end-limit { position: absolute; left: 0; right: 0; top: 1236px; text-align: center; font-size: 32px; color: var(--fg-subtle); }
+      #end-url { position: absolute; left: 0; right: 0; top: 1282px; text-align: center; font-size: 32px; font-weight: 700; color: var(--fg); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="35" data-width="1080" data-height="1920" data-layout-allow-overflow data-layout-allow-overlap>
+
+      <!-- 1. The phone rings -->
+      <div id="p1" class="plate clip" data-start="0" data-duration="2.5" data-track-index="1">
+        <div class="ken"><img src="assets/img/stop1-mobile.webp" alt="" /></div>
+        <h1 class="ptitle" id="p1-t"><span class="w" data-i18n="t1a">Suena</span><span class="w" data-i18n="t1b">el</span><span class="w acc" data-i18n="t1c">teléfono.</span></h1>
+      </div>
+
+      <!-- 2. You keep cutting -->
+      <div id="p2" class="plate clip" data-start="2.5" data-duration="2.3" data-track-index="2">
+        <div class="ken"><img src="assets/img/stop2-mobile.webp" alt="" /></div>
+        <h1 class="ptitle" id="p2-t"><span class="w" data-i18n="t2a">Tú</span><span class="w" data-i18n="t2b">sigues</span><span class="w acc" data-i18n="t2c">cortando.</span></h1>
+      </div>
+
+      <!-- 3-6. The app on the phone -->
+      <div id="world" class="clip" data-start="4.2" data-duration="21.7" data-track-index="3">
+        <div id="line">
+          <div class="ln" id="ln-call" data-i18n="lnCall">No pierdes una llamada</div>
+          <div class="ln" id="ln-req" data-i18n="lnReq">Te reservan online</div>
+          <div class="ln" id="ln-rev" data-i18n="lnRev">Cuidas tu reputación</div>
+          <div class="ln" id="ln-till" data-i18n="lnTill">Reservas y caja, solas</div>
+        </div>
+        <div id="phone">
+          <div id="screen">
+            <div class="status"><span style="position:relative;width:3em"><span class="st" id="st-1120">11:20</span><span class="st" id="st-1305" style="opacity:0">13:05</span><span class="st" id="st-1640" style="opacity:0">16:40</span><span class="st" id="st-2045" style="opacity:0">20:45</span></span><span>5G</span></div>
+
+            <div class="banner" id="bn-req" data-layout-allow-occlusion data-layout-allow-overlap><div class="ic"><svg viewBox="0 0 1993 1600" fill="currentColor"><path transform="translate(-99 1600) scale(1 -1)" d="M99 0V1600H506Q730 1600 833.0 1509.5Q936 1419 936 1210Q936 1182 936.0 1156.0Q936 1130 934 1104Q927 995 885.0 930.5Q843 866 754 836V788Q846 758 889.0 692.5Q932 627 936 514Q938 481 938.0 453.0Q938 425 936 390Q927 182 828.5 91.0Q730 0 506 0ZM399 264H506Q569 264 602.5 297.5Q636 331 636 394Q636 421 636.0 447.0Q636 473 636 500Q636 599 605.5 640.5Q575 682 506 682H399ZM399 946H506Q569 946 602.5 989.5Q636 1033 636 1112Q636 1141 636.0 1169.5Q636 1198 636 1226Q636 1279 602.5 1307.5Q569 1336 506 1336H399Z"/><path transform="translate(864 1600) scale(1 -1)" d="M99 0V1600H589L709 1090L819 264H908L852 914L828 1600H1129V0H615L495 524L413 1338H320L372 614L398 0Z"/></svg></div><div><b data-i18n="bnReqT">Nueva reserva</b><span data-i18n="bnReqD">Marcos quiere cita mañana a las 17:00</span></div><em class="now" data-i18n="now">ahora</em></div>
+            <div class="banner" id="bn-rev" data-layout-allow-occlusion data-layout-allow-overlap><div class="ic"><svg viewBox="0 0 1993 1600" fill="currentColor"><path transform="translate(-99 1600) scale(1 -1)" d="M99 0V1600H506Q730 1600 833.0 1509.5Q936 1419 936 1210Q936 1182 936.0 1156.0Q936 1130 934 1104Q927 995 885.0 930.5Q843 866 754 836V788Q846 758 889.0 692.5Q932 627 936 514Q938 481 938.0 453.0Q938 425 936 390Q927 182 828.5 91.0Q730 0 506 0ZM399 264H506Q569 264 602.5 297.5Q636 331 636 394Q636 421 636.0 447.0Q636 473 636 500Q636 599 605.5 640.5Q575 682 506 682H399ZM399 946H506Q569 946 602.5 989.5Q636 1033 636 1112Q636 1141 636.0 1169.5Q636 1198 636 1226Q636 1279 602.5 1307.5Q569 1336 506 1336H399Z"/><path transform="translate(864 1600) scale(1 -1)" d="M99 0V1600H589L709 1090L819 264H908L852 914L828 1600H1129V0H615L495 524L413 1338H320L372 614L398 0Z"/></svg></div><div><b data-i18n="bnRevT">Reseña de 5 estrellas</b><span data-i18n="bnRevD">Tienes la respuesta lista para copiar</span></div><em class="now" data-i18n="now">ahora</em></div>
+
+            <!-- Call -->
+            <div class="scr" id="scr-call">
+              <div class="pc" id="c-head" style="text-align:center">
+                <div id="av"><img src="assets/img/avatar-asistente.jpg" alt="" /><i class="ring" id="ring1"></i><i class="ring" id="ring2"></i></div>
+                <span class="eb" data-i18n="answering">Atendiendo llamada</span>
+                <span class="num">+34 612 ·· ·· 18</span>
+              </div>
+              <div class="pc wave" id="c-wave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              <div class="pc bub cl" id="c-b1" data-i18n="ask">¿Hueco el jueves para degradado y barba?</div>
+              <div class="pc bub as" id="c-b2" data-i18n="offer">Sí, a las 18:30 con Álex. ¿Te lo reservo?</div>
+              <div class="pc bub cl" id="c-b3" data-i18n="name">Perfecto, soy Carlos.</div>
+              <div class="pc aicard" id="c-card"><span class="row"><b data-i18n="created">Reserva creada</b><span class="tag" data-i18n="ai">IA</span></span><span style="display:block;font-size:0.88em" data-i18n="when">Jueves 18:30 · Álex</span></div>
+            </div>
+
+            <!-- Request -->
+            <div class="scr" id="scr-req">
+              <div class="pc" id="q-head"><span class="eb" data-i18n="reqEb">Solicitudes</span><span class="ttl" data-i18n="reqT">Nueva reserva</span></div>
+              <div class="pc card" id="q-card"><span class="row"><b>Marcos T.</b><span class="tagd" data-i18n="reqTag">Reserva online</span></span><span class="sub" data-i18n="reqDetail">Corte + barba · Mañana 17:00 · Álex</span></div>
+              <div class="pc acts" id="q-acts"><span data-i18n="decline">Rechazar</span><span class="pri" id="q-accept" data-i18n="accept">Aceptar</span></div>
+              <div class="pc aicard" id="q-ok"><span class="row"><b data-i18n="confirmed">Reserva confirmada</b><span class="tag">✓</span></span><span style="display:block;font-size:0.88em" data-i18n="emailed">Email de confirmación enviado a Marcos</span></div>
+              <div class="pc slot ai" id="q-slot"><b>17:00</b><span data-i18n="reqSlot">Marcos T. · Corte + barba</span></div>
+            </div>
+
+            <!-- Review -->
+            <div class="scr" id="scr-rev">
+              <div class="pc" id="r-head"><span class="eb" data-i18n="revEb">Reseñas de Google</span><span class="ttl" data-i18n="revT">Nueva reseña</span></div>
+              <div class="pc card" id="r-card">
+                <span class="row"><span style="display:grid;place-items:center;width:2.2em;height:2.2em;border-radius:999px;background:var(--raised);font-size:0.8em;font-weight:700;flex-shrink:0">LG</span><span style="flex:1">Lucía G.<span class="sub" data-i18n="ago">hace 10 min</span></span><span style="letter-spacing:0.1em;color:var(--warning)">★★★★★</span></span>
+                <span style="display:block;margin-top:0.4em;font-style:italic;color:var(--fg-muted)" data-i18n="quote">«El mejor degradado que ha llevado mi hijo. Repetiremos.»</span>
+              </div>
+              <div class="pc" id="r-draft" style="border-radius:8px;border:2px dashed var(--border);padding:0.6em 0.7em;font-size:0.84em;color:var(--fg-muted)"><span class="eb" style="font-size:0.82em;margin-bottom:0.2em" data-i18n="draft">Respuesta propuesta por la IA</span><span data-i18n="reply">¡Gracias, Lucía! Nos alegra que le guste. Os esperamos para el próximo.</span></div>
+              <div class="pc acts" id="r-acts"><span data-i18n="edit">Editar</span><span class="pri" id="r-copy" data-i18n="copy">Copiar</span></div>
+            </div>
+
+            <!-- Till -->
+            <div class="scr" id="scr-till">
+              <div class="pc" id="t-head"><span class="eb" data-i18n="tillEb">Hoy</span><span class="ttl" data-i18n="tillT">Caja del día</span></div>
+              <div class="pc slot" id="t-r1"><b>17:00</b><span data-i18n="row1">Javi R. · Corte</span><span class="tagd" data-i18n="a15">15 €</span></div>
+              <div class="pc slot" id="t-r2"><b>17:45</b><span data-i18n="row2">Marcos T. · Barba</span><span class="tagd" data-i18n="a10">10 €</span></div>
+              <div class="pc slot ai" id="t-r3"><b>18:30</b><span>Carlos M.</span><span class="tag" data-i18n="a22">22 €</span></div>
+              <div class="pc card" id="t-tot"><span class="eb" style="font-size:0.82em" data-i18n="total">Total</span><span class="row"><span class="big" id="t-amt">0 €</span><span style="font-weight:700;color:var(--success)" id="t-gr">+8 %</span></span>
+                <span class="bars"><i style="height:62%"></i><i style="height:48%"></i><i style="height:75%"></i><i style="height:58%"></i><i style="height:90%"></i><i style="height:100%"></i></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. Tomorrow your barbershop works with you -->
+      <div id="p5" class="plate clip" data-start="25.5" data-duration="3.3" data-track-index="4">
+        <div class="ken"><img src="assets/img/stop5-mobile.webp" alt="" /></div>
+        <h1 class="ptitle" id="p5-t" style="font-size:132px"><span class="w" data-i18n="t5a">Mañana</span><span class="w" data-i18n="t5b">tu</span><span class="w" data-i18n="t5c">barbería</span><span class="w acc" data-i18n="t5d">trabaja</span><span class="w acc" data-i18n="t5e">contigo.</span></h1>
+      </div>
+
+      <!-- 8. End card -->
+      <div id="end" class="clip" data-start="28.6" data-duration="6.4" data-track-index="5">
+        <img id="end-logo" src="assets/img/logo-bn.png" alt="Businext" />
+        <div id="end-eb" data-i18n="endEb">Clientes fundadores</div>
+        <h2 id="end-title"><span class="w" data-i18n="endT1">Tarifa</span><span class="w acc" data-i18n="endT2">de fundador</span></h2>
+        <p id="end-text" data-i18n="endText">Mantienes para siempre las condiciones con las que entras.</p>
+        <div id="end-cta" data-i18n="cta">Quiero ser fundador</div>
+        <div id="end-limit" data-i18n="limit">Plazas limitadas en la primera tanda</div>
+        <div id="end-url">businext.greenfourtech.com</div>
+      </div>
+
+      <!-- Sound: effects on visible actions only -->
+      <audio id="s-ring1" class="clip" src="assets/sfx/notification.mp3" data-start="0.15" data-duration="1.2" data-track-index="10" data-volume="0.55"></audio>
+      <audio id="s-ring2" class="clip" src="assets/sfx/notification.mp3" data-start="1.35" data-duration="1.2" data-track-index="11" data-volume="0.5"></audio>
+      <audio id="s-zoom" class="clip" src="assets/sfx/whoosh.mp3" data-start="3.95" data-duration="0.57" data-track-index="12" data-volume="0.45"></audio>
+      <audio id="s-b1" class="clip" src="assets/sfx/pop.mp3" data-start="5.85" data-duration="0.72" data-track-index="13" data-volume="0.35"></audio>
+      <audio id="s-b2" class="clip" src="assets/sfx/click-soft.mp3" data-start="6.75" data-duration="0.37" data-track-index="14" data-volume="0.45"></audio>
+      <audio id="s-b3" class="clip" src="assets/sfx/pop.mp3" data-start="7.65" data-duration="0.72" data-track-index="13" data-volume="0.3"></audio>
+      <audio id="s-made" class="clip" src="assets/sfx/chime.mp3" data-start="8.55" data-duration="2.0" data-track-index="15" data-volume="0.4"></audio>
+      <audio id="s-bn1" class="clip" src="assets/sfx/notification.mp3" data-start="9.95" data-duration="1.6" data-track-index="10" data-volume="0.45"></audio>
+      <audio id="s-acc" class="clip" src="assets/sfx/click-soft.mp3" data-start="13.0" data-duration="0.37" data-track-index="14" data-volume="0.55"></audio>
+      <audio id="s-ok" class="clip" src="assets/sfx/pop.mp3" data-start="13.35" data-duration="0.72" data-track-index="13" data-volume="0.35"></audio>
+      <audio id="s-bn2" class="clip" src="assets/sfx/notification.mp3" data-start="14.75" data-duration="1.6" data-track-index="11" data-volume="0.45"></audio>
+      <audio id="s-copy" class="clip" src="assets/sfx/click-soft.mp3" data-start="18.9" data-duration="0.37" data-track-index="14" data-volume="0.55"></audio>
+      <audio id="s-t3" class="clip" src="assets/sfx/pop.mp3" data-start="21.75" data-duration="0.72" data-track-index="13" data-volume="0.35"></audio>
+      <audio id="s-tot" class="clip" src="assets/sfx/chime.mp3" data-start="23.6" data-duration="2.0" data-track-index="15" data-volume="0.35"></audio>
+      <audio id="s-out" class="clip" src="assets/sfx/whoosh-short.mp3" data-start="25.4" data-duration="0.57" data-track-index="12" data-volume="0.4"></audio>
+      <audio id="s-logo" class="clip" src="assets/sfx/impact-bass-1.mp3" data-start="28.85" data-duration="2.12" data-track-index="16" data-volume="0.55"></audio>
+    </div>
+
+    <script>
+      // ---- Copy per language (verbatim from apps/web/src/components/landingpage/content.ts) ----
+      const EN = {
+        t1a: "The", t1b: "phone", t1c: "rings.", t2a: "You", t2b: "keep", t2c: "cutting.",
+        lnCall: "Never miss a call", lnReq: "Get booked online", lnRev: "Look after your reputation", lnTill: "Bookings and till, on autopilot",
+        bnReqT: "New booking", bnReqD: "Marcos wants an appointment tomorrow at 17:00",
+        bnRevT: "5-star review", bnRevD: "Your reply is ready to copy", now: "now",
+        answering: "Answering call", ask: "Anything on Thursday for a fade and beard?", offer: "Yes, 18:30 with Álex. Shall I book it?",
+        name: "Perfect, I'm Carlos.", created: "Booking created", ai: "AI", when: "Thursday 18:30 · Álex",
+        reqEb: "Requests", reqT: "New booking", reqTag: "Online booking", reqDetail: "Haircut + beard · Tomorrow 17:00 · Álex",
+        decline: "Decline", accept: "Accept", confirmed: "Booking confirmed", emailed: "Confirmation email sent to Marcos",
+        reqSlot: "Marcos T. · Haircut + beard",
+        revEb: "Google reviews", revT: "New review", ago: "10 min ago", quote: "“Best fade my son has ever had. We'll be back.”",
+        draft: "Reply drafted by AI", reply: "Thanks, Lucía! So glad he loves it. See you next time.", edit: "Edit", copy: "Copy",
+        tillEb: "Today", tillT: "Today's till", row1: "Javi R. · Haircut", row2: "Marcos T. · Beard", a15: "€15", a10: "€10", a22: "€22", total: "Total",
+        t5a: "Tomorrow", t5b: "your", t5c: "barbershop", t5d: "works", t5e: "with you.",
+        endEb: "Founding members", endT1: "Founder", endT2: "rate", endText: "Keep the terms you join with, forever.",
+        cta: "Become a founder", limit: "Limited spots in the first round",
+      };
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+      const LANG = vars.lang === "en" ? "en" : "es";
+      if (LANG === "en") {
+        document.documentElement.lang = "en";
+        document.querySelectorAll("[data-i18n]").forEach((el) => { const v = EN[el.dataset.i18n]; if (v) el.textContent = v; });
+        document.querySelector("#t-gr").textContent = "+8%";
+      }
+      // The line above the phone stays on one line: smaller type for longer lines.
+      document.querySelectorAll("#line .ln").forEach((el) => {
+        const n = el.textContent.length;
+        el.style.fontSize = (n <= 22 ? 92 : n <= 27 ? 80 : 68) + "px";
+      });
+      const money = (v) => (LANG === "en" ? "€" + v : v + " €");
+
+      const tl = gsap.timeline({ paused: true });
+
+      // ---- 1. Frame 0 is the hook: title already on screen, slow push in ----
+      tl.fromTo("#p1 .ken", { scale: 1.0 }, { scale: 1.07, duration: 2.5, ease: "none", transformOrigin: "50% 75%" }, 0);
+      tl.fromTo("#p1-t", { x: 0 }, { x: -10, duration: 0.06, yoyo: true, repeat: 3, ease: "none" }, 0.18);
+      tl.fromTo("#p1-t", { x: 0 }, { x: -10, duration: 0.06, yoyo: true, repeat: 3, ease: "none" }, 1.38);
+
+      // ---- 2. Hard cut, words land, then the camera dives into the phone on the desk ----
+      tl.fromTo("#p2-t .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, stagger: 0.1, ease: "power2.out" }, 2.55);
+      tl.fromTo("#p2 .ken", { scale: 1.0 }, { scale: 1.04, duration: 1.4, ease: "none", transformOrigin: "71% 84%" }, 2.5);
+      tl.to("#p2-t", { opacity: 0, filter: "blur(10px)", duration: 0.2, ease: "power3.in" }, 3.75);
+      tl.to("#p2 .ken", { scale: 3.2, duration: 0.75, ease: "power3.in", transformOrigin: "71% 84%" }, 3.9);
+
+      // ---- 3. Phone world: the call ----
+      tl.fromTo("#world", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" }, 4.35);
+      tl.fromTo("#phone", { scale: 1.12, y: 60, filter: "blur(10px)" }, { scale: 1, y: 0, filter: "blur(0px)", duration: 0.7, ease: "expo.out" }, 4.35);
+      tl.set("#scr-call", { opacity: 1 }, 4.35);
+      tl.fromTo("#ln-call", { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, 4.6);
+      tl.fromTo("#c-head", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, 4.6);
+      [0, 1, 2, 3].forEach((i) => {
+        tl.fromTo(["#ring1", "#ring2"][i % 2], { opacity: 0.9, scale: 1 }, { opacity: 0, scale: 1.35, duration: 0.9, ease: "power2.out" }, 4.8 + i * 0.5);
+      });
+      tl.fromTo("#c-wave", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 5.0);
+      document.querySelectorAll("#c-wave i").forEach((el, i) => {
+        const a = 0.3 + Math.abs(Math.sin(i * 1.7)) * 0.7;
+        tl.fromTo(el, { scaleY: a }, { scaleY: 0.25 + (1 - a) * 0.6, duration: 0.32 + (i % 3) * 0.06, yoyo: true, repeat: 15, ease: "sine.inOut" }, 5.0);
+      });
+      const pieceIn = (sel, t) => tl.fromTo(sel, { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.45, ease: "expo.out" }, t);
+      pieceIn("#c-b1", 5.85);
+      pieceIn("#c-b2", 6.75);
+      tl.to("#scr-call", { y: -300, duration: 0.7, ease: "power2.inOut" }, 7.3);
+      pieceIn("#c-b3", 7.65);
+      pieceIn("#c-card", 8.55);
+      tl.fromTo("#c-card", { scale: 0.96 }, { scale: 1, duration: 0.5, ease: "back.out(1.6)" }, 8.55);
+
+      // ---- 4. Notification: new booking request ----
+      const banner = (sel, t, tap) => {
+        tl.fromTo(sel, { opacity: 0, y: -140 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, t);
+        tl.to(sel, { scale: 0.96, duration: 0.08, ease: "power2.in" }, tap);
+        tl.to(sel, { opacity: 0, scale: 1.04, filter: "blur(8px)", duration: 0.2, ease: "power3.in" }, tap + 0.1);
+      };
+      const swapScreen = (from, to, t, lnFrom, lnTo, time) => {
+        tl.to(from, { opacity: 0, filter: "blur(8px)", duration: 0.16, ease: "power2.in" }, t);
+        tl.fromTo(to, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, t + 0.12);
+        tl.to(lnFrom, { opacity: 0, filter: "blur(8px)", duration: 0.15, ease: "power3.in" }, t);
+        tl.fromTo(lnTo, { opacity: 0, filter: "blur(8px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2, ease: "power2.out" }, t + 0.15);
+        tl.set(".st", { opacity: 0 }, t + 0.12);
+        tl.set("#st-" + time.replace(":", ""), { opacity: 1 }, t + 0.12);
+      };
+      banner("#bn-req", 9.9, 11.5);
+      swapScreen("#scr-call", "#scr-req", 11.6, "#ln-call", "#ln-req", "13:05");
+      pieceIn("#q-head", 11.75);
+      pieceIn("#q-card", 12.05);
+      pieceIn("#q-acts", 12.4);
+      tl.to("#q-accept", { scale: 0.94, duration: 0.08, ease: "power2.in" }, 13.0);
+      tl.to("#q-accept", { scale: 1, duration: 0.14, ease: "power2.out" }, 13.08);
+      pieceIn("#q-ok", 13.3);
+      pieceIn("#q-slot", 13.8);
+
+      // ---- 5. Notification: 5-star review ----
+      banner("#bn-rev", 14.7, 16.3);
+      swapScreen("#scr-req", "#scr-rev", 16.4, "#ln-req", "#ln-rev", "16:40");
+      pieceIn("#r-head", 16.55);
+      pieceIn("#r-card", 16.85);
+      pieceIn("#r-draft", 17.6);
+      pieceIn("#r-acts", 18.2);
+      tl.to("#r-copy", { scale: 0.94, duration: 0.08, ease: "power2.in" }, 18.9);
+      tl.to("#r-copy", { scale: 1, duration: 0.14, ease: "power2.out" }, 18.98);
+
+      // ---- 6. Today's till closes on its own ----
+      swapScreen("#scr-rev", "#scr-till", 20.4, "#ln-rev", "#ln-till", "20:45");
+      pieceIn("#t-head", 20.55);
+      pieceIn("#t-r1", 20.85);
+      pieceIn("#t-r2", 21.15);
+      pieceIn("#t-r3", 21.7);
+      pieceIn("#t-tot", 22.2);
+      const amt = { v: 0 };
+      tl.fromTo(amt, { v: 0 }, { v: 246, duration: 1.3, ease: "power2.out",
+        onUpdate: () => { document.querySelector("#t-amt").textContent = money(Math.round(amt.v)); } }, 22.3);
+      tl.fromTo("#t-tot .bars i", { scaleY: 0 }, { scaleY: 1, duration: 0.7, stagger: 0.07, ease: "expo.out" }, 22.4);
+      tl.fromTo("#t-gr", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 23.6);
+      tl.fromTo("#t-gr", { scale: 0.7 }, { scale: 1, duration: 0.4, ease: "back.out(2)" }, 23.6);
+
+      // ---- 7. The phone drops away: the shop, the day done ----
+      tl.to("#phone", { y: 1500, duration: 0.55, ease: "power3.in" }, 25.2);
+      tl.to("#ln-till", { opacity: 0, filter: "blur(8px)", duration: 0.2, ease: "power3.in" }, 25.2);
+      tl.fromTo("#p5 .ken", { scale: 1.08 }, { scale: 1.0, duration: 3.3, ease: "power2.out", transformOrigin: "60% 70%" }, 25.5);
+      tl.fromTo("#p5-t .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.14, stagger: 0.1, ease: "power2.out" }, 25.75);
+
+      // ---- 8. End card: the mark lands, founder rate, call to action ----
+      tl.fromTo("#end", { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power2.out" }, 28.6);
+      tl.fromTo("#end-logo", { opacity: 0, scale: 1.6, filter: "blur(16px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.5, ease: "expo.out" }, 28.75);
+      tl.fromTo("#end-eb", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.18 }, 29.3);
+      tl.fromTo("#end-title .w", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.16, stagger: 0.12, ease: "power2.out" }, 29.45);
+      tl.fromTo("#end-text", { opacity: 0, filter: "blur(6px)" }, { opacity: 1, filter: "blur(0px)", duration: 0.2 }, 30.1);
+      tl.fromTo("#end-cta", { opacity: 0, scaleX: 0.6 }, { opacity: 1, scaleX: 1, duration: 0.45, ease: "expo.out" }, 30.7);
+      tl.fromTo(["#end-limit", "#end-url"], { opacity: 0 }, { opacity: 1, duration: 0.25, stagger: 0.12 }, 31.1);
+
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
