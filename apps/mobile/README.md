@@ -111,11 +111,22 @@ distribucion, perfil de aprovisionamiento y UDID del iPhone de prueba
 registrado), guardadas en el servidor de Expo para que los builds no
 interactivos las reutilicen.
 
-**Pendiente:** definir `EAS_PROJECT_ID` como *Variable* del repo (Settings →
-Secrets and variables → Actions → pestana Variables) — no es un secret, el
-projectId no es sensible. `mobile-build.yml` ya la referencia via
-`vars.EAS_PROJECT_ID` para que `eas-cli` resuelva `app.config.ts` igual que en
-local.
+`EAS_PROJECT_ID` es una *Variable* del repo (no un secret: el projectId no es
+sensible); `mobile-build.yml` la pasa a `eas-cli` para que resuelva
+`app.config.ts` igual que en local. Los workers de EAS no la reciben, así que al
+leer la config en sus servidores avisan de que falta `extra.eas.projectId`: los
+builds salen sin `updates.url` (sin OTA) hasta que el projectId llegue también
+allí (por ejemplo, como variable de entorno de EAS).
+
+`mobile-build.yml` envía los builds sin esperar a que terminen: el run sale en
+verde en cuanto EAS los acepta. Para ver cómo van, desde `apps/mobile`:
+
+```bash
+EAS_PROJECT_ID=$(gh variable get EAS_PROJECT_ID -R businext-sys/businext) \
+  npx eas-cli build:view <id> --json
+```
+
+Los ids salen en el log del run (`See Android logs: …/builds/<id>`).
 
 ## Notificaciones push (issue #031)
 
