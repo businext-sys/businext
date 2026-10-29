@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Phone } from "./AppScreens";
-import { CHAPTERS } from "./content";
+import { COPY, type Lang } from "./content";
 
 /**
  * The chapters of the app, one after another: each one's bar fills over six seconds and its
  * end moves to the next. The bars stop while the block is off screen.
  */
-export function Walkthrough() {
+export function Walkthrough({ lang }: { lang: Lang }) {
+  const chapters = COPY[lang].app.chapters;
   const root = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
   const [onScreen, setOnScreen] = useState(false);
@@ -19,13 +20,13 @@ export function Walkthrough() {
     return () => observer.disconnect();
   }, []);
 
-  const chapter = CHAPTERS[active]!;
+  const chapter = chapters[active]!;
 
   return (
     <div ref={root} className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16">
       <div>
         <ol className="m-0 list-none p-0">
-          {CHAPTERS.map((c, i) => (
+          {chapters.map((c, i) => (
             <li key={c.title} className="border-t border-border-subtle last:border-b">
               <button
                 type="button"
@@ -40,7 +41,7 @@ export function Walkthrough() {
                 {i === active && (
                   <span
                     aria-hidden
-                    onAnimationEnd={() => setActive((active + 1) % CHAPTERS.length)}
+                    onAnimationEnd={() => setActive((active + 1) % chapters.length)}
                     className={`landing-progress absolute -top-px left-0 h-0.5 w-full bg-primary${onScreen ? "" : " is-paused"}`}
                   />
                 )}
@@ -54,7 +55,7 @@ export function Walkthrough() {
       </div>
 
       <div className="relative order-first aspect-[4/5] overflow-hidden rounded-xl border border-border-subtle lg:order-none lg:aspect-square">
-        {CHAPTERS.map((c, i) => (
+        {chapters.map((c, i) => (
           // eslint-disable-next-line @next/next/no-img-element -- plates are already sized WebP
           <img
             key={c.title}
@@ -70,6 +71,7 @@ export function Walkthrough() {
           />
         ))}
         <Phone
+          lang={lang}
           screen={chapter.screen}
           play={active}
           className="absolute left-[5%] top-1/2 w-[52%] -translate-y-1/2 lg:left-[7%] lg:w-[40%]"

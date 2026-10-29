@@ -1,12 +1,13 @@
 import type { CSSProperties } from "react";
 import { ExternalLink } from "lucide-react";
-import { SHOWCASE } from "./content";
+import { COPY, SHOWCASE, type Lang } from "./content";
 
 /**
  * The webs we built, as they are live: each capture scrolls by itself inside a browser and a phone.
  * On a phone only the phone frame shows, large enough to read.
  */
-export function ShopWebs() {
+export function ShopWebs({ lang }: { lang: Lang }) {
+  const t = COPY[lang].webs;
   return (
     <div className="grid gap-12 lg:grid-cols-2 lg:gap-6">
       {SHOWCASE.map((site) => {
@@ -26,7 +27,7 @@ export function ShopWebs() {
                   <img
                     src={`/landing/webs/${site.capture}-desktop.jpg`}
                     width={640}
-                    alt={`Web de ${site.name}: portada, precios, trabajos y ubicación.`}
+                    alt={t.alt(site.name)}
                     loading="lazy"
                     decoding="async"
                     className="landing-site h-auto w-full max-w-none"
@@ -40,7 +41,7 @@ export function ShopWebs() {
                   <img
                     src={`/landing/webs/${site.capture}-mobile.jpg`}
                     width={300}
-                    alt={`Web de ${site.name} en el móvil.`}
+                    alt={t.mobileAlt(site.name)}
                     loading="lazy"
                     decoding="async"
                     className="landing-site h-auto w-full max-w-none"
@@ -60,8 +61,8 @@ export function ShopWebs() {
                 rel="noopener noreferrer"
                 className="inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap text-label font-bold text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
               >
-                Ver la web <ExternalLink aria-hidden className="h-4 w-4" />
-                <span className="sr-only">(se abre en otra pestaña)</span>
+                {t.visit} <ExternalLink aria-hidden className="h-4 w-4" />
+                <span className="sr-only">{t.newTab}</span>
               </a>
             </div>
           </article>
