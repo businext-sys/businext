@@ -101,6 +101,6 @@ Noche de barrio) y forma; cambia la paleta. Están escritas en [`/DESIGN.md`](..
 
 - **Avatar.** Permiso de uso confirmado por el product owner (2026-10-29). Solo se usan
   recortes sin las zapatillas, que llevan el logo de Nike.
-- **Logo.** Se mantiene el graffiti; falta una versión plana sin gotas para tamaños pequeños
-  (sidebar, login, icono de la app). El rediseño del logo queda fuera de la story salvo que se
-  pida.
+- **Logo.** Resuelto en #129: el graffiti se queda para tamaños grandes y la landing, y
+  hay un logo plano (`assets/logo-plano.svg`, letras de Big Shoulders Black) para el
+  sidebar, el login, el icono de la app, el splash y el favicon.

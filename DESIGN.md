@@ -31,6 +31,7 @@ colors:
   warning: "#F5A623"
   warning-foreground: "#0F0E0C"
   highlight: "#F97316"
+  logo: "#41D9D6"
   light-background: "#F4F1EC"
   light-surface: "#FBF9F6"
   light-surface-raised: "#EFE3D8"
@@ -59,6 +60,7 @@ colors:
   light-warning: "#8A5A00"
   light-warning-foreground: "#FBF9F6"
   light-highlight: "#C2410C"
+  light-logo: "#0E6E6E"
 typography:
   display:
     fontFamily: Big Shoulders
@@ -205,6 +207,7 @@ el mismo papel. En código viven en `packages/shared-core/src/theme` (`themeColo
 - **Success, danger, warning:** solo para estado; nunca decorativos. Cada uno con su
   `*-foreground` para texto sobre el relleno.
 - **Highlight:** naranja para avisos puntuales que deben saltar a la vista.
+- **Logo:** el color del logo plano: turquesa BN en oscuro, turquesa oscuro en claro.
 
 ## Typography
 
@@ -244,7 +247,10 @@ el mismo papel. En código viven en `packages/shared-core/src/theme` (`themeColo
   del servicio. Libre = transparente con texto `foreground-muted`.
 - **Chat:** cabecera con el avatar del asistente (48 px, borde de 2 px en `primary`) y su
   estado. Las tarjetas dentro del chat (una cita reservada) usan `eyebrow` + `h2` + acciones.
-- **Logo:** a menos de 64 px de ancho necesita una versión plana sin gotas (pendiente).
+- **Logo:** dos formas. El **graffiti** (`apps/web/public/logo-bn.png`) solo en tamaños
+  grandes y en la landing. El **plano** (`docs/brand/assets/logo-plano.svg`, letras de
+  Big Shoulders Black) en tamaños pequeños: solo letras en color `logo` (sidebar,
+  login) o sobre pastilla `#0F0E0C` (icono de la app, splash, favicon).
 
 ## Do's and Don'ts
 

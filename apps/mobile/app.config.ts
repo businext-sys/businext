@@ -29,7 +29,7 @@ const config: ExpoConfig = {
   },
   android: {
     adaptiveIcon: {
-      backgroundColor: "#E6F4FE",
+      backgroundColor: "#0F0E0C",
       foregroundImage: "./assets/android-icon-foreground.png",
       backgroundImage: "./assets/android-icon-background.png",
       monochromeImage: "./assets/android-icon-monochrome.png",
@@ -46,12 +46,18 @@ const config: ExpoConfig = {
     "expo-secure-store",
     "expo-font",
     [
+      "expo-splash-screen",
+      {
+        image: "./assets/splash-icon.png",
+        imageWidth: 200,
+        backgroundColor: "#0F0E0C",
+      },
+    ],
+    [
       "expo-notifications",
       {
-        // Icono/color placeholder para notificaciones Android — ajustar
-        // cuando exista un icono de marca dedicado.
-        icon: "./assets/icon.png",
-        color: "#111111",
+        icon: "./assets/android-icon-monochrome.png",
+        color: "#41D9D6",
       },
     ],
   ],
