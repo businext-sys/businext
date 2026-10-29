@@ -128,6 +128,10 @@ EAS_PROJECT_ID=$(gh variable get EAS_PROJECT_ID -R businext-sys/businext) \
 
 Los ids salen en el log del run (`See Android logs: …/builds/<id>`).
 
+Para probar una rama en un dispositivo antes del merge (sin simulador ni
+`react-native-web` no hay otra forma de ver la UI), lanza el workflow sobre ella:
+`gh workflow run mobile-build.yml --ref <rama> -f profile=preview -f platform=android`.
+
 ## Notificaciones push (issue #031)
 
 `src/lib/pushNotifications.ts` + `src/hooks/usePushRegistration.ts`: registro
