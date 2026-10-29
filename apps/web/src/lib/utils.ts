@@ -7,6 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const routesWithoutHeader = [
   "/",
+  "/en",
   "/login",
   "/login/verify",
   "/resetpassword",
