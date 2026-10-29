@@ -180,3 +180,10 @@ pnpm type-check:web
 
 `build` dispara `postbuild` (`next-sitemap`), que genera
 `public/sitemap*.xml` y `public/robots.txt` — ambos gitignored.
+
+## Despliegue
+
+Vercel despliega `main` a producción en el proyecto `businext-frontend` (team
+`daniflorezms-projects`), servido en `https://businext.greenfourtech.com`. Cada
+merge crea un deployment de producción del commit; el dominio pasa a él cuando
+termina el build, unos minutos después.
