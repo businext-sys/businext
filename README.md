@@ -98,6 +98,11 @@ GMAIL_BUSINEXT_PASSWORD=
 route handlers de `src/app/api/*`, que hacen de BFF hacia FastAPI. Sin ella el
 login parece funcionar pero toda peticion de datos falla.
 
+Sin backend local, apunta solo esta ejecucion al de Render sin tocar el
+`.env.local`: `NEXT_PUBLIC_API_BASE=https://businext-backend.onrender.com pnpm dev:web`.
+Si no, el login entra pero la app muestra «Acceso restringido» (`/api/auth/me` da
+500 con `ECONNREFUSED`).
+
 ### 3. Mobile (Expo)
 
 ```bash
