@@ -138,7 +138,13 @@ que crearla a mano en Supabase.
 - **Historial** (`app/conversations.tsx`, issue #82) — conversaciones con el
   asistente (`useAssistantConversations`): abrir (`/?conversation=<id>`),
   borrar con confirmacion o empezar una nueva (`/?conversation=new`).
-- **Ajustes** (`app/settings.tsx`) — cuenta y cierre de sesion.
+- **Ajustes** (`app/settings.tsx`) — cuenta y cierre de sesion. Para el owner,
+  la seccion **Agente de voz** (`src/components/VoiceAgentSection.tsx`, issue
+  #119) lee `useVoiceAgentConfig` y, por cada numero asignado, un boton
+  «Llamar al agente» abre el marcador (`tel:`). La llamada entra por el mismo
+  webhook `call_inbound` que la de un cliente, asi que prueba el agente real
+  con los datos del negocio. En el simulador de iOS `tel:` no abre nada:
+  probar en un dispositivo.
 - **Agenda** (`src/screens/AgendaScreen.tsx`, en `/agenda`, issue #030) — reservas del dia agrupadas por
   hora, navegacion entre dias y pull-to-refresh.
 - **Detalle de reserva** (`app/reservation/[id].tsx`) — acciones reales del
