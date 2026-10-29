@@ -5,6 +5,8 @@ export const bigShoulders = Big_Shoulders({
   display: "swap",
   variable: "--font-heading",
   weight: ["700", "800", "900"],
+  // next/font no tiene metricas de fallback para Big Shoulders.
+  adjustFontFallback: false,
 });
 
 export const dmSans = DM_Sans({
