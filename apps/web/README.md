@@ -187,3 +187,8 @@ Vercel despliega `main` a producción en el proyecto `businext-frontend` (team
 `daniflorezms-projects`), servido en `https://businext.greenfourtech.com`. Cada
 merge crea un deployment de producción del commit; el dominio pasa a él cuando
 termina el build, unos minutos después.
+
+Si el build falla en `src/app/fonts.ts` con `An error occurred in next/font` y
+`Cannot read properties of null (reading '1')`, suele ser Google Fonts devolviendo
+una respuesta rara en ese momento: relanza el build (Redeploy en Vercel o un commit
+nuevo). Si se repite, mira qué CSS devuelve `fonts.googleapis.com` para esas familias.
