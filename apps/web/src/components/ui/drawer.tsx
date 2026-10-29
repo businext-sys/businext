@@ -61,7 +61,7 @@ export function Drawer({
           >
             <DialogPanel
               className={cn(
-                "w-full max-w-sm bg-surface border-accent shadow-lg overflow-y-auto",
+                "w-full max-w-sm bg-surface border-border shadow-lg overflow-y-auto",
                 isLeft ? "border-r" : "border-l",
                 className
               )}

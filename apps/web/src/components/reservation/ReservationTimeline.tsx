@@ -191,12 +191,12 @@ function ReservationCard({
 
   const styles = isPending
     ? {
-        bg: "bg-accent/[0.04]",
-        border: "border-accent/15",
-        hoverBorder: "hover:border-accent/30",
-        avatar: "bg-accent/15 text-accent",
-        amount: "text-accent",
-        separator: "border-accent/10",
+        bg: "bg-secondary/[0.04]",
+        border: "border-secondary/15",
+        hoverBorder: "hover:border-secondary/30",
+        avatar: "bg-secondary/15 text-secondary",
+        amount: "text-secondary",
+        separator: "border-secondary/10",
       }
     : {
         bg: "bg-success/[0.04]",
@@ -224,7 +224,7 @@ function ReservationCard({
           <span
             className={cn(
               "flex-shrink-0 h-1.5 w-1.5 rounded-full",
-              isPending ? "bg-accent" : "bg-success"
+              isPending ? "bg-secondary" : "bg-success"
             )}
           />
           <div
@@ -457,8 +457,8 @@ export function TodayTimeline({
             className={cn(
               "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium transition-all cursor-pointer",
               view === "timeline"
-                ? "bg-accent/20 text-accent ring-1 ring-accent/30"
-                : "bg-accent/8 text-accent/60 hover:text-accent hover:bg-accent/15"
+                ? "bg-secondary/20 text-secondary ring-1 ring-secondary/30"
+                : "bg-secondary/8 text-secondary/60 hover:text-secondary hover:bg-secondary/15"
             )}
           >
             <Clock className="h-2.5 w-2.5" />
@@ -541,7 +541,7 @@ export function TodayTimeline({
                 <span
                   className={cn(
                     "h-2.5 w-2.5 rounded-full flex-shrink-0 ring-2 ring-surface-base",
-                    isCurrent ? "bg-danger" : isPast ? "bg-foreground-subtle" : "bg-accent"
+                    isCurrent ? "bg-danger" : isPast ? "bg-foreground-subtle" : "bg-secondary"
                   )}
                 />
               </div>

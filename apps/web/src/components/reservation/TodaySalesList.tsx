@@ -114,7 +114,7 @@ export function TodaySalesList({
     <section className="space-y-3">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <h2 className="font-heading text-h4 font-semibold text-foreground flex items-center gap-2">
-          <ShoppingBag className="h-5 w-5 text-accent" />
+          <ShoppingBag className="h-5 w-5 text-secondary" />
           Ventas del dia
         </h2>
         <span className="text-caption text-warning font-semibold">
@@ -125,7 +125,7 @@ export function TodaySalesList({
         {groupedByCreator.map((group) => (
           <div
             key={group.creator}
-            className="bg-accent/5 border border-accent/15 rounded-md p-3 space-y-2"
+            className="bg-secondary/5 border border-secondary/15 rounded-md p-3 space-y-2"
           >
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <span className="text-body-sm font-semibold text-foreground">
@@ -153,7 +153,7 @@ export function TodaySalesList({
 
                 return (
                   <div key={sale.id} className="flex items-center gap-2">
-                    <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-accent" />
+                    <span className="flex-shrink-0 w-1.5 h-1.5 rounded-full bg-secondary" />
                     <div className="flex-1 min-w-0">
                       <p className="text-body-sm text-foreground truncate">
                         {sale.concept}
@@ -168,7 +168,7 @@ export function TodaySalesList({
                         )}
                       </p>
                     </div>
-                    <span className="text-body-sm font-bold text-accent flex-shrink-0">
+                    <span className="text-body-sm font-bold text-secondary flex-shrink-0">
                       {sale.amount.toLocaleString("es-ES")}EUR
                     </span>
                   </div>

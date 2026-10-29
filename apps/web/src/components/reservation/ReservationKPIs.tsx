@@ -98,7 +98,7 @@ export function ReservationKPIs({
       label: "Ingresos hoy",
       value: `${kpis.revenue.toLocaleString()}€`,
       icon: Euro,
-      color: "text-accent",
+      color: "text-secondary",
       onClick: undefined as (() => void) | undefined,
     },
   ];

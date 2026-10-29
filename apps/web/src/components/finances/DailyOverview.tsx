@@ -253,7 +253,7 @@ export function DailyOverview({ financesData, reservationData, loading }: DailyO
                         {isReservation ? (
                           <CalendarDays className="h-3.5 w-3.5 text-primary flex-shrink-0" />
                         ) : (
-                          <ShoppingBag className="h-3.5 w-3.5 text-accent flex-shrink-0" />
+                          <ShoppingBag className="h-3.5 w-3.5 text-secondary flex-shrink-0" />
                         )}
                         <div className="flex-1 min-w-0">
                           <span className="text-body-sm text-foreground truncate block">
