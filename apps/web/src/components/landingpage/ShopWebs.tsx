@@ -2,7 +2,10 @@ import type { CSSProperties } from "react";
 import { ExternalLink } from "lucide-react";
 import { SHOWCASE } from "./content";
 
-/** The webs we built, as they are live: each capture scrolls by itself inside a browser and a phone. */
+/**
+ * The webs we built, as they are live: each capture scrolls by itself inside a browser and a phone.
+ * On a phone only the phone frame shows, large enough to read.
+ */
 export function ShopWebs() {
   return (
     <div className="grid gap-12 lg:grid-cols-2 lg:gap-6">
@@ -10,15 +13,15 @@ export function ShopWebs() {
         const host = new URL(site.href).host;
         return (
           <article key={site.href} className="reveal flex flex-col gap-4">
-            <div className="relative pb-7">
-              <div className="overflow-hidden rounded-[10px] border border-border bg-surface">
+            <div className="relative md:pb-7">
+              <div className="hidden overflow-hidden rounded-[10px] border border-border bg-surface md:block">
                 <div aria-hidden className="flex items-center gap-2 border-b border-border-subtle px-3 py-[9px]">
                   <i className="h-[9px] w-[9px] rounded-full bg-border" />
                   <i className="h-[9px] w-[9px] rounded-full bg-border" />
                   <i className="h-[9px] w-[9px] rounded-full bg-border" />
                   <span className="ml-2 min-w-0 flex-1 truncate rounded-full bg-muted px-3 py-[3px] text-caption text-foreground-subtle">{host}</span>
                 </div>
-                <div className="relative aspect-[16/10] overflow-hidden bg-background">
+                <div className="landing-site-frame relative aspect-[16/10] overflow-hidden bg-background">
                   {/* eslint-disable-next-line @next/next/no-img-element -- full-page capture that scrolls with CSS */}
                   <img
                     src={`/landing/webs/${site.capture}-desktop.jpg`}
@@ -31,13 +34,13 @@ export function ShopWebs() {
                   />
                 </div>
               </div>
-              <div aria-hidden className="absolute bottom-0 right-0 w-1/4 rounded-[22px] border border-border bg-surface-raised p-[5px] [aspect-ratio:9/19.2]">
-                <div className="h-full overflow-hidden rounded-[17px] bg-background">
+              <div className="relative mx-auto w-[min(64%,16rem)] rounded-[30px] border border-border bg-surface-raised p-[7px] [aspect-ratio:9/19.2] md:absolute md:bottom-0 md:right-0 md:mx-0 md:w-1/4 md:rounded-[22px] md:p-[5px]">
+                <div className="landing-site-frame h-full overflow-hidden rounded-[23px] bg-background md:rounded-[17px]">
                   {/* eslint-disable-next-line @next/next/no-img-element -- full-page capture that scrolls with CSS */}
                   <img
                     src={`/landing/webs/${site.capture}-mobile.jpg`}
                     width={300}
-                    alt=""
+                    alt={`Web de ${site.name} en el móvil.`}
                     loading="lazy"
                     decoding="async"
                     className="landing-site h-auto w-full max-w-none"
