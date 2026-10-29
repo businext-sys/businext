@@ -6,7 +6,7 @@ import { ArrowRight, CircleCheck } from "lucide-react";
 type Status = "idle" | "sending" | "done" | "error";
 
 const field =
-  "w-full rounded-xl border border-border bg-surface-raised px-4 py-3 text-body text-foreground placeholder:text-foreground-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
+  "w-full rounded-md border border-border bg-surface-raised px-4 py-3 text-body text-foreground placeholder:text-foreground-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 export function WhitelistForm() {
   const [status, setStatus] = useState<Status>("idle");
@@ -33,7 +33,7 @@ export function WhitelistForm() {
 
   if (status === "done") {
     return (
-      <p role="status" className="m-0 flex items-center justify-center gap-2 rounded-2xl bg-surface-raised p-5 text-body text-foreground">
+      <p role="status" className="m-0 flex items-center justify-center gap-2 rounded-lg bg-surface-raised p-5 text-body text-foreground">
         <CircleCheck aria-hidden className="h-5 w-5 shrink-0 text-success" />
         Estás dentro. Te escribimos cuando sea el turno de tu barbería.
       </p>
@@ -63,7 +63,7 @@ export function WhitelistForm() {
           ].map((option, i) => (
             <label
               key={option.value}
-              className="flex min-h-11 cursor-pointer items-center gap-2 rounded-xl border border-border bg-surface-raised px-4 py-2.5 text-body-sm text-foreground has-[:checked]:border-primary"
+              className="flex min-h-11 cursor-pointer items-center gap-2 rounded-md border border-border bg-surface-raised px-4 py-2.5 text-body-sm text-foreground has-[:checked]:border-primary"
             >
               <input type="radio" name="interest" value={option.value} defaultChecked={i === 0} className="accent-[var(--color-primary)]" />
               {option.label}
@@ -75,7 +75,7 @@ export function WhitelistForm() {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 text-label font-semibold text-brand-foreground shadow-glow-primary transition-[transform,background-color] hover:-translate-y-0.5 hover:bg-brand-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary disabled:opacity-70"
+        className="mt-2 inline-flex h-12 w-full items-center justify-center gap-2 rounded-md bg-primary px-6 text-label font-bold text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary disabled:opacity-70"
       >
         {status === "sending" ? "Enviando…" : "Apuntarme a la whitelist"} <ArrowRight aria-hidden className="h-4 w-4" />
       </button>
