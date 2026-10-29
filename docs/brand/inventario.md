@@ -19,7 +19,8 @@ Estado de la web y la app móvil antes de redefinir la identidad
 ### Marca
 
 - **Dos colores de marca en la web.** La app usa turquesa (`--color-primary` `#41d9d6`) y la
-  landing un zafiro (`--color-brand` `#2c4a8a`) para sus llamadas a la acción.
+  landing un zafiro (`--color-brand` `#2c4a8a`) para sus llamadas a la acción. Resuelto en
+  #149: la landing usa los tokens de `DESIGN.md` y ya no hay `brand` ni Sora.
 - **Icono y splash de la app móvil por defecto de Expo** (`apps/mobile/assets/icon.png`).
 - **Logo a tamaño pequeño** (33×22 px en login, 42×28 px en el sidebar): el graffiti pierde el
   detalle.

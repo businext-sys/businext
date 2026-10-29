@@ -4,7 +4,7 @@
     "path": "apps/web/assets-src/landing/character-reference.png",
     "description": "Plancha de personaje (frente, tres cuartos, perfil, espalda) aportada por el cliente. Fuente de identidad para todas las escenas."
   },
-  "concepto": "Vuelo continuo por la barbería enganchado al scroll (plantilla narrativa de businext-web-system): 5 planchas por orientación y 4 tramos de vídeo de primer a último fotograma entre ellas. Coste aproximado: 10 planchas + 8 tramos. Paleta medianoche y zafiro: todo el material lleva la misma corrección de color (params.grade).",
+  "concepto": "La app sobre la barbería (businext-sys/businext#149): las 5 planchas del vuelo se reutilizan como escenas fijas, sin vídeo. Llevan grabada la corrección a zafiro (params.grade); la landing la compensa con un filtro CSS para casar con DESIGN.md. Las capturas de las webs de ejemplo (public/landing/webs) no son generadas y no van aquí.",
   "assets": [
     {
       "path": "/landing/stop1-desktop.webp",
@@ -175,174 +175,6 @@
       "seed": null,
       "seed_note": "el proveedor no expone seed",
       "generation_id": "27af9f64-bf13-4bbe-a5ab-b55e1ae77a3d",
-      "generated_at": "2026-10-15"
-    },
-    {
-      "path": "/landing/video/leg1-2-desktop.webm",
-      "alt": "El barbero descruza los brazos y empieza un degradado mientras el anillo de luz del móvil se convierte en ondas de llamada y una tarjeta de calendario.",
-      "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
-      "model": "wan2.7-i2v",
-      "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The barber uncrosses his arms, a client in a black cape sits in the barber chair and the barber starts a precise skin fade with clippers while the camera glides closer to the counter. The small teal holographic ring above the smartphone grows into glowing teal sound-wave rings with a voice waveform, and a translucent teal calendar card rises above it, as if an AI took the call and booked the appointment. Smooth, calm, cinematic, soft teal and warm tungsten light.",
-      "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
-      "params": {
-        "resolution": "720P",
-        "duration": 5,
-        "prompt_extend": false,
-        "watermark": false,
-        "first_frame": "/landing/stop1-desktop.webp (generación 332c7fc3-845f-4266-b61c-850e5286cff7)",
-        "last_frame": "/landing/stop2-desktop.webp (generación 2d20c1ec-19a4-4901-8e84-80b9c89400c5)",
-        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
-        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
-      },
-      "seed": 20261015,
-      "generation_id": "f3c7525b-c707-4262-90bb-852e3f004a93",
-      "generated_at": "2026-10-15"
-    },
-    {
-      "path": "/landing/video/leg1-2-mobile.mp4",
-      "alt": "El barbero descruza los brazos y empieza un degradado mientras el anillo de luz del móvil se convierte en ondas de llamada y una tarjeta de calendario.",
-      "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
-      "model": "wan2.7-i2v",
-      "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The barber uncrosses his arms, a client in a black cape sits in the barber chair and the barber starts a precise skin fade with clippers while the camera glides closer to the counter. The small teal holographic ring above the smartphone grows into glowing teal sound-wave rings with a voice waveform, and a translucent teal calendar card rises above it, as if an AI took the call and booked the appointment. Smooth, calm, cinematic, soft teal and warm tungsten light.",
-      "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
-      "params": {
-        "resolution": "720P",
-        "duration": 5,
-        "prompt_extend": false,
-        "watermark": false,
-        "first_frame": "/landing/stop1-mobile.webp (generación 239f35fb-6556-4b1c-8070-a0a29bd8eae9)",
-        "last_frame": "/landing/stop2-mobile.webp (generación 668fa93c-88ed-44b7-9454-dc097826fb10)",
-        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
-        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
-      },
-      "seed": 20261015,
-      "generation_id": "f48e22a6-59ca-4412-beae-a2a3f61fad22",
-      "generated_at": "2026-10-15"
-    },
-    {
-      "path": "/landing/video/leg2-3-desktop.webm",
-      "alt": "Las ondas de la llamada se deshacen en iconos de redes y el barbero monta el móvil en un trípode con aro de luz para grabar al cliente.",
-      "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
-      "model": "wan2.7-i2v",
-      "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The barber finishes the fade, the teal sound-wave rings and calendar card dissolve into floating holographic icons: a heart, a play button, a rising trend chart and a calendar with a clock. The barber sets a smartphone on a small tripod with a ring light and starts filming the client showing off his fresh haircut. Smooth, calm, cinematic, soft teal and warm tungsten light.",
-      "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
-      "params": {
-        "resolution": "720P",
-        "duration": 5,
-        "prompt_extend": false,
-        "watermark": false,
-        "first_frame": "/landing/stop2-desktop.webp (generación 2d20c1ec-19a4-4901-8e84-80b9c89400c5)",
-        "last_frame": "/landing/stop3-desktop.webp (generación e24e7554-d359-4f3c-9ead-0a1556718074)",
-        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
-        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
-      },
-      "seed": 20261015,
-      "generation_id": "f987a2bc-7087-4e01-a160-9aa64f8a7e32",
-      "generated_at": "2026-10-15"
-    },
-    {
-      "path": "/landing/video/leg2-3-mobile.mp4",
-      "alt": "Las ondas de la llamada se deshacen en iconos de redes y el barbero monta el móvil en un trípode con aro de luz para grabar al cliente.",
-      "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
-      "model": "wan2.7-i2v",
-      "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The barber finishes the fade, the teal sound-wave rings and calendar card dissolve into floating holographic icons: a heart, a play button, a rising trend chart and a calendar with a clock. The barber sets a smartphone on a small tripod with a ring light and starts filming the client showing off his fresh haircut. Smooth, calm, cinematic, soft teal and warm tungsten light.",
-      "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
-      "params": {
-        "resolution": "720P",
-        "duration": 5,
-        "prompt_extend": false,
-        "watermark": false,
-        "first_frame": "/landing/stop2-mobile.webp (generación 668fa93c-88ed-44b7-9454-dc097826fb10)",
-        "last_frame": "/landing/stop3-mobile.webp (generación afd5bdd1-8577-493b-a209-519064a5013f)",
-        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
-        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
-      },
-      "seed": 20261015,
-      "generation_id": "f37adc0d-4218-4bae-861b-331a25f3e542",
-      "generated_at": "2026-10-15"
-    },
-    {
-      "path": "/landing/video/leg3-4-desktop.webm",
-      "alt": "El cliente se va, la barbería se vacía y los iconos se convierten en tarjetas de notificación que orbitan alrededor del barbero.",
-      "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
-      "model": "wan2.7-i2v",
-      "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The client stands up and leaves, the ring light switches off and the shop empties. The barber walks to the counter and leans back relaxed, checking his phone with a satisfied smile, while the floating holographic icons turn into small translucent teal notification cards that gently orbit around him like a live dashboard. Smooth, calm, cinematic, soft teal and warm tungsten light.",
-      "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
-      "params": {
-        "resolution": "720P",
-        "duration": 5,
-        "prompt_extend": false,
-        "watermark": false,
-        "first_frame": "/landing/stop3-desktop.webp (generación e24e7554-d359-4f3c-9ead-0a1556718074)",
-        "last_frame": "/landing/stop4-desktop.webp (generación 68282084-dcd4-418d-aabb-94493ec06cc9)",
-        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
-        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
-      },
-      "seed": 20261015,
-      "generation_id": "bc6698ea-1cf5-4a70-884f-f4611d98957d",
-      "generated_at": "2026-10-15"
-    },
-    {
-      "path": "/landing/video/leg3-4-mobile.mp4",
-      "alt": "El cliente se va, la barbería se vacía y los iconos se convierten en tarjetas de notificación que orbitan alrededor del barbero.",
-      "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
-      "model": "wan2.7-i2v",
-      "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The client stands up and leaves, the ring light switches off and the shop empties. The barber walks to the counter and leans back relaxed, checking his phone with a satisfied smile, while the floating holographic icons turn into small translucent teal notification cards that gently orbit around him like a live dashboard. Smooth, calm, cinematic, soft teal and warm tungsten light.",
-      "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
-      "params": {
-        "resolution": "720P",
-        "duration": 5,
-        "prompt_extend": false,
-        "watermark": false,
-        "first_frame": "/landing/stop3-mobile.webp (generación afd5bdd1-8577-493b-a209-519064a5013f)",
-        "last_frame": "/landing/stop4-mobile.webp (generación b8e0154b-af93-4681-96b6-3eedf3115620)",
-        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
-        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
-      },
-      "seed": 20261015,
-      "generation_id": "51d4caa4-4413-4999-a4da-fede7490e6f9",
-      "generated_at": "2026-10-15"
-    },
-    {
-      "path": "/landing/video/leg4-5-desktop.webm",
-      "alt": "Las notificaciones bajan al mostrador y se convierten en la tableta con la agenda y el datáfono; un cliente recién cortado le da la mano al barbero.",
-      "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
-      "model": "wan2.7-i2v",
-      "prompt": "One continuous camera move through the same stylized 3D barbershop, no cuts. The floating teal notification cards settle down onto the counter and become a tablet on a stand showing a glowing calendar grid and a card payment terminal with a small holographic coin. A happy client with a fresh haircut walks up to the counter and the barber shakes his hand. Smooth, calm, cinematic, soft teal and warm tungsten light.",
-      "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
-      "params": {
-        "resolution": "720P",
-        "duration": 5,
-        "prompt_extend": false,
-        "watermark": false,
-        "first_frame": "/landing/stop4-desktop.webp (generación 68282084-dcd4-418d-aabb-94493ec06cc9)",
-        "last_frame": "/landing/stop5-desktop.webp (generación 6689741a-a37f-4624-9297-50539d9268dd)",
-        "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
-        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
-      },
-      "seed": 20261015,
-      "generation_id": "048e2979-7b93-48f2-aea2-25f6a79639d2",
-      "generated_at": "2026-10-15"
-    },
-    {
-      "path": "/landing/video/leg4-5-mobile.mp4",
-      "alt": "Las notificaciones bajan al mostrador y se convierten en la tableta con la agenda y el datáfono; un cliente recién cortado le da la mano al barbero.",
-      "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
-      "model": "wan2.7-i2v",
-      "prompt": "One continuous camera move through the same stylized 3D barbershop, no cuts. The floating teal notification cards settle down onto the counter and become a tablet on a stand showing a glowing calendar grid and a card payment terminal with a small holographic coin. A happy client with a fresh haircut walks up to the counter and the barber shakes his hand. Smooth, calm, cinematic, soft teal and warm tungsten light.",
-      "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
-      "params": {
-        "resolution": "720P",
-        "duration": 5,
-        "prompt_extend": false,
-        "watermark": false,
-        "first_frame": "/landing/stop4-mobile.webp (generación b8e0154b-af93-4681-96b6-3eedf3115620)",
-        "last_frame": "/landing/stop5-mobile.webp (generación 27af9f64-bf13-4bbe-a5ab-b55e1ae77a3d)",
-        "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
-        "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
-      },
-      "seed": 20261015,
-      "generation_id": "68c545b6-5254-4c11-98c3-aa14da4b9d1b",
       "generated_at": "2026-10-15"
     }
   ],
@@ -563,7 +395,177 @@
         "seed_note": "el proveedor no expone seed",
         "generation_id": "41a3a26b-d1e9-4bf0-a4c3-d765c3db0fc9",
         "generated_at": "2026-10-13"
+      },
+      {
+        "path": "/landing/video/leg1-2-desktop.webm",
+        "alt": "El barbero descruza los brazos y empieza un degradado mientras el anillo de luz del móvil se convierte en ondas de llamada y una tarjeta de calendario.",
+        "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
+        "model": "wan2.7-i2v",
+        "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The barber uncrosses his arms, a client in a black cape sits in the barber chair and the barber starts a precise skin fade with clippers while the camera glides closer to the counter. The small teal holographic ring above the smartphone grows into glowing teal sound-wave rings with a voice waveform, and a translucent teal calendar card rises above it, as if an AI took the call and booked the appointment. Smooth, calm, cinematic, soft teal and warm tungsten light.",
+        "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
+        "params": {
+          "resolution": "720P",
+          "duration": 5,
+          "prompt_extend": false,
+          "watermark": false,
+          "first_frame": "/landing/stop1-desktop.webp (generación 332c7fc3-845f-4266-b61c-850e5286cff7)",
+          "last_frame": "/landing/stop2-desktop.webp (generación 2d20c1ec-19a4-4901-8e84-80b9c89400c5)",
+          "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
+          "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
+        },
+        "seed": 20261015,
+        "generation_id": "f3c7525b-c707-4262-90bb-852e3f004a93",
+        "generated_at": "2026-10-15"
+      },
+      {
+        "path": "/landing/video/leg1-2-mobile.mp4",
+        "alt": "El barbero descruza los brazos y empieza un degradado mientras el anillo de luz del móvil se convierte en ondas de llamada y una tarjeta de calendario.",
+        "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
+        "model": "wan2.7-i2v",
+        "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The barber uncrosses his arms, a client in a black cape sits in the barber chair and the barber starts a precise skin fade with clippers while the camera glides closer to the counter. The small teal holographic ring above the smartphone grows into glowing teal sound-wave rings with a voice waveform, and a translucent teal calendar card rises above it, as if an AI took the call and booked the appointment. Smooth, calm, cinematic, soft teal and warm tungsten light.",
+        "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
+        "params": {
+          "resolution": "720P",
+          "duration": 5,
+          "prompt_extend": false,
+          "watermark": false,
+          "first_frame": "/landing/stop1-mobile.webp (generación 239f35fb-6556-4b1c-8070-a0a29bd8eae9)",
+          "last_frame": "/landing/stop2-mobile.webp (generación 668fa93c-88ed-44b7-9454-dc097826fb10)",
+          "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
+          "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
+        },
+        "seed": 20261015,
+        "generation_id": "f48e22a6-59ca-4412-beae-a2a3f61fad22",
+        "generated_at": "2026-10-15"
+      },
+      {
+        "path": "/landing/video/leg2-3-desktop.webm",
+        "alt": "Las ondas de la llamada se deshacen en iconos de redes y el barbero monta el móvil en un trípode con aro de luz para grabar al cliente.",
+        "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
+        "model": "wan2.7-i2v",
+        "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The barber finishes the fade, the teal sound-wave rings and calendar card dissolve into floating holographic icons: a heart, a play button, a rising trend chart and a calendar with a clock. The barber sets a smartphone on a small tripod with a ring light and starts filming the client showing off his fresh haircut. Smooth, calm, cinematic, soft teal and warm tungsten light.",
+        "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
+        "params": {
+          "resolution": "720P",
+          "duration": 5,
+          "prompt_extend": false,
+          "watermark": false,
+          "first_frame": "/landing/stop2-desktop.webp (generación 2d20c1ec-19a4-4901-8e84-80b9c89400c5)",
+          "last_frame": "/landing/stop3-desktop.webp (generación e24e7554-d359-4f3c-9ead-0a1556718074)",
+          "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
+          "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
+        },
+        "seed": 20261015,
+        "generation_id": "f987a2bc-7087-4e01-a160-9aa64f8a7e32",
+        "generated_at": "2026-10-15"
+      },
+      {
+        "path": "/landing/video/leg2-3-mobile.mp4",
+        "alt": "Las ondas de la llamada se deshacen en iconos de redes y el barbero monta el móvil en un trípode con aro de luz para grabar al cliente.",
+        "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
+        "model": "wan2.7-i2v",
+        "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The barber finishes the fade, the teal sound-wave rings and calendar card dissolve into floating holographic icons: a heart, a play button, a rising trend chart and a calendar with a clock. The barber sets a smartphone on a small tripod with a ring light and starts filming the client showing off his fresh haircut. Smooth, calm, cinematic, soft teal and warm tungsten light.",
+        "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
+        "params": {
+          "resolution": "720P",
+          "duration": 5,
+          "prompt_extend": false,
+          "watermark": false,
+          "first_frame": "/landing/stop2-mobile.webp (generación 668fa93c-88ed-44b7-9454-dc097826fb10)",
+          "last_frame": "/landing/stop3-mobile.webp (generación afd5bdd1-8577-493b-a209-519064a5013f)",
+          "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
+          "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
+        },
+        "seed": 20261015,
+        "generation_id": "f37adc0d-4218-4bae-861b-331a25f3e542",
+        "generated_at": "2026-10-15"
+      },
+      {
+        "path": "/landing/video/leg3-4-desktop.webm",
+        "alt": "El cliente se va, la barbería se vacía y los iconos se convierten en tarjetas de notificación que orbitan alrededor del barbero.",
+        "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
+        "model": "wan2.7-i2v",
+        "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The client stands up and leaves, the ring light switches off and the shop empties. The barber walks to the counter and leans back relaxed, checking his phone with a satisfied smile, while the floating holographic icons turn into small translucent teal notification cards that gently orbit around him like a live dashboard. Smooth, calm, cinematic, soft teal and warm tungsten light.",
+        "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
+        "params": {
+          "resolution": "720P",
+          "duration": 5,
+          "prompt_extend": false,
+          "watermark": false,
+          "first_frame": "/landing/stop3-desktop.webp (generación e24e7554-d359-4f3c-9ead-0a1556718074)",
+          "last_frame": "/landing/stop4-desktop.webp (generación 68282084-dcd4-418d-aabb-94493ec06cc9)",
+          "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
+          "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
+        },
+        "seed": 20261015,
+        "generation_id": "bc6698ea-1cf5-4a70-884f-f4611d98957d",
+        "generated_at": "2026-10-15"
+      },
+      {
+        "path": "/landing/video/leg3-4-mobile.mp4",
+        "alt": "El cliente se va, la barbería se vacía y los iconos se convierten en tarjetas de notificación que orbitan alrededor del barbero.",
+        "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
+        "model": "wan2.7-i2v",
+        "prompt": "One continuous camera move through the same stylized 3D barbershop at dusk, no cuts. The client stands up and leaves, the ring light switches off and the shop empties. The barber walks to the counter and leans back relaxed, checking his phone with a satisfied smile, while the floating holographic icons turn into small translucent teal notification cards that gently orbit around him like a live dashboard. Smooth, calm, cinematic, soft teal and warm tungsten light.",
+        "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
+        "params": {
+          "resolution": "720P",
+          "duration": 5,
+          "prompt_extend": false,
+          "watermark": false,
+          "first_frame": "/landing/stop3-mobile.webp (generación afd5bdd1-8577-493b-a209-519064a5013f)",
+          "last_frame": "/landing/stop4-mobile.webp (generación b8e0154b-af93-4681-96b6-3eedf3115620)",
+          "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
+          "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
+        },
+        "seed": 20261015,
+        "generation_id": "51d4caa4-4413-4999-a4da-fede7490e6f9",
+        "generated_at": "2026-10-15"
+      },
+      {
+        "path": "/landing/video/leg4-5-desktop.webm",
+        "alt": "Las notificaciones bajan al mostrador y se convierten en la tableta con la agenda y el datáfono; un cliente recién cortado le da la mano al barbero.",
+        "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
+        "model": "wan2.7-i2v",
+        "prompt": "One continuous camera move through the same stylized 3D barbershop, no cuts. The floating teal notification cards settle down onto the counter and become a tablet on a stand showing a glowing calendar grid and a card payment terminal with a small holographic coin. A happy client with a fresh haircut walks up to the counter and the barber shakes his hand. Smooth, calm, cinematic, soft teal and warm tungsten light.",
+        "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
+        "params": {
+          "resolution": "720P",
+          "duration": 5,
+          "prompt_extend": false,
+          "watermark": false,
+          "first_frame": "/landing/stop4-desktop.webp (generación 68282084-dcd4-418d-aabb-94493ec06cc9)",
+          "last_frame": "/landing/stop5-desktop.webp (generación 6689741a-a37f-4624-9297-50539d9268dd)",
+          "post": "apps/web/scripts/encode-leg.sh: AV1 CRF 46 sin audio",
+          "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
+        },
+        "seed": 20261015,
+        "generation_id": "048e2979-7b93-48f2-aea2-25f6a79639d2",
+        "generated_at": "2026-10-15"
+      },
+      {
+        "path": "/landing/video/leg4-5-mobile.mp4",
+        "alt": "Las notificaciones bajan al mostrador y se convierten en la tableta con la agenda y el datáfono; un cliente recién cortado le da la mano al barbero.",
+        "provider": "Comfy Cloud (workflow: Wan2ImageToVideoApi)",
+        "model": "wan2.7-i2v",
+        "prompt": "One continuous camera move through the same stylized 3D barbershop, no cuts. The floating teal notification cards settle down onto the counter and become a tablet on a stand showing a glowing calendar grid and a card payment terminal with a small holographic coin. A happy client with a fresh haircut walks up to the counter and the barber shakes his hand. Smooth, calm, cinematic, soft teal and warm tungsten light.",
+        "negative_prompt": "text, letters, numbers, captions, subtitles, watermark, logo, scene cut, hard cut, flicker, morphing faces, distorted hands, extra limbs",
+        "params": {
+          "resolution": "720P",
+          "duration": 5,
+          "prompt_extend": false,
+          "watermark": false,
+          "first_frame": "/landing/stop4-mobile.webp (generación b8e0154b-af93-4681-96b6-3eedf3115620)",
+          "last_frame": "/landing/stop5-mobile.webp (generación 27af9f64-bf13-4bbe-a5ab-b55e1ae77a3d)",
+          "post": "apps/web/scripts/encode-leg.sh: H.264 540x960, 24 fps, keyframe cada 4 fotogramas, sin audio",
+          "grade": "ffmpeg huesaturation=hue=35:saturation=-0.4:colors=c+g:strength=40 (los cian y verdes pasan a zafiro; piel y lámparas cálidas intactas), aplicado el 2026-10-15 sobre el original antes de codificar"
+        },
+        "seed": 20261015,
+        "generation_id": "68c545b6-5254-4c11-98c3-aa14da4b9d1b",
+        "generated_at": "2026-10-15"
       }
-    ]
+    ],
+    "tramos_descartados_el": "2026-10-29",
+    "tramos_motivo": "La landing de #149 deja el vídeo: los 4 tramos de Wan 2.7 se borraron; prompts e ids se conservan para regenerarlos."
   }
 }

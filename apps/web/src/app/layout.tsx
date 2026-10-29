@@ -1,5 +1,5 @@
 import "./globals.css";
-import { bigShoulders, dmSans, sora } from "./fonts";
+import { bigShoulders, dmSans } from "./fonts";
 import { THEME_MODE_SCRIPT } from "@/lib/theme-mode";
 import { AppShell } from "@/components/common/AppShell";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
@@ -69,7 +69,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${bigShoulders.variable} ${dmSans.variable} ${sora.variable} antialiased`}
+      className={`${bigShoulders.variable} ${dmSans.variable} antialiased`}
       suppressHydrationWarning
     >
       <head>

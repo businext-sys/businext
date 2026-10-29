@@ -1,4 +1,4 @@
-import { Big_Shoulders, DM_Sans, Sora } from "next/font/google";
+import { Big_Shoulders, DM_Sans } from "next/font/google";
 
 export const bigShoulders = Big_Shoulders({
   subsets: ["latin", "latin-ext"],
@@ -14,11 +14,4 @@ export const dmSans = DM_Sans({
   display: "swap",
   variable: "--font-body",
   weight: ["400", "500", "700"],
-});
-
-export const sora = Sora({
-  subsets: ["latin", "latin-ext"],
-  display: "swap",
-  variable: "--font-landing",
-  weight: ["600", "700"],
 });

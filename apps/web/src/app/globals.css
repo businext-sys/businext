@@ -43,10 +43,6 @@
   --color-muted-foreground: #b5aba0;
   --color-input: #3a3530;
   --color-ring: #41d9d6;
-  /* Deep sapphire fill for the landing's calls to action: white text on it is 7.98:1. */
-  --color-brand: #2c4a8a;
-  --color-brand-hover: #3a5aa0;
-  --color-brand-foreground: #f4f7fd;
 
   /* ── Typography ── */
   --font-sans: var(--font-body), system-ui, sans-serif;
@@ -262,288 +258,209 @@ h4 {
   display: none;
 }
 
-/* ── Landing palette ──
-   Midnight and sapphire, scoped to the landing so the app keeps its own tokens. Tailwind
-   utilities read these variables, so everything under .landing picks them up. The scenes
-   are graded to match (cyans moved to sapphire, see public/assets.manifest.json).
-   AA measured on #0a0c16 / #121828: text 17.7, muted 10.9, subtle 6.2 / 5.6, primary 9.0 /
-   8.2, gradient end 5.6, success 9.7, danger 5.3. The landing keeps its own palette and Sora,
-   in dark, whatever mode the app is in. */
+/* ── Landing ──
+   Noche de barrio whatever mode the app is in: the scenes are night shots, so .landing pins the
+   dark tokens of @theme. Same values as themeColors.dark in @businext/shared-core/theme. */
 .landing {
   color-scheme: dark;
-  --font-heading: var(--font-landing), system-ui, sans-serif;
-  --color-surface-overlay: rgba(12, 17, 23, 0.95);
-  --color-secondary: #22b8c8;
-  --color-secondary-hover: #3fcddb;
-  --color-secondary-foreground: #0c1117;
-  --color-muted: #16202a;
-  --color-muted-foreground: #9eb6bf;
-  --color-input: #252e46;
-  --color-danger: #f4574b;
-  --color-danger-foreground: #0c1117;
+  --color-background: #0f0e0c;
+  --color-surface: #1c1a17;
+  --color-surface-raised: #2a2621;
+  --color-primary: #41d9d6;
+  --color-primary-hover: #7fe8e5;
+  --color-primary-foreground: #0f0e0c;
+  --color-secondary: #d08b5b;
+  --color-secondary-hover: #dfa47a;
+  --color-secondary-foreground: #0f0e0c;
+  --color-accent: #12302f;
+  --color-accent-hover: #1a4140;
+  --color-accent-foreground: #f4f1ec;
+  --color-foreground: #f4f1ec;
+  --color-foreground-muted: #d6cec5;
+  --color-foreground-subtle: #a89e93;
+  --color-border: #3a3530;
+  --color-border-subtle: #24211d;
+  --color-success: #34d399;
   --color-warning: #f5a623;
-  --color-warning-foreground: #0c1117;
-  --color-success-foreground: #0c1117;
-  --color-highlight: #f97316;
-  --gradient-primary: linear-gradient(135deg, #41d9d6, #22b8c8, #123d47);
-  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 8px -1px rgb(0 0 0 / 0.4);
-  --shadow-lg: 0 12px 24px -4px rgb(0 0 0 / 0.5);
-  --color-background: #0a0c16;
-  --color-surface: #121828;
-  --color-surface-raised: #1a2236;
-  --color-border: #252e46;
-  --color-border-subtle: #151b2b;
-  --color-primary: #9db0de;
-  --color-primary-hover: #b8c7ea;
-  --color-primary-foreground: #0a0c16;
-  --color-accent: #1d2947;
-  --color-accent-hover: #2a3a62;
-  --color-accent-foreground: #e9eef9;
-  --color-foreground: #f2f4fa;
-  --color-foreground-muted: #b9c2d8;
-  --color-foreground-subtle: #8891aa;
-  --color-success: #6fd3a8;
-  --color-ring: #9db0de;
-  --gradient-text: linear-gradient(100deg, #eef2fb 0%, #9db0de 55%, #7088c6 100%);
-  --shadow-glow-primary: 0 12px 32px -10px rgb(44 74 138 / 0.75);
+  --color-muted: #171513;
+  --color-muted-foreground: #b5aba0;
+  --color-ring: #41d9d6;
   background: var(--color-background);
 }
 
-/* ── Landing story ──
-   The page scrolls natively and nothing runs per scroll frame: a chapter turns active once
-   (Story.tsx) and everything below is a transition on opacity or transform, which the
-   compositor handles on its own. Clips play at their own speed, they are never scrubbed. */
-.hero-plate {
-  object-position: 50% 100%;
-  animation: hero-settle 2.2s var(--ease-fluid) both;
+/* The scenes were graded towards sapphire for the previous landing (assets.manifest.json,
+   params.grade); this turns their cyans back to the brand turquoise. */
+.landing-scene {
+  filter: hue-rotate(-32deg) saturate(1.25);
 }
 
-@keyframes hero-settle {
-  from {
-    opacity: 0;
-    scale: 1.06;
+.landing-drift {
+  animation: landing-drift 14s ease-in-out infinite alternate;
+  transform-origin: 65% 40%;
+}
+
+@keyframes landing-drift {
+  to {
+    scale: 1.05;
+    translate: -1% 0;
   }
 }
 
-/* Keeps the copy above AA over any part of the plate: the top on a phone, the left on desktop. */
-.hero-scrim {
-  background: linear-gradient(
-    to bottom,
-    rgb(10 12 22 / 0.95) 0%,
-    rgb(10 12 22 / 0.75) 48%,
-    transparent 72%,
-    var(--color-background) 100%
-  );
+/* Phone frame. Everything inside is sized in em of the phone's width (cqw). */
+.landing-phone {
+  container-type: inline-size;
+  aspect-ratio: 9 / 19.2;
+  padding: 9px;
+  border-radius: 38px;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-raised);
 }
 
-.hero-copy > * {
-  animation: rise 800ms var(--ease-fluid) both;
-}
-
-.hero-copy > :nth-child(2) {
-  animation-delay: 450ms;
-}
-
-.hero-copy > :nth-child(3) {
-  animation-delay: 540ms;
-}
-
-.hero-copy > :nth-child(n + 4) {
-  animation-delay: 630ms;
-}
-
-@keyframes rise {
-  from {
-    opacity: 0;
-    translate: 0 1.25rem;
-  }
-}
-
-/* The wordmark's letters rise in one after another on load. */
-.wordmark-letter {
-  display: inline-block;
-  animation: rise 800ms var(--ease-fluid) both;
-  animation-delay: calc(100ms + var(--i) * 50ms);
-}
-
-.nav-brand {
-  opacity: 0;
-  transition: opacity 400ms var(--ease-fluid);
-}
-
-.past-hero .nav-brand {
-  opacity: 1;
-}
-
-/* Past the hero the bar gets a solid ground so it never sits on top of a scene. */
-.site-nav {
-  border-bottom: 1px solid transparent;
-  transition:
-    background-color 400ms var(--ease-fluid),
-    border-color 400ms var(--ease-fluid);
-}
-
-.past-hero .site-nav {
-  background-color: rgb(10 12 22 / 0.94);
-  border-bottom-color: var(--color-border-subtle);
-}
-
-@media (min-width: 48rem) {
-  .hero-plate {
-    object-position: 70% 50%;
-  }
-
-  .hero-scrim {
-    background:
-      linear-gradient(to top, var(--color-background) 0%, transparent 22%),
-      linear-gradient(to right, rgb(10 12 22 / 0.95) 0%, rgb(10 12 22 / 0.78) 32%, rgb(10 12 22 / 0.2) 55%, transparent 65%);
-  }
-}
-
-.story-scene img,
-.story-scene video,
-.story-layer img,
-.story-layer video {
-  position: absolute;
-  inset: 0;
-  width: 100%;
+.landing-phone-screen {
+  position: relative;
   height: 100%;
-  object-fit: cover;
-  object-position: 50% 85%;
+  overflow: hidden;
+  border-radius: 30px;
+  background: var(--color-background);
+  font-size: 4.9cqw;
 }
 
-.story-layer img,
-.story-layer video {
-  object-position: 70% 50%;
+/* App pieces enter one after another, in --d order, each time their screen mounts. */
+.landing-piece {
+  animation: landing-rise 450ms var(--ease-fluid) both;
+  animation-delay: calc(var(--d, 0) * 500ms + 150ms);
 }
 
-/* A clip shows only once it is playing; until then the chapter's own plate is there. */
-.story-scene video,
-.story-layer video {
-  opacity: 0;
-  transition: opacity 200ms linear;
-}
-
-.story-scene video.is-playing,
-.story-layer video.is-playing {
-  opacity: 1;
-}
-
-.story-layer {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 600ms var(--ease-fluid);
-}
-
-.story-layer.is-active {
-  opacity: 1;
-}
-
-.story-screens {
-  display: grid;
-}
-
-.story-screen {
-  grid-area: 1 / 1;
-  align-self: end;
-  opacity: 0;
-  translate: 0 1rem;
-  pointer-events: none;
-  transition:
-    opacity 500ms var(--ease-fluid),
-    translate 500ms var(--ease-fluid);
-}
-
-.story-screen.is-active {
-  opacity: 1;
-  translate: 0 0;
-  pointer-events: auto;
-}
-
-@media (min-width: 48rem) {
-  .story-copy {
-    opacity: 0.35;
-    transition: opacity 500ms var(--ease-fluid);
-  }
-
-  .story-chapter.is-active .story-copy {
-    opacity: 1;
+@keyframes landing-rise {
+  from {
+    opacity: 0;
+    translate: 0 0.6em;
   }
 }
 
-/* App pieces assemble one after another, in --at order, when their chapter turns active. */
-.ui-item {
+.landing-press {
+  animation: landing-press 700ms var(--ease-fluid) both;
+  animation-delay: calc(var(--d, 0) * 500ms + 150ms);
+}
+
+@keyframes landing-press {
+  40% {
+    scale: 0.92;
+    outline: 2px solid var(--color-primary-hover);
+    outline-offset: 3px;
+  }
+}
+
+.landing-ring {
+  animation: landing-ring 1.6s ease-out infinite;
+}
+
+@keyframes landing-ring {
+  from {
+    opacity: 0.7;
+    scale: 0.9;
+  }
+  to {
+    opacity: 0;
+    scale: 1.25;
+  }
+}
+
+.landing-wave {
+  animation: landing-wave 1s ease-in-out infinite;
+}
+
+@keyframes landing-wave {
+  0%,
+  100% {
+    scale: 1 0.35;
+  }
+  50% {
+    scale: 1 1;
+  }
+}
+
+.landing-toast {
   opacity: 0;
-  translate: 0 0.75rem;
+  translate: 0 10px;
   transition:
     opacity 450ms var(--ease-fluid),
     translate 450ms var(--ease-fluid);
-  transition-delay: max(0s, var(--at) * 1.6s);
 }
 
-.is-active .ui-item {
+.landing-toast.is-shown {
   opacity: 1;
   translate: 0 0;
 }
 
-.ui-bar {
-  width: 0;
-  transition: width 900ms var(--ease-fluid);
-  transition-delay: calc(var(--at) * 1.6s + 250ms);
+.landing-fade {
+  opacity: 0;
+  translate: 0 6px;
+  transition:
+    opacity 350ms var(--ease-fluid),
+    translate 350ms var(--ease-fluid);
 }
 
-.is-active .ui-bar {
-  width: calc(var(--w) * 100%);
+.landing-fade.is-shown {
+  opacity: 1;
+  translate: 0 0;
 }
 
-.ui-bar-v {
-  height: 8%;
-  transition: height 900ms var(--ease-fluid);
-  transition-delay: calc(var(--at) * 1.6s + 250ms);
+/* A chapter's bar fills over its duration; its animationend moves to the next chapter. */
+.landing-progress {
+  animation: landing-progress 6s linear both;
+  transform-origin: left;
 }
 
-.is-active .ui-bar-v {
-  height: calc(var(--h) * 100%);
+.landing-progress.is-paused {
+  animation-play-state: paused;
 }
 
-/* A live dot that breathes. */
-.live-dot {
-  animation: live 1.6s ease-in-out infinite;
-}
-
-@keyframes live {
-  50% {
-    opacity: 0.35;
-    scale: 0.7;
+@keyframes landing-progress {
+  from {
+    scale: 0 1;
   }
 }
 
-/* Past the story, blocks rise in as they scroll into view. Without scroll timelines they are
-   simply there. */
+/* The sample webs scroll top to bottom and back; --end is how far, in % of the capture. */
+.landing-site {
+  animation: landing-site 34s ease-in-out infinite alternate;
+}
+
+@keyframes landing-site {
+  0%,
+  8% {
+    translate: 0 0;
+  }
+  92%,
+  100% {
+    translate: 0 calc(var(--end) * -1%);
+  }
+}
+
+/* Blocks rise in as they scroll into view. Without scroll timelines they are simply there. */
 @supports (animation-timeline: view()) {
   .reveal {
-    animation: rise linear both;
+    animation: landing-rise linear both;
     animation-timeline: view();
     animation-range: entry 5% entry 40%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-plate,
-  .hero-copy > *,
-  .wordmark-letter,
-  .reveal,
-  .live-dot {
+  .landing-drift,
+  .landing-piece,
+  .landing-press,
+  .landing-ring,
+  .landing-wave,
+  .landing-progress,
+  .landing-site,
+  .reveal {
     animation: none;
   }
 
-  .ui-item,
-  .ui-bar,
-  .ui-bar-v,
-  .story-screen,
-  .story-layer {
+  .landing-toast,
+  .landing-fade {
     transition: none;
   }
 }

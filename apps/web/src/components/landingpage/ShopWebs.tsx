@@ -1,0 +1,69 @@
+import type { CSSProperties } from "react";
+import { ExternalLink } from "lucide-react";
+import { SHOWCASE } from "./content";
+
+/** The webs we built, as they are live: each capture scrolls by itself inside a browser and a phone. */
+export function ShopWebs() {
+  return (
+    <div className="grid gap-12 lg:grid-cols-2 lg:gap-6">
+      {SHOWCASE.map((site) => {
+        const host = new URL(site.href).host;
+        return (
+          <article key={site.href} className="reveal flex flex-col gap-4">
+            <div className="relative pb-7">
+              <div className="overflow-hidden rounded-[10px] border border-border bg-surface">
+                <div aria-hidden className="flex items-center gap-2 border-b border-border-subtle px-3 py-[9px]">
+                  <i className="h-[9px] w-[9px] rounded-full bg-border" />
+                  <i className="h-[9px] w-[9px] rounded-full bg-border" />
+                  <i className="h-[9px] w-[9px] rounded-full bg-border" />
+                  <span className="ml-2 min-w-0 flex-1 truncate rounded-full bg-muted px-3 py-[3px] text-caption text-foreground-subtle">{host}</span>
+                </div>
+                <div className="relative aspect-[16/10] overflow-hidden bg-background">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- full-page capture that scrolls with CSS */}
+                  <img
+                    src={`/landing/webs/${site.capture}-desktop.jpg`}
+                    width={640}
+                    alt={`Web de ${site.name}: portada, precios, trabajos y ubicación.`}
+                    loading="lazy"
+                    decoding="async"
+                    className="landing-site h-auto w-full max-w-none"
+                    style={{ "--end": site.end.desktop } as CSSProperties}
+                  />
+                </div>
+              </div>
+              <div aria-hidden className="absolute bottom-0 right-0 w-1/4 rounded-[22px] border border-border bg-surface-raised p-[5px] [aspect-ratio:9/19.2]">
+                <div className="h-full overflow-hidden rounded-[17px] bg-background">
+                  {/* eslint-disable-next-line @next/next/no-img-element -- full-page capture that scrolls with CSS */}
+                  <img
+                    src={`/landing/webs/${site.capture}-mobile.jpg`}
+                    width={300}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="landing-site h-auto w-full max-w-none"
+                    style={{ "--end": site.end.mobile } as CSSProperties}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="flex items-end justify-between gap-4">
+              <div>
+                <p className="m-0 font-heading text-[26px] font-extrabold uppercase leading-none text-foreground">{site.name}</p>
+                <p className="m-0 text-body-sm text-foreground-subtle">{site.place}</p>
+              </div>
+              <a
+                href={site.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap text-label font-bold text-primary hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              >
+                Ver la web <ExternalLink aria-hidden className="h-4 w-4" />
+                <span className="sr-only">(se abre en otra pestaña)</span>
+              </a>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
