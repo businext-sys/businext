@@ -67,6 +67,12 @@ pnpm --filter @businext/mobile lint
 Con Metro corriendo, `a` / `i` / `w` abren en emulador Android, simulador iOS
 o navegador.
 
+`lint` es `expo lint`, y la app aún no tiene configuración de ESLint: el comando
+la crea e instala `eslint-config-expo`, lo que deja `eslint-plugin-react-hooks@7` en
+la raíz de `node_modules`. Con eso `pnpm lint:web` y `pnpm build:web` fallan en
+código que no ha cambiado. Si pasa, no commitees esos cambios: deja
+`pnpm-lock.yaml` y `package.json` como en `main` y ejecuta `pnpm install`.
+
 ## Distribucion via EAS
 
 `eas.json` tiene 3 perfiles:
