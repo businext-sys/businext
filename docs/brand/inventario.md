@@ -57,6 +57,7 @@ producción con `main`; "después", la rama en local.
 | Pantalla | Antes | Después (oscuro) | Después (claro) |
 |---|---|---|---|
 | Login web | [web-login-antes](capturas/web-login-antes.jpg) | [web-login-despues-oscuro](capturas/web-login-despues-oscuro.jpg) | [web-login-despues-claro](capturas/web-login-despues-claro.jpg) |
+| KPIs de Reservas (#127) | [web-kpis-antes](capturas/web-kpis-antes.jpg) (claro) | — | [web-kpis-despues](capturas/web-kpis-despues.jpg) |
+| Reserva pública, datos (#127) | — | [web-reserva-publica-datos-oscuro](capturas/web-reserva-publica-datos-oscuro.jpg) | — |
 
-Las pantallas con sesión (inicio, reservas, finanzas, productos, configuración y
-la app móvil) se capturan con un owner de prueba en las sub-issues #127 y #128.
+Las pantallas de la app móvil se capturan en #128.

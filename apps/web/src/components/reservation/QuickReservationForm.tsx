@@ -128,7 +128,7 @@ export function QuickReservationForm({
               {selectedService.name}
             </p>
           </div>
-          <span className="text-body-sm font-semibold text-accent">
+          <span className="text-body-sm font-semibold text-secondary">
             {selectedService.price.toLocaleString("es-ES")}€
           </span>
         </div>

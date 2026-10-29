@@ -26,10 +26,10 @@ const colorMap = {
     amount: "text-danger",
   },
   balance: {
-    icon: "text-accent",
-    iconBg: "bg-accent/15",
-    border: "border-accent/40",
-    amount: "text-accent",
+    icon: "text-secondary",
+    iconBg: "bg-secondary/15",
+    border: "border-secondary/40",
+    amount: "text-secondary",
   },
 } as const;
 

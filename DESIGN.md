@@ -250,6 +250,8 @@ el mismo papel. En código viven en `packages/shared-core/src/theme` (`themeColo
 
 - Usa los tokens: nada de hex, `rgba()` ni clases de la paleta por defecto de Tailwind escritas
   a mano en `apps/`.
+- `accent` es una superficie (`bg-accent` con `text-accent-foreground`), no un color de texto,
+  icono ni borde: para datos destacados usa `secondary`.
 - Usa el avatar solo como cara del asistente (chat, voz, estados vacíos, onboarding), nunca
   como decoración. Solo recortes sin las zapatillas.
 - No mezcles los dos modos en una pantalla ni cambies de tipografía entre modos.

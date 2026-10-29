@@ -375,7 +375,7 @@ export default function ReservationPage() {
                               {slotInCharge && (
                                 <>
                                   {" — "}
-                                  <span className="font-semibold text-accent">
+                                  <span className="font-semibold text-secondary">
                                     {slotInCharge}
                                   </span>
                                 </>

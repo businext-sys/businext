@@ -10,6 +10,7 @@ import { Pie } from "react-chartjs-2";
 import { Finances } from "@/lib/finances/types";
 import { Product } from "@/lib/product/types";
 import { useProduct } from "@/hooks/useProduct";
+import { useThemeMode } from "@/hooks/useThemeMode";
 import { darkChartOptions, paletteColor } from "@/lib/chartjs-dark-theme";
 import { colorToken, withAlpha } from "@/lib/theme-tokens";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -56,6 +57,7 @@ export const FinancesPieChart = ({
   };
 
   const dataset = createDataSet(financesData, productData);
+  useThemeMode();
   const baseOptions = darkChartOptions();
 
   useEffect(() => {

@@ -102,7 +102,7 @@ export function ServiceCards({
                   className={cn(
                     "flex items-center gap-2 px-3 py-2 rounded-md border text-body-sm font-medium transition-all duration-150",
                     isSelected
-                      ? "border-accent bg-accent/10 text-accent shadow-glow-accent"
+                      ? "border-secondary bg-secondary/10 text-secondary shadow-glow-accent"
                       : "border-border-subtle bg-surface-raised/40 text-foreground hover:border-primary/40 hover:bg-primary/5"
                   )}
                 >
@@ -158,7 +158,7 @@ export function ServiceCards({
                 onClick={() => onSelect(product)}
                 className={cn(
                   "flex flex-col items-center p-4 gap-2 text-center",
-                  isSelected && "border-accent shadow-glow-accent"
+                  isSelected && "border-secondary shadow-glow-accent"
                 )}
               >
                 {product.imageUrl ? (

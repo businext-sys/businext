@@ -12,6 +12,7 @@ import {
   Legend,
   Filler,
 } from "chart.js";
+import { useThemeMode } from "@/hooks/useThemeMode";
 import { darkChartOptions, paletteColor } from "@/lib/chartjs-dark-theme";
 import { colorToken, withAlpha } from "@/lib/theme-tokens";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -33,6 +34,7 @@ export const FinancesLineChart = ({
   financesData: AnualBalances[];
 }) => {
   const currentYear = new Date().getFullYear().toString();
+  useThemeMode();
   const baseOptions = darkChartOptions();
   const seriesColor = paletteColor(0);
 

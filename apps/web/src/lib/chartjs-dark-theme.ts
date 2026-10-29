@@ -11,7 +11,9 @@
  */
 
 import { Chart, type ChartOptions } from "chart.js";
+import type { ThemeMode } from "@businext/shared-core/theme";
 import { chartPalette, colorToken } from "@/lib/theme-tokens";
+import { readThemeMode } from "@/lib/theme-mode";
 
 /* ── Reduced-motion detection ── */
 function prefersReducedMotion(): boolean {
@@ -21,15 +23,18 @@ function prefersReducedMotion(): boolean {
   );
 }
 
-let applied = false;
+let appliedMode: ThemeMode | null = null;
 
 /**
- * Aplica los defaults globales de Chart.js con los tokens del theme.
- * Idempotente y no-op en servidor; `darkChartOptions()` ya lo invoca.
+ * Aplica los defaults globales de Chart.js con los tokens del theme. Solo
+ * trabaja la primera vez y al cambiar de modo; no-op en servidor.
+ * `darkChartOptions()` ya lo invoca.
  */
 export function applyChartTheme(): void {
-  if (applied || typeof document === "undefined") return;
-  applied = true;
+  if (typeof document === "undefined") return;
+  const mode = readThemeMode();
+  if (appliedMode === mode) return;
+  appliedMode = mode;
 
   const foreground = colorToken("foreground");
   const foregroundMuted = colorToken("foreground-muted");

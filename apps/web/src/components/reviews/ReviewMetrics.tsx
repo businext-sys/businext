@@ -5,6 +5,7 @@ import { Star } from "lucide-react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useThemeMode } from "@/hooks/useThemeMode";
 import { darkChartOptions } from "@/lib/chartjs-dark-theme";
 import { colorToken } from "@/lib/theme-tokens";
 import type { GoogleBusinessProfile } from "@/lib/google-reviews/types";
@@ -39,6 +40,7 @@ export function ReviewMetrics({ profile }: ReviewMetricsProps) {
   const scores = profile.reviewsPerScore || {};
   const total = profile.totalReviews || 0;
   const starLevels = [5, 4, 3, 2, 1];
+  const { mode } = useThemeMode();
 
   /* Los tokens se leen dentro de los memos: solo existen en el navegador, y el
      primer render de cliente (donde se pinta el canvas) ya los resuelve. */
@@ -54,7 +56,7 @@ export function ReviewMetrics({ profile }: ReviewMetricsProps) {
       },
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }), [scores]);
+  }), [scores, mode]);
 
   const chartOptions = useMemo(() => {
     const baseOptions = darkChartOptions();
@@ -68,7 +70,8 @@ export function ReviewMetrics({ profile }: ReviewMetricsProps) {
         legend: { display: false },
       },
     };
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mode]);
 
   return (
     <Card className="h-full">

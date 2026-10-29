@@ -229,26 +229,26 @@ h4 {
   }
 }
 
-/* ── Public booking form inputs (light theme) ── */
+/* ── Public booking form inputs ── */
 .form-input {
   display: block;
   width: 100%;
   padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: #1e293b;
-  background-color: #ffffff;
-  border: 2px solid #e2e8f0;
+  color: var(--color-foreground);
+  background-color: var(--color-surface);
+  border: 2px solid var(--color-input);
   border-radius: 0.75rem;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .form-input::placeholder {
-  color: #94a3b8;
+  color: var(--color-foreground-subtle);
 }
 .form-input:focus {
   outline: none;
-  border-color: #41d9d6;
-  box-shadow: 0 0 0 3px rgba(65, 217, 214, 0.18);
+  border-color: var(--color-ring);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-ring) 18%, transparent);
 }
 
 /* ── Hide scrollbar for date carousel ── */

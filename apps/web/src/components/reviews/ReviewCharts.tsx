@@ -16,6 +16,7 @@ import {
 } from "chart.js";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { TrendingUp, BarChart3 } from "lucide-react";
+import { useThemeMode } from "@/hooks/useThemeMode";
 import { darkChartOptions } from "@/lib/chartjs-dark-theme";
 import { colorToken, withAlpha } from "@/lib/theme-tokens";
 import type { GoogleReview } from "@/lib/google-reviews/types";
@@ -111,6 +112,7 @@ const VOLUME_TOKEN = "chart-3";
 
 export function ReviewCharts({ reviews }: ReviewChartsProps) {
   const [range, setRange] = useState<TimeRange>("all");
+  useThemeMode();
 
   const monthData = useMemo(
     () => groupByMonth(reviews, getDateCutoff(range)),

@@ -5,10 +5,10 @@ import { cn } from "@/lib/utils";
 const cardVariants = cva("rounded-2xl", {
   variants: {
     variant: {
-      default: "bg-surface border border-accent shadow-md",
-      elevated: "bg-surface-raised border border-accent shadow-lg",
+      default: "bg-surface border border-border shadow-md",
+      elevated: "bg-surface-raised border border-border shadow-lg",
       interactive:
-        "bg-surface border border-accent shadow-md cursor-pointer transition-all duration-150 ease-snappy hover:border-primary/50 hover:shadow-glow-primary",
+        "bg-surface border border-border shadow-md cursor-pointer transition-all duration-150 ease-snappy hover:border-primary/50 hover:shadow-glow-primary",
     },
   },
   defaultVariants: {
