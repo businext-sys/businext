@@ -34,11 +34,11 @@ const BOOKING_MODES: {
 ];
 
 /**
- * Agente de voz del negocio (issue #118): numeros asignados, activarlo o
- * desactivarlo y el modo de reserva. Solo para owners: el backend
- * (`/voice-agent/config`) rechaza al resto con 403.
+ * Configuracion del agente de voz (issue #118), en la pestaña «Agente de voz»:
+ * numeros asignados, activarlo o desactivarlo y el modo de reserva. Solo para
+ * owners: el backend (`/voice-agent/config`) rechaza al resto con 403.
  */
-export function VoiceAgentSection() {
+export function VoiceAgentSettings() {
   const { config, loading, error, updateVoiceAgentConfig } =
     useVoiceAgentConfig();
   const { showToast } = useGlobalToast();

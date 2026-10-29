@@ -12,3 +12,4 @@ export * from "./useAccessContext";
 export * from "./useAssistantChat";
 export * from "./useAssistantConversations";
 export * from "./useVoiceAgentConfig";
+export * from "./useVoiceAgentCalls";
