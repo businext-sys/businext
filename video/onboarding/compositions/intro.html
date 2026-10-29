@@ -1,0 +1,67 @@
+<template>
+  <style>
+    @font-face { font-family: "Big Shoulders"; font-weight: 900; src: url("assets/fonts/BigShoulders_900Black.ttf"); }
+    @font-face { font-family: "DM Sans"; font-weight: 400; src: url("assets/fonts/DMSans_400Regular.ttf"); }
+    @font-face { font-family: "DM Sans"; font-weight: 700; src: url("assets/fonts/DMSans_700Bold.ttf"); }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0F0E0C; }
+    #intro-plate-wrap { position: absolute; inset: 0; transform-origin: 80% 56%; }
+    #intro-plate { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; object-fit: cover; }
+    #intro-title {
+      position: absolute; left: 150px; top: 330px; width: 760px;
+      font-family: "Big Shoulders"; font-weight: 900; font-size: 132px; line-height: 0.95;
+      text-transform: uppercase; color: #F4F1EC;
+    }
+    #intro-title .w { display: inline-block; opacity: 0; margin-right: 0.18em; }
+    #intro-title .hour { color: #D08B5B; }
+    #intro-card-anchor { position: absolute; left: 1530px; top: 600px; width: 0; height: 0; }
+    #intro-card {
+      position: absolute; left: -280px; top: -260px; width: 560px;
+      background: #1C1A17; border-radius: 14px; padding: 26px 30px;
+      display: flex; gap: 22px; align-items: center; transform-origin: 50% 100%;
+      font-family: "DM Sans"; color: #F4F1EC;
+    }
+    #intro-card .ic {
+      width: 68px; height: 68px; border-radius: 999px; background: #41D9D6; color: #0F0E0C;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    #intro-card .ic svg { width: 34px; height: 34px; }
+    #intro-card .t { font-weight: 700; font-size: 34px; line-height: 1.2; }
+    #intro-card .d { font-size: 28px; color: #D6CEC5; line-height: 1.35; margin-top: 4px; }
+    #intro-flood { position: absolute; inset: 0; background: #0F0E0C; opacity: 0; }
+  </style>
+  <div id="root" data-composition-id="intro" data-width="1920" data-height="1080">
+    <div id="intro-plate-wrap">
+      <img id="intro-plate" src="assets/img/stop1-desktop.webp" alt="" />
+    </div>
+    <h1 id="intro-title" data-layout-allow-overflow>
+      <span class="w hour">9:00.</span><span class="w">Suena</span><span class="w">el</span><span class="w">teléfono.</span>
+    </h1>
+    <div id="intro-card-anchor">
+      <div id="intro-card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2a9 9 0 0 1 9 9"/><path d="M13 6a5 5 0 0 1 5 5"/><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></svg></div>
+        <div>
+          <div class="t">Llamada atendida</div>
+          <div class="d">Carlos reservó hoy a las 18:30</div>
+        </div>
+      </div>
+    </div>
+    <div id="intro-flood"></div>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    // Plate: slow push towards the phone on the desk.
+    tl.fromTo("#intro-plate-wrap", { scale: 1 }, { scale: 1.06, duration: 4.2, ease: "none" }, 0);
+    // Title word by word, blur in, no translate.
+    tl.fromTo("#intro-title .w", { opacity: 0, filter: "blur(6px)" },
+      { opacity: 1, filter: "blur(0px)", duration: 0.16, stagger: 0.12, ease: "power2.out" }, 0.2);
+    // The card rises out of the phone.
+    tl.fromTo("#intro-card", { opacity: 0, scale: 0.4, y: 60 },
+      { opacity: 1, scale: 1, y: 0, duration: 0.7, ease: "expo.out" }, 1.6);
+    // Title leaves, the camera pushes into the card.
+    tl.to("#intro-title .w", { opacity: 0, filter: "blur(8px)", duration: 0.2, stagger: 0.04, ease: "power3.in" }, 3.7);
+    tl.to("#intro-plate-wrap", { scale: 1.6, filter: "blur(14px)", duration: 1.0, ease: "power3.in" }, 4.2);
+    tl.to("#intro-card", { scale: 5, opacity: 0, duration: 1.0, ease: "power3.in" }, 4.3);
+    tl.to("#intro-flood", { opacity: 1, duration: 0.45, ease: "power2.in" }, 4.85);
+    window.__timelines["intro"] = tl;
+  </script>
+</template>

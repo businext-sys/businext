@@ -1,0 +1,28 @@
+<template>
+  <style>
+    @font-face { font-family: "Big Shoulders"; font-weight: 900; src: url("assets/fonts/BigShoulders_900Black.ttf"); }
+    #root { position: absolute; inset: 0; overflow: hidden; background: #0F0E0C; }
+    #outro-logo { position: absolute; left: 50%; top: 250px; width: 520px; margin-left: -260px; }
+    #outro-line {
+      position: absolute; left: 0; right: 0; top: 700px; text-align: center;
+      font-family: "Big Shoulders"; font-weight: 900; font-size: 110px; line-height: 1;
+      text-transform: uppercase; color: #F4F1EC;
+    }
+    #outro-line .w { display: inline-block; opacity: 0; margin: 0 0.12em; }
+    #outro-line .acc { color: #41D9D6; }
+  </style>
+  <div id="root" data-composition-id="outro" data-width="1920" data-height="1080">
+    <img id="outro-logo" src="assets/img/logo-bn.png" alt="Businext" />
+    <h2 id="outro-line">
+      <span class="w">Ya</span><span class="w">sabes</span><span class="w">moverte</span><span class="w">por</span><span class="w acc">Businext</span>
+    </h2>
+  </div>
+  <script>
+    const tl = gsap.timeline({ paused: true });
+    tl.fromTo("#outro-logo", { opacity: 0, scale: 1.5, filter: "blur(16px)" },
+      { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.55, ease: "expo.out" }, 0.25);
+    tl.fromTo("#outro-line .w", { opacity: 0, filter: "blur(6px)" },
+      { opacity: 1, filter: "blur(0px)", duration: 0.15, stagger: 0.09, ease: "power2.out" }, 0.9);
+    window.__timelines["outro"] = tl;
+  </script>
+</template>
