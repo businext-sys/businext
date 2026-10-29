@@ -10,6 +10,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { useThemeMode } from "@/hooks/useThemeMode";
 import { darkChartOptions, paletteColor } from "@/lib/chartjs-dark-theme";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
@@ -45,6 +46,7 @@ export const FinancesBarChart = ({
     return dataset;
   };
   const dataset = createDataSet(financesData);
+  useThemeMode();
   const baseOptions = darkChartOptions();
 
   return (
