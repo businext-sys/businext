@@ -26,9 +26,9 @@ Una migración de Alembic que crea estas tablas (y, de paso, la de
 `push_token`, que hoy no la tiene):
 
 ```text
-trend_snapshot          una fila por (niche, region, source, date)
-  id, niche, region, source, captured_at, payload JSONB, summary TEXT
-  UNIQUE (niche, region, source, captured_at::date)
+trend_snapshot          una fila por (niche, language, country, source, date)
+  id, niche, language, country, source, captured_at, payload JSONB, summary TEXT
+  UNIQUE (niche, language, country, source, captured_at::date)
 
 trend_insight           análisis por negocio y día
   id, business_id, date, trends_used JSONB, analysis TEXT,
