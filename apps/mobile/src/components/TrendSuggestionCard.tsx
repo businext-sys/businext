@@ -2,7 +2,8 @@ import { Linking, Pressable, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useContentSuggestions } from "@businext/shared-core/hooks";
 import { isSameDay } from "@/lib/date";
-import { formatPublishAt, isActiveSuggestion, networkLabels } from "@/lib/trends";
+import { isCurrentSuggestion } from "@businext/shared-core/services";
+import { formatPublishAt, networkLabels } from "@/lib/trends";
 import { themedStyles } from "@/theme/ThemeContext";
 import { fonts } from "@/theme/fonts";
 
@@ -12,7 +13,7 @@ export function TrendSuggestionCard({ notificationsDenied }: { notificationsDeni
   const { suggestions } = useContentSuggestions();
   const today = new Date();
   const suggestion = suggestions
-    .filter((s) => isActiveSuggestion(s) && isSameDay(s.publishAt, today))
+    .filter((s) => isCurrentSuggestion(s) && isSameDay(s.publishAt, today))
     .sort((a, b) => a.publishAt.localeCompare(b.publishAt))[0];
 
   if (!suggestion) return null;

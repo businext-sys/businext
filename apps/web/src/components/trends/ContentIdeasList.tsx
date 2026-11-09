@@ -1,5 +1,6 @@
 "use client";
 
+import { isCurrentSuggestion } from "@businext/shared-core/services";
 import { useContentSuggestions } from "@/hooks/useTrends";
 import { useGlobalToast } from "@/context/ToastContext";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -12,7 +13,7 @@ export function ContentIdeasList() {
   const { suggestions, loading, markOpened, dismiss } = useContentSuggestions();
 
   const ideas = suggestions
-    .filter((s) => s.status === "sent" || s.status === "opened")
+    .filter((s) => (s.status === "sent" || s.status === "opened") && isCurrentSuggestion(s))
     .sort((a, b) => a.publishAt.localeCompare(b.publishAt));
 
   const handleDismiss = async (id: number) => {

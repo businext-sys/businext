@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import type { ContentSuggestion, TrendInsight } from "@businext/shared-core/trends";
+import type { TrendInsight } from "@businext/shared-core/trends";
+import { isCurrentSuggestion } from "@businext/shared-core/services";
 import { useContentPreferences, useContentSuggestions, useTrendInsight } from "@/hooks/useTrends";
 import { useGlobalToast } from "@/context/ToastContext";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,8 +13,6 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { SectionSkeleton } from "@/components/ui/skeleton";
 import { NETWORK_LABELS, SuggestionCard } from "@/components/trends/SuggestionCard";
 import { CalendarClock, ExternalLink, Radar, RefreshCw, Sparkles } from "lucide-react";
-
-const UPCOMING_STATUSES: ContentSuggestion["status"][] = ["pending", "sent", "opened"];
 
 export const CONTENT_PREFERENCES_HREF = "/configuration?section=content";
 
@@ -68,7 +67,7 @@ export function TrendsTab() {
   }
 
   const upcoming = suggestions
-    .filter((s) => UPCOMING_STATUSES.includes(s.status))
+    .filter((s) => isCurrentSuggestion(s))
     .sort((a, b) => a.publishAt.localeCompare(b.publishAt));
 
   return (

@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useAccessContext } from "@/hooks/useAccessContext";
 import { useBookingRequests } from "@/hooks/useBookingRequests";
+import { countNewSuggestions } from "@businext/shared-core/services";
 import { useContentSuggestions } from "@/hooks/useTrends";
 import { logout } from "@/app/login/logout";
 import { cn } from "@/lib/utils";
@@ -99,7 +100,7 @@ export function Sidebar() {
       return r.employeeName.toLowerCase() === name.toLowerCase();
     }
   ).length;
-  const newIdeasCount = suggestions.filter((s) => s.status === "sent").length;
+  const newIdeasCount = countNewSuggestions(suggestions);
   const notificationsCount = pendingCount + newIdeasCount;
 
   const displayName =

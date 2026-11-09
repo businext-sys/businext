@@ -1,4 +1,4 @@
-import type { ContentFormat, ContentSuggestion, SocialNetwork } from "@businext/shared-core/trends";
+import type { ContentFormat, SocialNetwork } from "@businext/shared-core/trends";
 import { formatDayLabel, formatHour, isSameDay } from "@/lib/date";
 
 export const networkLabels: Record<SocialNetwork, string> = {
@@ -12,10 +12,6 @@ export const formatLabels: Record<ContentFormat, string> = {
   carrusel: "Carrusel",
   story: "Story",
 };
-
-export function isActiveSuggestion(suggestion: ContentSuggestion): boolean {
-  return suggestion.status !== "dismissed" && suggestion.status !== "published";
-}
 
 export function formatPublishAt(publishAt: string): string {
   const hour = formatHour(publishAt);
