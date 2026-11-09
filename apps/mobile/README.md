@@ -143,6 +143,10 @@ el chat en una conversacion nueva con un mensaje que la explica y su tarjeta
 con Aceptar/Rechazar; si la push trae `conversationId`, abre esa
 conversacion. Con el chat apagado, abre la agenda.
 
+La push de una idea de contenido (`{ type: "content_suggestion", id }`, canal
+Android `content`, "Ideas de contenido", separado del `default` de las reservas)
+abre su detalle (`/trends/<id>`) si el usuario tiene `canViewTrends`.
+
 Backend: `POST`/`DELETE /users/{id}/push-tokens` en `businext-backend`, mas el
 envio de notificacion al crear un `BookingRequest`.
 
@@ -182,6 +186,16 @@ que crearla a mano en Supabase.
   probar en un dispositivo.
 - **Agenda** (`src/screens/AgendaScreen.tsx`, en `/agenda`, issue #030) — reservas del dia agrupadas por
   hora, navegacion entre dias y pull-to-refresh.
+- **Tendencias** (`app/trends/`, issue #171, solo con `canViewTrends`; si no,
+  redirigen a `/`) — `index.tsx`: análisis del día con actualizar, servicios que
+  encajan, tendencias con enlace y próximas ideas. `[id].tsx`: hora, red, idea,
+  guion en 3 pasos, texto sugerido con **Copiar texto** (`expo-clipboard`, cambia
+  el binario), **Ya lo publiqué** y **No me interesa**; al abrirla, una idea
+  `pending` o `sent` pasa a `opened`. `settings.tsx`: preferencias del radar. Se
+  entra desde la cabecera de la Agenda, el menú del chat, la push y la tarjeta
+  de la Agenda (`src/components/TrendSuggestionCard.tsx`), que sale cuando hay
+  una idea para hoy y avisa si las notificaciones están denegadas. Grabar y
+  publicar el vídeo es #172.
 - **Detalle de reserva** (`app/reservation/[id].tsx`) — acciones reales del
   dominio: Completar / Revertir / Eliminar. El modelo no tiene un estado
   "cancelada" distinto (ver la nota en el propio archivo).
