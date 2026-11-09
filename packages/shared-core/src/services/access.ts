@@ -17,6 +17,7 @@ export type AccessCapabilitiesFull = {
   canManageFinances: boolean;
   canManageReservations: boolean;
   canManageReviews: boolean;
+  canViewTrends: boolean;
 };
 
 /** `true` si la capacidad indicada esta activa. */

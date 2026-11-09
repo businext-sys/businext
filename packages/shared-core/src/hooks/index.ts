@@ -13,3 +13,4 @@ export * from "./useAssistantChat";
 export * from "./useAssistantConversations";
 export * from "./useVoiceAgentConfig";
 export * from "./useVoiceAgentCalls";
+export * from "./useTrends";
