@@ -72,6 +72,10 @@ la crea e instala `eslint-config-expo`, lo que deja `eslint-plugin-react-hooks@7
 la raíz de `node_modules`. Con eso `pnpm lint:web` y `pnpm build:web` fallan en
 código que no ha cambiado. Si pasa, no commitees esos cambios: deja
 `pnpm-lock.yaml` y `package.json` como en `main` y ejecuta `pnpm install`.
+Aun así, `lint` ya sale en rojo en `main`: `react-hooks/set-state-in-effect` en
+`src/screens/ChatScreen.tsx` e `import/namespace` sobre
+`Notifications.AndroidImportance` (falso positivo: el type-check lo acepta).
+Compara con esos errores, no con cero.
 
 ## Distribucion via EAS
 
