@@ -50,6 +50,10 @@ export async function registerForPushNotificationsAsync(): Promise<PushRegistrat
       name: "default",
       importance: Notifications.AndroidImportance.DEFAULT,
     });
+    await Notifications.setNotificationChannelAsync("content", {
+      name: "Ideas de contenido",
+      importance: Notifications.AndroidImportance.DEFAULT,
+    });
   }
 
   const { status: existingStatus } = await Notifications.getPermissionsAsync();

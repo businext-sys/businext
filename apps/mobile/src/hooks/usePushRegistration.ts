@@ -20,7 +20,7 @@ export type PushRegistrationState =
  * aceptacion explicito de la issue).
  */
 export function usePushRegistration(): PushRegistrationState {
-  const { context } = useAccessContext();
+  const { context, capabilities } = useAccessContext();
   const router = useRouter();
   const registeredRef = useRef(false);
   const [state, setState] = useState<PushRegistrationState>({ status: "idle" });
@@ -78,9 +78,11 @@ export function usePushRegistration(): PushRegistrationState {
 
     const chatEnabled = isAssistantChatEnabledFor(context?.businessId);
     const data = lastResponse.notification.request.content.data as
-      | { type?: string; bookingRequestId?: number; conversationId?: string }
+      | { type?: string; id?: number; bookingRequestId?: number; conversationId?: string }
       | undefined;
-    if (chatEnabled && data?.conversationId) {
+    if (data?.type === "content_suggestion") {
+      if (capabilities.canViewTrends && data.id) router.navigate(`/trends/${data.id}`);
+    } else if (chatEnabled && data?.conversationId) {
       router.navigate({ pathname: "/", params: { conversation: data.conversationId } });
     } else if (data?.type === "booking_request") {
       router.navigate(
@@ -89,7 +91,7 @@ export function usePushRegistration(): PushRegistrationState {
           : "/"
       );
     }
-  }, [lastResponse, router, context]);
+  }, [lastResponse, router, context, capabilities.canViewTrends]);
 
   return state;
 }
