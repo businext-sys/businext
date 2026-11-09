@@ -3,7 +3,8 @@ import { ActivityIndicator, Linking, Pressable, ScrollView, Text, View } from "r
 import { Stack, useRouter } from "expo-router";
 import { useContentSuggestions, useTrendInsight } from "@businext/shared-core/hooks";
 import { TrendsGate } from "@/components/TrendsGate";
-import { formatLabels, formatPublishAt, isActiveSuggestion, networkLabels } from "@/lib/trends";
+import { isCurrentSuggestion } from "@businext/shared-core/services";
+import { formatLabels, formatPublishAt, networkLabels } from "@/lib/trends";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
 import { fonts } from "@/theme/fonts";
 
@@ -25,7 +26,7 @@ function TrendsScreen() {
   const [refreshError, setRefreshError] = useState<string | null>(null);
 
   const upcoming = suggestions
-    .filter(isActiveSuggestion)
+    .filter((s) => isCurrentSuggestion(s))
     .sort((a, b) => a.publishAt.localeCompare(b.publishAt));
 
   const refreshInsight = async () => {
