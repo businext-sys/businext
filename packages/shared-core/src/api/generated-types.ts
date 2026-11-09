@@ -799,6 +799,170 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/trends/preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Content Preferences
+         * @description Preferencias de contenido del negocio (sin fila: los valores por defecto, desactivado).
+         */
+        get: operations["get_content_preferences_trends_preferences_get"];
+        /**
+         * Update Content Preferences
+         * @description Guarda las preferencias de contenido completas del negocio.
+         */
+        put: operations["update_content_preferences_trends_preferences_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/trends/insight": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Insight
+         * @description Ultimo analisis de tendencias del negocio, con las tendencias que usa.
+         */
+        get: operations["get_insight_trends_insight_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/trends/insight/refresh": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Refresh Insight
+         * @description Regenera el analisis de hoy y sus sugerencias pendientes. Una vez al dia.
+         */
+        post: operations["refresh_insight_trends_insight_refresh_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/trends/suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Suggestions
+         * @description Sugerencias de contenido del negocio, por hora de publicacion.
+         */
+        get: operations["list_suggestions_trends_suggestions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/trends/suggestions/{suggestion_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Update Suggestion
+         * @description Marca una sugerencia como abierta, descartada o publicada.
+         */
+        patch: operations["update_suggestion_trends_suggestions__suggestion_id__patch"];
+        trace?: never;
+    };
+    "/internal/trends/ingest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Ingest
+         * @description Guarda las tendencias del dia; relanzarlo el mismo dia no repite consultas ni filas.
+         */
+        post: operations["ingest_internal_trends_ingest_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/internal/trends/analyze": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Analyze
+         * @description Analiza los negocios activados con tendencias de hoy; relanzarlo no repite analisis.
+         */
+        post: operations["analyze_internal_trends_analyze_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/internal/trends/dispatch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Dispatch
+         * @description Envia los avisos de las sugerencias que tocan; relanzarlo no reenvia ninguno.
+         */
+        post: operations["dispatch_internal_trends_dispatch_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/voice-agent/config": {
         parameters: {
             query?: never;
@@ -823,6 +987,66 @@ export interface paths {
         patch: operations["update_voice_agent_config_voice_agent_config_patch"];
         trace?: never;
     };
+    "/voice-agent/calls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Voice Calls
+         * @description Llamadas del negocio, de la mas reciente a la mas antigua (sin transcripcion).
+         */
+        get: operations["list_voice_calls_voice_agent_calls_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/voice-agent/calls/{call_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Voice Call
+         * @description Una llamada con su transcripcion y grabacion; 404 si no es del negocio.
+         */
+        get: operations["get_voice_call_voice_agent_calls__call_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/voice-agent/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Voice Call Stats
+         * @description KPIs de las llamadas de los ultimos `days` dias (hoy incluido, hora de Madrid).
+         */
+        get: operations["get_voice_call_stats_voice_agent_stats_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/retell/inbound": {
         parameters: {
             query?: never;
@@ -837,6 +1061,28 @@ export interface paths {
          * @description Resuelve el numero marcado a su negocio; rechaza si no hay negocio o el agente esta desactivado.
          */
         post: operations["inbound_call_retell_inbound_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/retell/webhook": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Call Event
+         * @description Guarda el estado de la llamada en `voicecall`. El negocio sale del numero
+         *     marcado; sin numero (llamada web de prueba), del `business_id` que fijo el
+         *     webhook de entrada.
+         */
+        post: operations["call_event_retell_webhook_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -973,6 +1219,51 @@ export interface components {
             /** Commission Service */
             commission_service?: number | null;
         };
+        /** CallAnalysis */
+        CallAnalysis: {
+            /** Call Summary */
+            call_summary?: string | null;
+            /** User Sentiment */
+            user_sentiment?: string | null;
+            /** Call Successful */
+            call_successful?: boolean | null;
+        };
+        /** CallEvent */
+        CallEvent: {
+            /** Event */
+            event: string;
+            call: components["schemas"]["CallEventCall"];
+        };
+        /** CallEventCall */
+        CallEventCall: {
+            /** Call Id */
+            call_id: string;
+            /** From Number */
+            from_number?: string | null;
+            /** To Number */
+            to_number?: string | null;
+            /** Start Timestamp */
+            start_timestamp?: number | null;
+            /** End Timestamp */
+            end_timestamp?: number | null;
+            /** Duration Ms */
+            duration_ms?: number | null;
+            /** Disconnection Reason */
+            disconnection_reason?: string | null;
+            /** Transcript */
+            transcript?: string | null;
+            /** Recording Url */
+            recording_url?: string | null;
+            /** Metadata */
+            metadata?: {
+                [key: string]: unknown;
+            };
+            /** Retell Llm Dynamic Variables */
+            retell_llm_dynamic_variables?: {
+                [key: string]: unknown;
+            };
+            call_analysis?: components["schemas"]["CallAnalysis"] | null;
+        };
         /** CallInbound */
         CallInbound: {
             /** Call Id */
@@ -1003,6 +1294,78 @@ export interface components {
              * @enum {string}
              */
             decision: "confirm" | "cancel";
+        };
+        /** ContentPreferencesPublic */
+        ContentPreferencesPublic: {
+            /** Enabled */
+            enabled: boolean;
+            /** Networks */
+            networks: ("instagram" | "tiktok")[];
+            /** Max Per Day */
+            max_per_day: number;
+            /**
+             * Quiet From
+             * Format: time
+             */
+            quiet_from: string;
+            /**
+             * Quiet To
+             * Format: time
+             */
+            quiet_to: string;
+            /** Timezone */
+            timezone: string;
+            /** Niche */
+            niche: string;
+            /** Language */
+            language: string;
+            /** Country */
+            country: string;
+        };
+        /** ContentSuggestionPublic */
+        ContentSuggestionPublic: {
+            /** Id */
+            id: number;
+            /**
+             * Network
+             * @enum {string}
+             */
+            network: "instagram" | "tiktok";
+            /**
+             * Format
+             * @enum {string}
+             */
+            format: "reel" | "short" | "carrusel" | "story";
+            /** Idea */
+            idea: string;
+            /** Script */
+            script: string[];
+            /** Caption Hint */
+            caption_hint: string;
+            /** Audio Hint */
+            audio_hint: string | null;
+            /**
+             * Publish At
+             * Format: date-time
+             */
+            publish_at: string;
+            /** Source Trend Ids */
+            source_trend_ids: string[];
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "pending" | "sent" | "opened" | "dismissed" | "published";
+            /** Sent At */
+            sent_at: string | null;
+        };
+        /** ContentSuggestionStatusUpdate */
+        ContentSuggestionStatusUpdate: {
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "opened" | "dismissed" | "published";
         };
         /** EmployeePublic */
         EmployeePublic: {
@@ -1465,6 +1828,41 @@ export interface components {
             /** Last Sync At */
             last_sync_at: string;
         };
+        /** TrendInsightPublic */
+        TrendInsightPublic: {
+            /** Id */
+            id: number;
+            /**
+             * Day
+             * Format: date
+             */
+            day: string;
+            /** Analysis */
+            analysis: string;
+            /** Matched Services */
+            matched_services: string[];
+            /** Trends */
+            trends: components["schemas"]["TrendUsed"][];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /** Refreshed At */
+            refreshed_at: string | null;
+        };
+        /** TrendUsed */
+        TrendUsed: {
+            /** Title */
+            title: string;
+            /**
+             * Network
+             * @enum {string}
+             */
+            network: "instagram" | "tiktok";
+            /** Url */
+            url: string;
+        };
         /** UpdateEmployeeInput */
         UpdateEmployeeInput: {
             /** Role */
@@ -1501,6 +1899,117 @@ export interface components {
             enabled?: boolean | null;
             /** Booking Mode */
             booking_mode?: ("request" | "confirm") | null;
+        };
+        /** VoiceCallDay */
+        VoiceCallDay: {
+            /** Date */
+            date: string;
+            /** Calls */
+            calls: number;
+            /** Bookings */
+            bookings: number;
+        };
+        /** VoiceCallDetail */
+        VoiceCallDetail: {
+            /** Id */
+            id: number;
+            /** From Number */
+            from_number: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "rejected" | "in_progress" | "ended";
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /** Ended At */
+            ended_at: string | null;
+            /** Duration Seconds */
+            duration_seconds: number | null;
+            /** Disconnection Reason */
+            disconnection_reason: string | null;
+            /** Summary */
+            summary: string | null;
+            /** Sentiment */
+            sentiment: string | null;
+            /** Successful */
+            successful: boolean | null;
+            /** Booking Mode */
+            booking_mode: ("request" | "confirm") | null;
+            /** Booking Id */
+            booking_id: number | null;
+            /** Transcript */
+            transcript: string | null;
+            /** Recording Url */
+            recording_url: string | null;
+        };
+        /** VoiceCallPage */
+        VoiceCallPage: {
+            /** Items */
+            items: components["schemas"]["VoiceCallPublic"][];
+            /** Total */
+            total: number;
+        };
+        /** VoiceCallPublic */
+        VoiceCallPublic: {
+            /** Id */
+            id: number;
+            /** From Number */
+            from_number: string | null;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "rejected" | "in_progress" | "ended";
+            /**
+             * Started At
+             * Format: date-time
+             */
+            started_at: string;
+            /** Ended At */
+            ended_at: string | null;
+            /** Duration Seconds */
+            duration_seconds: number | null;
+            /** Disconnection Reason */
+            disconnection_reason: string | null;
+            /** Summary */
+            summary: string | null;
+            /** Sentiment */
+            sentiment: string | null;
+            /** Successful */
+            successful: boolean | null;
+            /** Booking Mode */
+            booking_mode: ("request" | "confirm") | null;
+            /** Booking Id */
+            booking_id: number | null;
+        };
+        /** VoiceCallStats */
+        VoiceCallStats: {
+            /** Days */
+            days: number;
+            /** Total Calls */
+            total_calls: number;
+            /** Answered Calls */
+            answered_calls: number;
+            /** Rejected Calls */
+            rejected_calls: number;
+            /** Bookings */
+            bookings: number;
+            /** Booking Rate */
+            booking_rate: number;
+            /** Total Minutes */
+            total_minutes: number;
+            /** Avg Duration Seconds */
+            avg_duration_seconds: number;
+            /** Positive Calls */
+            positive_calls: number;
+            /** Negative Calls */
+            negative_calls: number;
+            /** Daily */
+            daily: components["schemas"]["VoiceCallDay"][];
         };
         /** WeeklySummaryPublic */
         WeeklySummaryPublic: {
@@ -3733,6 +4242,297 @@ export interface operations {
             };
         };
     };
+    get_content_preferences_trends_preferences_get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentPreferencesPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_content_preferences_trends_preferences_put: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContentPreferencesPublic"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentPreferencesPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_insight_trends_insight_get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrendInsightPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    refresh_insight_trends_insight_refresh_post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TrendInsightPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_suggestions_trends_suggestions_get: {
+        parameters: {
+            query?: {
+                status?: ("pending" | "sent" | "opened" | "dismissed" | "published") | null;
+            };
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentSuggestionPublic"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_suggestion_trends_suggestions__suggestion_id__patch: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                suggestion_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ContentSuggestionStatusUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ContentSuggestionPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    ingest_internal_trends_ingest_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    analyze_internal_trends_analyze_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    dispatch_internal_trends_dispatch_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_voice_agent_config_voice_agent_config_get: {
         parameters: {
             query?: never;
@@ -3799,6 +4599,108 @@ export interface operations {
             };
         };
     };
+    list_voice_calls_voice_agent_calls_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+                status?: string | null;
+                booked?: boolean | null;
+            };
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VoiceCallPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_voice_call_voice_agent_calls__call_id__get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                call_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VoiceCallDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_voice_call_stats_voice_agent_stats_get: {
+        parameters: {
+            query?: {
+                days?: number;
+            };
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VoiceCallStats"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     inbound_call_retell_inbound_post: {
         parameters: {
             query?: never;
@@ -3820,6 +4722,37 @@ export interface operations {
                 content: {
                     "application/json": unknown;
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    call_event_retell_webhook_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CallEvent"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

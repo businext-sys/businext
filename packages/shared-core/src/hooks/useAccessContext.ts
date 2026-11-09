@@ -13,6 +13,7 @@ const DEFAULT_CAPABILITIES: Capabilities = {
   canManageFinances: false,
   canManageReservations: false,
   canManageReviews: false,
+  canViewTrends: false,
 };
 
 export const ACCESS_CONTEXT_SWR_KEY = ACCESS_CONTEXT_PATH;

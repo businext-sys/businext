@@ -10,6 +10,7 @@ const none: AccessCapabilitiesFull = {
   canManageFinances: false,
   canManageReservations: false,
   canManageReviews: false,
+  canViewTrends: false,
 };
 
 const all: AccessCapabilitiesFull = {
@@ -20,6 +21,7 @@ const all: AccessCapabilitiesFull = {
   canManageFinances: true,
   canManageReservations: true,
   canManageReviews: true,
+  canViewTrends: true,
 };
 
 // Capacidades reales del rol employee en el backend (_build_capabilities).

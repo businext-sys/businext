@@ -15,6 +15,7 @@ const capabilities: AccessCapabilitiesFull = {
   canManageFinances: true,
   canManageReservations: false,
   canManageReviews: false,
+  canViewTrends: false,
 };
 
 describe("hasCapability", () => {

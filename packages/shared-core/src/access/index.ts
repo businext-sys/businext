@@ -17,6 +17,7 @@ export type AccessCapabilities = {
   canManageFinances: boolean;
   canManageReservations: boolean;
   canManageReviews: boolean;
+  canViewTrends: boolean;
 };
 
 export type BackendAccessContext = {
