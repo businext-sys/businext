@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -30,16 +30,9 @@ export default function TrendPreferencesRoute() {
 function TrendPreferencesScreen() {
   const styles = useStyles();
   const { colors } = useTheme();
-  const { preferences, loading, error, savePreferences } = useContentPreferences();
-  const [form, setForm] = useState<ContentPreferences | null>(null);
-  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
-  const [saving, setSaving] = useState(false);
+  const { preferences, loading, savePreferences } = useContentPreferences();
 
-  useEffect(() => {
-    if (preferences && !form) setForm(preferences);
-  }, [preferences, form]);
-
-  if (loading || (!form && !error)) {
+  if (loading) {
     return (
       <View style={styles.center}>
         <ActivityIndicator color={colors.primary} />
@@ -47,13 +40,29 @@ function TrendPreferencesScreen() {
     );
   }
 
-  if (!form) {
+  if (!preferences) {
     return (
       <View style={styles.center}>
         <Text style={styles.muted}>No se pudieron cargar las preferencias.</Text>
       </View>
     );
   }
+
+  return <PreferencesForm initial={preferences} savePreferences={savePreferences} />;
+}
+
+function PreferencesForm({
+  initial,
+  savePreferences,
+}: {
+  initial: ContentPreferences;
+  savePreferences: (next: ContentPreferences) => Promise<ContentPreferences | null>;
+}) {
+  const styles = useStyles();
+  const { colors } = useTheme();
+  const [form, setForm] = useState(initial);
+  const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
+  const [saving, setSaving] = useState(false);
 
   const update = (patch: Partial<ContentPreferences>) => {
     setForm({ ...form, ...patch });
