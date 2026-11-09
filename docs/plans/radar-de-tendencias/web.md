@@ -81,6 +81,14 @@ confirmación con un diálogo de `components/ui/`. Una red `expired` muestra
 - Las capabilities se leen de `useAccessContext()`; nunca se llama a
   `/api/auth/me` directamente.
 - `employee` no ve la pestaña ni la sección de configuración.
+- El manager tiene `canViewTrends` pero no `canManageTeam`: entra en Inteligencia
+  (el enlace del `Sidebar` usa `canViewTrends`) y solo ve la pestaña Tendencias;
+  el resumen semanal sigue pidiendo `canManageTeam`.
+- `/configuration?section=content` abre directamente "Contenido y redes"; es el
+  destino de la CTA del radar apagado.
+- Sin fila de preferencias el backend devuelve sus valores por defecto (radar
+  apagado, `es`/`ES`, `Europe/Madrid`); las ubicaciones no guardan país ni
+  idioma, así que el formulario parte de esos valores.
 
 ## Landing
 

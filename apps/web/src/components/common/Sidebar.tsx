@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import { useAccessContext } from "@/hooks/useAccessContext";
 import { useBookingRequests } from "@/hooks/useBookingRequests";
+import { useContentSuggestions } from "@/hooks/useTrends";
 import { logout } from "@/app/login/logout";
 import { cn } from "@/lib/utils";
 import { BrandMark } from "@/components/common/BrandMark";
@@ -55,7 +56,7 @@ const NAV_LINKS = [
     href: "/intelligence",
     label: "Inteligencia",
     icon: Brain,
-    cap: "canManageTeam" as const,
+    cap: "canViewTrends" as const,
   },
   {
     href: "/voice-agent",
@@ -82,6 +83,7 @@ export function Sidebar() {
   const pathname = usePathname();
   const { context, capabilities } = useAccessContext();
   const { bookingRequests } = useBookingRequests();
+  const { suggestions } = useContentSuggestions(undefined, capabilities.canViewTrends);
   const { showToast } = useGlobalToast();
   const [open, setOpen] = useState(false);
   const [showContact, setShowContact] = useState(false);
@@ -97,6 +99,8 @@ export function Sidebar() {
       return r.employeeName.toLowerCase() === name.toLowerCase();
     }
   ).length;
+  const newIdeasCount = suggestions.filter((s) => s.status === "sent").length;
+  const notificationsCount = pendingCount + newIdeasCount;
 
   const displayName =
     context?.profile?.displayName ||
@@ -151,7 +155,7 @@ export function Sidebar() {
           if (!capabilities[cap]) return null;
           if ("ownerOnly" in link && context?.role !== "owner") return null;
           const active = pathname.startsWith(href);
-          const badge = href === "/notifications" && pendingCount > 0 ? pendingCount : 0;
+          const badge = href === "/notifications" ? notificationsCount : 0;
           return (
             <Link
               key={href}

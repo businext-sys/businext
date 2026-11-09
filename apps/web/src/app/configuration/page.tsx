@@ -14,6 +14,7 @@ import {
   MapPin,
   CalendarClock,
   Palette,
+  Megaphone,
 } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { SectionSkeleton } from "@/components/common/SkeletonLoader";
@@ -28,6 +29,7 @@ import { ProductsSection } from "@/components/configuration/ProductsSection";
 import { WorkingHoursEditor } from "@/components/configuration/WorkingHoursEditor";
 import { LocationsSection } from "@/components/configuration/LocationsSection";
 import { AppearanceSection } from "@/components/configuration/AppearanceSection";
+import { ContentPreferencesSection } from "@/components/trends/ContentPreferencesSection";
 import { Modal, ModalHeader, ModalContent } from "@/components/ui/modal";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { useGlobalToast } from "@/context/ToastContext";
@@ -49,14 +51,14 @@ const INITIAL_EMPLOYEE_FORM: InviteEmployeeInput = {
   role: "employee",
 };
 
-type SectionId = "profile" | "business" | "products" | "hours" | "team" | "locations" | "booking" | "appearance";
+type SectionId = "profile" | "business" | "products" | "hours" | "team" | "locations" | "booking" | "content" | "appearance";
 
 type NavItem = {
   id: SectionId;
   label: string;
   icon: typeof Settings;
   ownerOnly?: boolean;
-  cap?: "canManageProducts" | "canManageTeam";
+  cap?: "canManageProducts" | "canManageTeam" | "canViewTrends";
 };
 
 const NAV_ITEMS: NavItem[] = [
@@ -67,6 +69,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "hours", label: "Horario", icon: Clock, ownerOnly: true },
   { id: "team", label: "Equipo", icon: ShieldUser, cap: "canManageTeam" },
   { id: "booking", label: "Reserva online", icon: Link2, ownerOnly: true },
+  { id: "content", label: "Contenido y redes", icon: Megaphone, cap: "canViewTrends" },
   { id: "appearance", label: "Apariencia", icon: Palette },
 ];
 
@@ -103,6 +106,13 @@ export default function ConfigurationPage() {
   });
 
   const [activeSection, setActiveSection] = useState<SectionId>("profile");
+
+  useEffect(() => {
+    const section = new URLSearchParams(window.location.search).get("section");
+    if (section && NAV_ITEMS.some((item) => item.id === section)) {
+      setActiveSection(section as SectionId);
+    }
+  }, []);
 
   // ── Employee state ──
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -675,6 +685,10 @@ export default function ConfigurationPage() {
               {/* ═══ Booking Online ═══ */}
               {activeSection === "booking" && (
                 <BookingLinkSection businessId={context?.businessId ?? ""} />
+              )}
+
+              {activeSection === "content" && capabilities.canViewTrends && (
+                <ContentPreferencesSection />
               )}
 
               {/* ═══ Appearance ═══ */}
