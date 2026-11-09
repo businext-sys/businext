@@ -49,6 +49,24 @@ Este paquete esta en construccion (Fase 3 del plan maestro, issues #12-#20 en
 phoneNumbers }`; los numeros los asigna Businext y no se cambian desde aqui.
 En web pasa por el BFF `apps/web/src/app/api/voice-agent/config/route.ts`.
 
+## Radar de tendencias (Fase 13, issue #169)
+
+`@businext/shared-core/trends` tiene los tipos (`TrendInsight`,
+`ContentSuggestion`, `ContentPreferences`); `trendsApi` y los hooks
+`useTrendInsight()`, `useContentSuggestions(status?)` y `useContentPreferences()`
+consumen `/trends/insight`, `/trends/insight/refresh`, `/trends/suggestions` y
+`/trends/preferences` del backend (owner y manager, capability `canViewTrends`).
+
+- `getInsight()` devuelve `null` si el negocio aún no tiene análisis (404).
+- `refreshInsight()` y el `refresh()` del hook devuelven el `detail` del backend
+  como mensaje (429 si ya se actualizó hoy, 409 si el radar está apagado).
+- `updateSuggestion` sigue `resourcePath`: en web el BFF recibe `?id=`.
+- `ContentPreferencesFormSchema` valida el formulario (1-3 avisos al día, al
+  menos una red, horas `HH:mm` distintas); las horas llegan del backend como
+  `HH:mm:ss` y el mapper las deja en `HH:mm`.
+
+Las cuentas sociales y las publicaciones van en #172.
+
 ## Tema (issue #124)
 
 `@businext/shared-core/theme` exporta los tokens de [`DESIGN.md`](../../DESIGN.md):
