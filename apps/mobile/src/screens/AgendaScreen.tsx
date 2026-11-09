@@ -6,9 +6,11 @@ import {
   Text,
   View,
 } from "react-native";
-import { useReservation } from "@businext/shared-core/hooks";
+import { useRouter } from "expo-router";
+import { useAccessContext, useReservation } from "@businext/shared-core/hooks";
 import type { Reservation } from "@businext/shared-core";
 import { ReservationListItem } from "@/components/ReservationListItem";
+import { TrendSuggestionCard } from "@/components/TrendSuggestionCard";
 import { useAuth } from "@/context/AuthContext";
 import { usePushRegistration } from "@/hooks/usePushRegistration";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
@@ -35,6 +37,8 @@ export default function AgendaScreen() {
   const [selectedDay, setSelectedDay] = useState(new Date());
   const { reservationData, loading, getAllReservations } = useReservation();
   const pushState = usePushRegistration();
+  const router = useRouter();
+  const { capabilities } = useAccessContext();
 
   const sections = useMemo<Section[]>(() => {
     const dayReservations = reservationData
@@ -58,9 +62,16 @@ export default function AgendaScreen() {
     <View style={styles.flex}>
       <View style={styles.titleBar}>
         <Text style={styles.title}>Agenda</Text>
-        <Pressable onPress={logout}>
-          <Text style={styles.logoutText}>Salir</Text>
-        </Pressable>
+        <View style={styles.titleActions}>
+          {capabilities.canViewTrends && (
+            <Pressable onPress={() => router.push("/trends")} accessibilityRole="button" hitSlop={8}>
+              <Text style={styles.trendsText}>Tendencias</Text>
+            </Pressable>
+          )}
+          <Pressable onPress={logout}>
+            <Text style={styles.logoutText}>Salir</Text>
+          </Pressable>
+        </View>
       </View>
 
       <View style={styles.header}>
@@ -90,6 +101,10 @@ export default function AgendaScreen() {
         <View style={styles.pushBanner}>
           <Text style={styles.pushBannerText}>{pushState.message}</Text>
         </View>
+      )}
+
+      {capabilities.canViewTrends && isToday(selectedDay) && (
+        <TrendSuggestionCard notificationsDenied={pushState.status === "denied"} />
       )}
 
       <SectionList
@@ -139,6 +154,16 @@ const useStyles = themedStyles((colors) => ({
     fontSize: 28,
     textTransform: "uppercase",
     color: colors.foreground,
+  },
+  titleActions: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 16,
+  },
+  trendsText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.primary,
   },
   logoutText: {
     fontSize: 14,

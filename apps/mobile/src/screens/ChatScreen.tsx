@@ -75,7 +75,7 @@ export default function ChatScreen() {
       .finally(() => setLoadingConversation(false));
   }, [bookingRequest, reset, router]);
 
-  const { context } = useAccessContext();
+  const { context, capabilities } = useAccessContext();
   const quickActions = quickActionsFor(context);
   const streaming = chat.status === "streaming";
   const lastAssistantId = [...chat.messages].reverse().find((m) => m.role === "assistant")?.id;
@@ -94,6 +94,9 @@ export default function ChatScreen() {
           { label: "Nueva conversación", onPress: () => chat.reset() },
           { label: "Historial", onPress: () => router.push("/conversations") },
           { label: "Agenda", onPress: () => router.push("/agenda") },
+          ...(capabilities.canViewTrends
+            ? [{ label: "Tendencias", onPress: () => router.push("/trends") }]
+            : []),
           { label: "Ajustes", onPress: () => router.push("/settings") },
           { label: "Cerrar sesión", onPress: logout, destructive: true },
         ]}
