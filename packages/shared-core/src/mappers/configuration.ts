@@ -1,5 +1,8 @@
-import type { Configuration } from "../configuration";
-import { ConfigurationSchema } from "../schemas/configuration";
+import type { Configuration, RemindersSetting } from "../configuration";
+import {
+  ConfigurationSchema,
+  RemindersSettingSchema,
+} from "../schemas/configuration";
 
 export const mapConfigurationFromApi = (
   data: Record<string, unknown>
@@ -28,4 +31,13 @@ export const mapConfigurationToApi = (configuration: Configuration) => ({
   business_email: configuration.businessEmail ?? null,
   commission_product: configuration.commissionProduct ?? null,
   commission_service: configuration.commissionService ?? null,
+});
+
+export const mapRemindersSettingFromApi = (
+  data: Record<string, unknown>
+): RemindersSetting =>
+  RemindersSettingSchema.parse({ remindersEnabled: data.reminders_enabled });
+
+export const mapRemindersSettingToApi = (setting: RemindersSetting) => ({
+  reminders_enabled: setting.remindersEnabled,
 });

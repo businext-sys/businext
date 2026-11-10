@@ -1,12 +1,15 @@
 import type { ApiClient } from "./client";
 import { apiClient, resourcePath } from "./client";
-import type { Configuration } from "../configuration";
+import type { Configuration, RemindersSetting } from "../configuration";
 import {
   mapConfigurationFromApi,
   mapConfigurationToApi,
+  mapRemindersSettingFromApi,
+  mapRemindersSettingToApi,
 } from "../mappers/configuration";
 
 const PATH = "/configuration";
+const REMINDERS_PATH = "/configuration/reminders";
 
 export const configurationApi = {
   list: (client: ApiClient = apiClient): Promise<Configuration[]> =>
@@ -39,6 +42,22 @@ export const configurationApi = {
 
   remove: (id: number, client: ApiClient = apiClient): Promise<void> =>
     client.delete(resourcePath(client, PATH, id)),
+
+  getReminders: (client: ApiClient = apiClient): Promise<RemindersSetting> =>
+    client
+      .get<Record<string, unknown>>(REMINDERS_PATH)
+      .then(mapRemindersSettingFromApi),
+
+  updateReminders: async (
+    setting: RemindersSetting,
+    client: ApiClient = apiClient
+  ): Promise<RemindersSetting> => {
+    const data = await client.put<Record<string, unknown>>(
+      REMINDERS_PATH,
+      mapRemindersSettingToApi(setting)
+    );
+    return mapRemindersSettingFromApi(data);
+  },
 };
 
 export { mapConfigurationToApi };

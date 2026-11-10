@@ -15,6 +15,7 @@ import {
   CalendarClock,
   Palette,
   Megaphone,
+  BellRing,
 } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { SectionSkeleton } from "@/components/common/SkeletonLoader";
@@ -29,6 +30,7 @@ import { ProductsSection } from "@/components/configuration/ProductsSection";
 import { WorkingHoursEditor } from "@/components/configuration/WorkingHoursEditor";
 import { LocationsSection } from "@/components/configuration/LocationsSection";
 import { AppearanceSection } from "@/components/configuration/AppearanceSection";
+import { RemindersSection } from "@/components/configuration/RemindersSection";
 import { ContentPreferencesSection } from "@/components/trends/ContentPreferencesSection";
 import { Modal, ModalHeader, ModalContent } from "@/components/ui/modal";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
@@ -51,13 +53,14 @@ const INITIAL_EMPLOYEE_FORM: InviteEmployeeInput = {
   role: "employee",
 };
 
-type SectionId = "profile" | "business" | "products" | "hours" | "team" | "locations" | "booking" | "content" | "appearance";
+type SectionId = "profile" | "business" | "products" | "hours" | "team" | "locations" | "booking" | "reminders" | "content" | "appearance";
 
 type NavItem = {
   id: SectionId;
   label: string;
   icon: typeof Settings;
   ownerOnly?: boolean;
+  ownerOrManager?: boolean;
   cap?: "canManageProducts" | "canManageTeam" | "canViewTrends";
 };
 
@@ -69,6 +72,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "hours", label: "Horario", icon: Clock, ownerOnly: true },
   { id: "team", label: "Equipo", icon: ShieldUser, cap: "canManageTeam" },
   { id: "booking", label: "Reserva online", icon: Link2, ownerOnly: true },
+  { id: "reminders", label: "Recordatorios", icon: BellRing, ownerOrManager: true },
   { id: "content", label: "Contenido y redes", icon: Megaphone, cap: "canViewTrends" },
   { id: "appearance", label: "Apariencia", icon: Palette },
 ];
@@ -88,6 +92,7 @@ type ConfirmState = {
 export default function ConfigurationPage() {
   const { capabilities, context, loading: contextLoading } = useAccessContext();
   const isOwner = context?.role === "owner";
+  const isOwnerOrManager = isOwner || context?.role === "manager";
   const canManageConfig = isOwner;
   const canManageTeam = capabilities.canManageTeam;
 
@@ -140,10 +145,11 @@ export default function ConfigurationPage() {
   const visibleNav = useMemo(() => {
     return NAV_ITEMS.filter((item) => {
       if (item.ownerOnly && !isOwner) return false;
+      if (item.ownerOrManager && !isOwnerOrManager) return false;
       if (item.cap && !capabilities[item.cap]) return false;
       return true;
     });
-  }, [isOwner, capabilities]);
+  }, [isOwner, isOwnerOrManager, capabilities]);
 
   // ── Configuration form ──
   const onSubmit: SubmitHandler<Configuration> = async (data) => {
@@ -686,6 +692,8 @@ export default function ConfigurationPage() {
               {activeSection === "booking" && (
                 <BookingLinkSection businessId={context?.businessId ?? ""} />
               )}
+
+              {activeSection === "reminders" && isOwnerOrManager && <RemindersSection />}
 
               {activeSection === "content" && capabilities.canViewTrends && (
                 <ContentPreferencesSection />

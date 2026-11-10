@@ -23,3 +23,13 @@ export type ConfigurationParsed = z.infer<typeof ConfigurationSchema>;
 /** Alias explicito pedido por la issue #14 ("schemas para... Business"). */
 export const BusinessSchema = ConfigurationSchema;
 export type BusinessParsed = ConfigurationParsed;
+
+/**
+ * Ajuste de recordatorios del negocio (`GET`/`PUT /configuration/reminders`).
+ * Owner y manager; employee recibe 403.
+ */
+export const RemindersSettingSchema = z.object({
+  remindersEnabled: z.boolean(),
+});
+
+export type RemindersSettingParsed = z.infer<typeof RemindersSettingSchema>;

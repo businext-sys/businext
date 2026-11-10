@@ -49,6 +49,13 @@ Este paquete esta en construccion (Fase 3 del plan maestro, issues #12-#20 en
 phoneNumbers }`; los numeros los asigna Businext y no se cambian desde aqui.
 En web pasa por el BFF `apps/web/src/app/api/voice-agent/config/route.ts`.
 
+## Recordatorios de cita (Fase 14, issue #184)
+
+`configurationApi.getReminders()` / `updateReminders()` y `useRemindersSetting()`
+consumen `GET`/`PUT /configuration/reminders` del backend (owner y manager; 403 a
+employee). `RemindersSetting` es `{ remindersEnabled }`. En web pasa por el BFF
+`apps/web/src/app/api/configuration/reminders/route.ts`.
+
 ## Radar de tendencias (Fase 13, issue #169)
 
 `@businext/shared-core/trends` tiene los tipos (`TrendInsight`,
