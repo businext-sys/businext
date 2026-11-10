@@ -21,6 +21,8 @@ import {
   Trash2,
   CalendarClock,
   Undo2,
+  Phone,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -281,6 +283,30 @@ function ReservationCard({
         <span className="tabular-nums font-medium">
           {formatTime(reservation.reservationStartDate)} — {formatTime(reservation.reservationEndDate)}
         </span>
+        {reservation.customerPhone && (
+          <>
+            <span className="text-foreground-subtle/40">·</span>
+            <a
+              href={`tel:${reservation.customerPhone}`}
+              className="inline-flex items-center gap-1 hover:text-foreground transition-colors duration-150 ease-snappy"
+            >
+              <Phone className="h-2.5 w-2.5" />
+              <span className="tabular-nums">{reservation.customerPhone}</span>
+            </a>
+          </>
+        )}
+        {reservation.customerEmail && (
+          <>
+            <span className="text-foreground-subtle/40">·</span>
+            <a
+              href={`mailto:${reservation.customerEmail}`}
+              className="inline-flex items-center gap-1 min-w-0 hover:text-foreground transition-colors duration-150 ease-snappy"
+            >
+              <Mail className="h-2.5 w-2.5 flex-shrink-0" />
+              <span className="truncate max-w-[12rem]">{reservation.customerEmail}</span>
+            </a>
+          </>
+        )}
       </div>
     </div>
   );

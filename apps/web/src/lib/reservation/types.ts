@@ -4,6 +4,8 @@ import type { Reservation } from "@businext/shared-core";
 export type { Reservation };
 export { StatusOptions } from "@businext/shared-core";
 
+export const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
 export type DeleteModalProps = {
   id: number;
   customerName: string;
@@ -38,6 +40,8 @@ export const PlaceHoldersReservationMapping = {
   timePerReservation: "Tiempo por reserva",
   status: "Estado",
   service: "Servicio",
+  customerPhone: "Teléfono del cliente",
+  customerEmail: "Email del cliente",
 } as const;
 
 export type ReservationInputProps = {
@@ -47,4 +51,5 @@ export type ReservationInputProps = {
   disabled?: boolean;
   options?: { [key: string]: string };
   type?: string;
+  pattern?: RegExp;
 };

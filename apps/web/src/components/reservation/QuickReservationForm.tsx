@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { Product } from "@/lib/product/types";
-import { Reservation } from "@/lib/reservation/types";
+import { EMAIL_PATTERN, Reservation } from "@/lib/reservation/types";
 import { Employee } from "@/lib/employee/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +49,8 @@ export function QuickReservationForm({
   } = useForm<{
     customerName: string;
     inCharge: string;
+    customerPhone: string;
+    customerEmail: string;
   }>({
     defaultValues: {
       inCharge: currentUserName,
@@ -104,6 +106,8 @@ export function QuickReservationForm({
       timePerReservation: FIXED_DURATION,
       status: "PENDING",
       service: selectedService.name,
+      customerPhone: data.customerPhone,
+      customerEmail: data.customerEmail,
     };
     onSubmit(reservation);
   });
@@ -113,7 +117,7 @@ export function QuickReservationForm({
       className={cn(
         "overflow-hidden transition-all duration-150 ease-snappy",
         selectedService
-          ? "max-h-[600px] opacity-100"
+          ? "max-h-[800px] opacity-100"
           : "max-h-0 opacity-0"
       )}
     >
@@ -170,6 +174,35 @@ export function QuickReservationForm({
               {errors.inCharge && (
                 <span className="text-caption text-danger">
                   Campo requerido
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-caption text-foreground-muted">
+                Teléfono (opcional)
+              </label>
+              <Input
+                {...register("customerPhone")}
+                type="tel"
+                placeholder="Teléfono del cliente"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-caption text-foreground-muted">
+                Email (opcional)
+              </label>
+              <Input
+                {...register("customerEmail", { pattern: EMAIL_PATTERN })}
+                type="email"
+                placeholder="Email del cliente"
+                state={errors.customerEmail ? "error" : "default"}
+              />
+              {errors.customerEmail && (
+                <span className="text-caption text-danger">
+                  Email no válido
                 </span>
               )}
             </div>
