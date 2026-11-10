@@ -3,6 +3,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ActivityIndicator,
   Alert,
+  Linking,
   Pressable,
   ScrollView,
   Text,
@@ -113,6 +114,28 @@ export default function ReservationDetailScreen() {
       <Text style={styles.label}>Cliente</Text>
       <Text style={styles.value}>{reservation.customerName}</Text>
 
+      {reservation.customerPhone && (
+        <>
+          <Text style={styles.label}>Teléfono</Text>
+          <Pressable
+            onPress={() => Linking.openURL(`tel:${reservation.customerPhone}`)}
+            accessibilityRole="link"
+            accessibilityLabel={`Llamar a ${reservation.customerName}`}
+          >
+            <Text style={[styles.value, styles.link]}>{reservation.customerPhone}</Text>
+          </Pressable>
+        </>
+      )}
+
+      {reservation.customerEmail && (
+        <>
+          <Text style={styles.label}>Email</Text>
+          <Text style={styles.value} selectable>
+            {reservation.customerEmail}
+          </Text>
+        </>
+      )}
+
       <Text style={styles.label}>Servicio</Text>
       <Text style={styles.value}>{reservation.service}</Text>
 
@@ -180,6 +203,10 @@ const useStyles = themedStyles((colors) => ({
   value: {
     fontSize: 16,
     color: colors.foreground,
+  },
+  link: {
+    color: colors.primary,
+    fontWeight: "600",
   },
   actions: {
     marginTop: 32,
