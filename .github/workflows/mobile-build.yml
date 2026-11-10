@@ -33,10 +33,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      # projectId de EAS (no es secreto, ver apps/mobile/README.md). Se
-      # configura como Variable de repo en Settings > Secrets and
-      # variables > Actions > pestaña Variables.
-      EAS_PROJECT_ID: ${{ vars.EAS_PROJECT_ID }}
       # eas-cli lee el token de esta variable; no hace falta expo-github-action.
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 

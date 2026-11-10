@@ -7,12 +7,8 @@ import type { ExpoConfig } from "expo/config";
  * build real distribuible (EAS, issue #33).
  */
 
-// Se rellena automaticamente al correr `eas init` (crea el proyecto en
-// expo.dev y escribe este id) o manualmente via la variable de entorno
-// EAS_PROJECT_ID. Mientras este vacio, los builds de EAS y
-// getExpoPushTokenAsync() (#031) no funcionan — ver README para el paso
-// manual pendiente (requiere una cuenta de Expo real).
-const EAS_PROJECT_ID = process.env.EAS_PROJECT_ID ?? "";
+// projectId de expo.dev (no es secreto): fijo para que los workers de EAS lo vean.
+const EAS_PROJECT_ID = "468dbb33-6433-4484-842e-41f65d74121f";
 
 const config: ExpoConfig = {
   name: "Businext",
@@ -61,15 +57,10 @@ const config: ExpoConfig = {
       },
     ],
   ],
-  // runtimeVersion siempre debe resolver igual (depende solo de `version`,
-  // no del projectId) para que todos los builds/updates sean comparables
-  // sin importar si EAS_PROJECT_ID estaba definido al evaluar esta config
-  // (evita el "Runtime version mismatch" de EAS Update).
+  // runtimeVersion depende solo de `version` para que todos los builds/updates
+  // sean comparables (evita el "Runtime version mismatch" de EAS Update).
   runtimeVersion: { policy: "appVersion" as const },
-  // OTA updates via expo-updates (issue #033). `url` solo es valido con
-  // un projectId real; con EAS_PROJECT_ID vacio, se omite (Expo Go/dev
-  // sigue funcionando igual, solo no habria OTA updates).
-  ...(EAS_PROJECT_ID ? { updates: { url: `https://u.expo.dev/${EAS_PROJECT_ID}` } } : {}),
+  updates: { url: `https://u.expo.dev/${EAS_PROJECT_ID}` },
   extra: {
     // Punto unico de configuracion del baseURL del backend consumido por
     // @businext/shared-core (createApiClient). Ver issue #28.
@@ -79,7 +70,7 @@ const config: ExpoConfig = {
     // Publicas por diseno (anon key), no son secretas.
     supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL ?? "",
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY ?? "",
-    ...(EAS_PROJECT_ID ? { eas: { projectId: EAS_PROJECT_ID } } : {}),
+    eas: { projectId: EAS_PROJECT_ID },
   },
 };
 

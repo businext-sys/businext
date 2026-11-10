@@ -116,7 +116,6 @@ automaticamente y las expone via `Constants.expoConfig.extra`):
 EXPO_PUBLIC_API_BASE_URL=http://localhost:8000
 EXPO_PUBLIC_SUPABASE_URL=https://<proyecto>.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=<anon key>
-EAS_PROJECT_ID=<projectId de expo.dev>
 ```
 
 Mismo proyecto de Supabase que `apps/web`.
