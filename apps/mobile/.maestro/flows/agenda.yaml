@@ -1,9 +1,15 @@
 appId: com.businext.mobile
-name: Agenda - se abre desde el menu y muestra el dia
+name: Agenda - es el inicio y abre el chat y vuelve
 ---
 - launchApp:
     clearState: true
 - runFlow: ../subflows/login.yaml
+- assertVisible: "Agenda"
+- tapOn:
+    id: "agenda-chat-button"
+- extendedWaitUntil:
+    visible: "¿En qué te ayudo hoy?"
+    timeout: 20000
 - tapOn:
     id: "chat-menu-button"
 - tapOn: "Agenda"
@@ -11,4 +17,3 @@ name: Agenda - se abre desde el menu y muestra el dia
     visible:
       id: "agenda-day-label"
     timeout: 20000
-- assertVisible: "Agenda"

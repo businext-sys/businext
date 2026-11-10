@@ -63,6 +63,14 @@ export default function AgendaScreen() {
       <View style={styles.titleBar}>
         <Text style={styles.title}>Agenda</Text>
         <View style={styles.titleActions}>
+          <Pressable
+            style={styles.chatButton}
+            onPress={() => router.push("/chat")}
+            accessibilityRole="button"
+            testID="agenda-chat-button"
+          >
+            <Text style={styles.chatButtonText}>Asistente</Text>
+          </Pressable>
           {capabilities.canViewTrends && (
             <Pressable onPress={() => router.push("/trends")} accessibilityRole="button" hitSlop={8}>
               <Text style={styles.trendsText}>Tendencias</Text>
@@ -159,6 +167,19 @@ const useStyles = themedStyles((colors) => ({
     flexDirection: "row",
     alignItems: "center",
     gap: 16,
+  },
+  chatButton: {
+    height: 44,
+    paddingHorizontal: 20,
+    borderRadius: 6,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.primary,
+  },
+  chatButtonText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: colors.primaryForeground,
   },
   trendsText: {
     fontSize: 14,

@@ -19,8 +19,6 @@ los valores a la app via `Constants.expoConfig.extra`:
 | `EXPO_PUBLIC_SUPABASE_URL` | `extra.supabaseUrl` | `src/lib/supabaseAuth.ts` |
 | `EXPO_PUBLIC_SUPABASE_ANON_KEY` | `extra.supabaseAnonKey` | `src/lib/supabaseAuth.ts` |
 | `EAS_PROJECT_ID` | `extra.eas.projectId` | `src/lib/pushNotifications.ts`, EAS Build/Update |
-| `EXPO_PUBLIC_ASSISTANT_CHAT` | `extra.assistantChatEnabled` | `src/lib/featureFlags.ts` (`"false"` apaga el chat y la home vuelve a ser la agenda) |
-| `EXPO_PUBLIC_ASSISTANT_PILOT_BUSINESSES` | `extra.assistantPilotBusinesses` | `src/lib/featureFlags.ts` (ids de negocio separados por comas; vacio = todos) |
 
 `runtimeVersion` usa la politica `appVersion` a proposito: resuelve igual
 tenga o no `EAS_PROJECT_ID` definido, para que todos los builds y updates sean
@@ -141,11 +139,11 @@ Para probar una rama en un dispositivo antes del merge (sin simulador ni
 `src/lib/pushNotifications.ts` + `src/hooks/usePushRegistration.ts`: registro
 automatico del token al autenticarse, manejo explicito del rechazo de permisos
 (banner en la home) y deep link al tocar una notificacion, tambien con la app
-cerrada (`useLastNotificationResponse`). Con el chat activo (issue #83), la
-push de una solicitud (`{ type: "booking_request", bookingRequestId }`) abre
-el chat en una conversacion nueva con un mensaje que la explica y su tarjeta
+cerrada (`useLastNotificationResponse`). La push de una solicitud
+(`{ type: "booking_request", bookingRequestId }`, issue #83) abre el chat
+(`/chat`) en una conversacion nueva con un mensaje que la explica y su tarjeta
 con Aceptar/Rechazar; si la push trae `conversationId`, abre esa
-conversacion. Con el chat apagado, abre la agenda.
+conversacion. Sin `bookingRequestId`, abre la agenda.
 
 La push de una idea de contenido (`{ type: "content_suggestion", id }`, canal
 Android `content`, "Ideas de contenido", separado del `default` de las reservas)
@@ -161,8 +159,8 @@ que crearla a mano en Supabase.
 
 ## Pantallas
 
-- **Chat del asistente** (`app/index.tsx` → `src/screens/HomeScreen.tsx` →
-  `src/screens/ChatScreen.tsx`, issue #78) — la home tras el login. Usa `useAssistantChat` de shared-core
+- **Chat del asistente** (`app/chat.tsx` → `src/screens/ChatScreen.tsx`, issues
+  #78 y #86) — se abre con el boton «Asistente» de la Agenda. Usa `useAssistantChat` de shared-core
   con `assistantClient` (`expo/fetch`, streaming). Componentes en
   `src/components/chat/`: burbujas con markdown basico, indicador de
   escribiendo/herramienta, input con enviar y parar, error con reintento y
@@ -175,12 +173,11 @@ que crearla a mano en Supabase.
   (Confirmar/Cancelar llama a `confirm` del chat).
   Colores del tema (ver *Tema* abajo); la cabecera lleva el avatar del asistente
   (`assets/avatar-asistente.png`). Sin tabs: el menu de la
-  cabecera lleva a nueva conversacion, historial, agenda, ajustes y cerrar sesion. Si
-  `EXPO_PUBLIC_ASSISTANT_CHAT=false` (hoy en los perfiles `preview` y
-  `production` de `eas.json`), la home es la agenda.
+  cabecera lleva a nueva conversacion, historial, agenda (vuelve al inicio),
+  ajustes y cerrar sesion.
 - **Historial** (`app/conversations.tsx`, issue #82) — conversaciones con el
-  asistente (`useAssistantConversations`): abrir (`/?conversation=<id>`),
-  borrar con confirmacion o empezar una nueva (`/?conversation=new`).
+  asistente (`useAssistantConversations`): abrir (`/chat?conversation=<id>`),
+  borrar con confirmacion o empezar una nueva (`/chat?conversation=new`).
 - **Ajustes** (`app/settings.tsx`) — cuenta y cierre de sesion. Para el owner,
   la seccion **Agente de voz** (`src/components/VoiceAgentSection.tsx`, issue
   #119) lee `useVoiceAgentConfig` y, por cada numero asignado, un boton
@@ -188,8 +185,9 @@ que crearla a mano en Supabase.
   webhook `call_inbound` que la de un cliente, asi que prueba el agente real
   con los datos del negocio. En el simulador de iOS `tel:` no abre nada:
   probar en un dispositivo.
-- **Agenda** (`src/screens/AgendaScreen.tsx`, en `/agenda`, issue #030) — reservas del dia agrupadas por
-  hora, navegacion entre dias y pull-to-refresh.
+- **Agenda** (`app/index.tsx` → `src/screens/AgendaScreen.tsx`, issues #030 y #86) — la
+  pantalla de inicio tras el login para todos los negocios: reservas del dia agrupadas por
+  hora, navegacion entre dias, pull-to-refresh y el boton «Asistente» que abre el chat.
 - **Tendencias** (`app/trends/`, issue #171, solo con `canViewTrends`; si no,
   redirigen a `/`) — `index.tsx`: análisis del día con actualizar, servicios que
   encajan, tendencias con enlace y próximas ideas. `[id].tsx`: hora, red, idea,
@@ -205,55 +203,31 @@ que crearla a mano en Supabase.
   "cancelada" distinto (ver la nota en el propio archivo).
 - **Login** (issue #029) — Supabase Auth con token en `expo-secure-store`.
 
-## Lanzamiento del chat (issue #86)
+## Chat desde la agenda (issue #86)
 
-La home es el chat solo si `EXPO_PUBLIC_ASSISTANT_CHAT` no es `"false"` **y**
-`EXPO_PUBLIC_ASSISTANT_PILOT_BUSINESSES` esta vacia o incluye el `businessId`
-del usuario (`/auth/me`). Si no, la home es la agenda. Las push siguen la
-misma regla. Ambas variables se leen al construir el bundle, asi que cambian
-con un build nuevo o con `eas update`.
+La agenda es el inicio para todos y el chat es un extra que se abre desde su
+boton. No hay flag ni lista de negocios piloto: el chat esta disponible para
+todos. Volver a poner el chat como inicio es cambiar `app/index.tsx`.
 
-**Antes del piloto** (requiere el backend del asistente desplegado y evals y
-E2E en verde):
-
-1. Variables de EAS del entorno `preview` (no estan en el repo):
-   `EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY` y
-   `EAS_PROJECT_ID` (tambien como Variable del repo para `mobile-build.yml`).
-   ```bash
-   cd apps/mobile
-   npx eas-cli env:list --environment preview
-   npx eas-cli env:create --environment preview --name EXPO_PUBLIC_SUPABASE_URL --value <url> --visibility plaintext
-   npx eas-cli env:create --environment preview --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <anon-key> --visibility plaintext
-   ```
-2. En `eas.json`, perfil `preview`: `EXPO_PUBLIC_ASSISTANT_CHAT: "true"` y
-   `EXPO_PUBLIC_ASSISTANT_PILOT_BUSINESSES` con los negocios piloto.
-3. Build preview: `mobile-build.yml` (`workflow_dispatch`, perfil `preview`)
-   o `pnpm --filter @businext/mobile build:preview`. Instalar por link/QR y
-   comprobar que un negocio piloto aterriza en el chat y otro en la agenda.
-
-**Rollback** (sin build nuevo): poner `EXPO_PUBLIC_ASSISTANT_CHAT=false` (o
-quitar el negocio de la lista) y publicar un OTA:
+Para un build `preview`, el entorno `preview` de EAS necesita
+`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY` y `EAS_PROJECT_ID`
+(tambien como Variable del repo para `mobile-build.yml`); no estan en el repo:
 
 ```bash
 cd apps/mobile
-EXPO_PUBLIC_ASSISTANT_CHAT=false npx eas-cli update --branch preview --message "rollback: chat off"
+npx eas-cli env:list --environment preview
+npx eas-cli env:create --environment preview --name EXPO_PUBLIC_SUPABASE_URL --value <url> --visibility plaintext
+npx eas-cli env:create --environment preview --name EXPO_PUBLIC_SUPABASE_ANON_KEY --value <anon-key> --visibility plaintext
 ```
-
-Al reabrir la app, la home vuelve a ser la agenda. Probarlo una vez durante
-el piloto.
-
-**Tras validar el piloto:** quitar la agenda antigua
-(`src/screens/AgendaScreen.tsx`, `app/agenda.tsx`, la entrada del menu) y
-`HomeScreen`, y dejar `app/index.tsx` apuntando al chat.
 
 ## Tests E2E (Maestro, issues #32 y #85)
 
 Flows base en `.maestro/flows/`: `launch.yaml` (la app abre en el login, sin
-credenciales), `login.yaml` (login → home) y `agenda.yaml` (login → menu →
-Agenda).
+credenciales), `login.yaml` (login → agenda) y `agenda.yaml` (agenda →
+boton «Asistente» → chat → menu → Agenda).
 
 **En CI:** Actions → `qa-mobile` → Run workflow (suite `base`, `chat` o
-`all`). Construye el APK con el chat activo (`expo prebuild` + Gradle, solo
+`all`). Construye el APK (`expo prebuild` + Gradle, solo
 `x86_64`), lo instala en un emulador Android (API 34) y ejecuta los flows; el
 informe JUnit y las capturas de los fallos quedan en el artefacto
 `maestro-results`. Necesita, en Settings → Secrets and variables → Actions:
@@ -277,7 +251,7 @@ Flows del chat en `.maestro/flows/` (el login es el subflow
 
 Cada flow espera el `testID` de su tarjeta (`card-reservation-list`,
 `card-confirmation`, `card-booking-request`), asi que falla si un chip deja de
-devolverla. Necesitan un build con el chat activo instalado en un emulador o
+devolverla. Entran al chat por el boton de la agenda. Necesitan un build instalado en un emulador o
 dispositivo y un backend con el LLM simulado, para que las respuestas sean
 deterministas (`businext-backend`, ver su README, «E2E del chat»):
 
