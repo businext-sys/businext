@@ -16,3 +16,4 @@ export type { paths, components, operations } from "./generated-types";
 export * from "./assistantApi";
 export * from "./voiceAgentApi";
 export * from "./trendsApi";
+export * from "./customerMessageApi";

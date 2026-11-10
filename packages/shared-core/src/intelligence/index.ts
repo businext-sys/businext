@@ -57,4 +57,21 @@ export interface ClientProfile {
   loyaltyStatus: LoyaltyStatus;
   trend: Trend;
   services: string[];
+  customerEmail?: string;
 }
+
+export interface CustomerMessageDraft {
+  customerEmail: string;
+  customerName: string;
+  message: string;
+}
+
+export interface CustomerMessage {
+  id: number;
+  customerEmail: string;
+  message: string;
+  sentBy: string;
+  createdAt: string;
+}
+
+export * from "./clientScoring";
