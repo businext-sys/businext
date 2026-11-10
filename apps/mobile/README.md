@@ -18,13 +18,13 @@ los valores a la app via `Constants.expoConfig.extra`:
 | `EXPO_PUBLIC_API_BASE_URL` | `extra.apiBaseUrl` | `src/lib/bootstrapApiClient.ts` |
 | `EXPO_PUBLIC_SUPABASE_URL` | `extra.supabaseUrl` | `src/lib/supabaseAuth.ts` |
 | `EXPO_PUBLIC_SUPABASE_ANON_KEY` | `extra.supabaseAnonKey` | `src/lib/supabaseAuth.ts` |
-| `EAS_PROJECT_ID` | `extra.eas.projectId` | `src/lib/pushNotifications.ts`, EAS Build/Update |
 
-`runtimeVersion` usa la politica `appVersion` a proposito: resuelve igual
-tenga o no `EAS_PROJECT_ID` definido, para que todos los builds y updates sean
-comparables (evita el "Runtime version mismatch" de EAS Update). Con
-`EAS_PROJECT_ID` vacio se omite el bloque `updates` — Expo Go y el flujo de
-desarrollo siguen funcionando, solo no hay OTA updates.
+El `projectId` de EAS no es secreto y va fijo en `app.config.ts`
+(`extra.eas.projectId` y `updates.url`): así lo ven igual el CLI en local, el
+runner de GitHub y los workers de EAS, que vuelven a leer la config en sus
+servidores. `runtimeVersion` usa la politica `appVersion` a proposito, para que
+todos los builds y updates sean comparables (evita el "Runtime version
+mismatch" de EAS Update).
 
 Los bundle identifiers (`com.businext.mobile` en iOS y Android) son
 placeholders y deben confirmarse antes de un build distribuible (issue #33).
@@ -102,7 +102,7 @@ pnpm --filter @businext/mobile update:production
 
 Cuenta de Expo (`daniflorezm`) y proyecto
 [businext-mobile](https://expo.dev/accounts/daniflorezm/projects/businext-mobile)
-creados; `projectId` guardado en `apps/mobile/.env` (gitignored). Token de
+creados; `projectId` fijo en `app.config.ts`. Token de
 acceso configurado como secret `EXPO_TOKEN` del repo, y el workflow
 `.github/workflows/mobile-build.yml` corre `--platform all` en push a `main`
 (el `workflow_dispatch` acepta `android`/`ios` para una sola plataforma).
@@ -113,19 +113,11 @@ distribucion, perfil de aprovisionamiento y UDID del iPhone de prueba
 registrado), guardadas en el servidor de Expo para que los builds no
 interactivos las reutilicen.
 
-`EAS_PROJECT_ID` es una *Variable* del repo (no un secret: el projectId no es
-sensible); `mobile-build.yml` la pasa a `eas-cli` para que resuelva
-`app.config.ts` igual que en local. Los workers de EAS no la reciben, así que al
-leer la config en sus servidores avisan de que falta `extra.eas.projectId`: los
-builds salen sin `updates.url` (sin OTA) hasta que el projectId llegue también
-allí (por ejemplo, como variable de entorno de EAS).
-
 `mobile-build.yml` envía los builds sin esperar a que terminen: el run sale en
 verde en cuanto EAS los acepta. Para ver cómo van, desde `apps/mobile`:
 
 ```bash
-EAS_PROJECT_ID=$(gh variable get EAS_PROJECT_ID -R businext-sys/businext) \
-  npx eas-cli build:view <id> --json
+npx eas-cli build:view <id> --json
 ```
 
 Los ids salen en el log del run (`See Android logs: …/builds/<id>`).
@@ -210,8 +202,8 @@ boton. No hay flag ni lista de negocios piloto: el chat esta disponible para
 todos. Volver a poner el chat como inicio es cambiar `app/index.tsx`.
 
 Para un build `preview`, el entorno `preview` de EAS necesita
-`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY` y `EAS_PROJECT_ID`
-(tambien como Variable del repo para `mobile-build.yml`); no estan en el repo:
+`EXPO_PUBLIC_SUPABASE_URL` y `EXPO_PUBLIC_SUPABASE_ANON_KEY`; no estan en el
+repo:
 
 ```bash
 cd apps/mobile
