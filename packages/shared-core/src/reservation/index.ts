@@ -14,6 +14,8 @@ export type Reservation = {
   timePerReservation: number;
   status: string;
   service: string;
+  customerPhone?: string;
+  customerEmail?: string;
 };
 
 export const StatusOptions = {

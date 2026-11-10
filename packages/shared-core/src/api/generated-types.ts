@@ -1744,6 +1744,10 @@ export interface components {
             status: string;
             /** Service */
             service: string;
+            /** Customer Phone */
+            customer_phone?: string | null;
+            /** Customer Email */
+            customer_email?: string | null;
         };
         /** ReservationPublic */
         ReservationPublic: {
@@ -1767,6 +1771,10 @@ export interface components {
             status: string;
             /** Service */
             service: string;
+            /** Customer Phone */
+            customer_phone?: string | null;
+            /** Customer Email */
+            customer_email?: string | null;
             /** Id */
             id: number;
         };
@@ -1786,6 +1794,10 @@ export interface components {
             status?: string | null;
             /** Service */
             service?: string | null;
+            /** Customer Phone */
+            customer_phone?: string | null;
+            /** Customer Email */
+            customer_email?: string | null;
         };
         /** RetellCall */
         RetellCall: {

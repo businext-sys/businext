@@ -18,6 +18,8 @@ export const ReservationSchema = z.object({
   timePerReservation: z.number(),
   status: z.string(),
   service: z.string(),
+  customerPhone: z.string().optional(),
+  customerEmail: z.string().optional(),
 });
 
 export type ReservationParsed = z.infer<typeof ReservationSchema>;

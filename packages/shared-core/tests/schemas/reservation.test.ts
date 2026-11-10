@@ -31,6 +31,23 @@ describe("ReservationSchema", () => {
     expect(() => ReservationSchema.parse(valid)).not.toThrow();
   });
 
+  it("acepta telefono y email opcionales del cliente", () => {
+    const valid = {
+      customerName: "Ana Perez",
+      inCharge: "Carlos",
+      reservationStartDate: "2026-08-01T10:00:00Z",
+      reservationEndDate: "2026-08-01T11:00:00Z",
+      timePerReservation: 60,
+      status: "PENDING",
+      service: "Corte de cabello",
+      customerPhone: "+573001234567",
+      customerEmail: "ana@example.com",
+    };
+    const result = ReservationSchema.parse(valid);
+    expect(result.customerPhone).toBe("+573001234567");
+    expect(result.customerEmail).toBe("ana@example.com");
+  });
+
   it("rechaza una reserva invalida (faltan campos requeridos)", () => {
     const invalid = { customerName: "Ana Perez" };
     expect(() => ReservationSchema.parse(invalid)).toThrow();

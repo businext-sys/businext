@@ -17,6 +17,8 @@ export const mapReservationFromApi = (
     timePerReservation: data.time_per_reservation,
     status: data.status,
     service: data.service,
+    customerPhone: data.customer_phone ?? undefined,
+    customerEmail: data.customer_email ?? undefined,
   });
   return parsed as Reservation;
 };
@@ -31,4 +33,6 @@ export const mapReservationToApi = (reservation: Reservation) => ({
   time_per_reservation: reservation.timePerReservation,
   status: reservation.status,
   service: reservation.service,
+  customer_phone: reservation.customerPhone || null,
+  customer_email: reservation.customerEmail || null,
 });
