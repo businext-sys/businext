@@ -3,6 +3,7 @@ export * from "./useFinances";
 export * from "./useProduct";
 export * from "./useBookingRequests";
 export * from "./useConfiguration";
+export * from "./useRemindersSetting";
 export * from "./useEmployee";
 export * from "./useLocations";
 export * from "./useWeeklySummary";
