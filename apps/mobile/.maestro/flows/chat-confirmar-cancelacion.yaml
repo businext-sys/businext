@@ -5,6 +5,11 @@ name: Chat - confirmar la cancelacion de una reserva
     clearState: true
 - runFlow: ../subflows/login.yaml
 - tapOn:
+    id: "agenda-chat-button"
+- extendedWaitUntil:
+    visible: "¿En qué te ayudo hoy?"
+    timeout: 20000
+- tapOn:
     id: "chat-input"
 - inputText: "Cancela la próxima reserva de hoy"
 - tapOn:

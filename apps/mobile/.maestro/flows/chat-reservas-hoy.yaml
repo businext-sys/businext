@@ -4,6 +4,11 @@ name: Chat - chip Reservas de hoy devuelve la tarjeta de reservas
 - launchApp:
     clearState: true
 - runFlow: ../subflows/login.yaml
+- tapOn:
+    id: "agenda-chat-button"
+- extendedWaitUntil:
+    visible: "¿En qué te ayudo hoy?"
+    timeout: 20000
 - tapOn: "Reservas de hoy"
 - extendedWaitUntil:
     visible:

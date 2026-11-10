@@ -1,7 +1,7 @@
 name: qa-mobile
 
 # E2E de apps/mobile con Maestro en un emulador Android (issue #32).
-# Construye el APK con el chat activo, ejecuta los flows de
+# Construye el APK, ejecuta los flows de
 # apps/mobile/.maestro/flows y sube el informe y las capturas de los fallos.
 #
 # Configuracion (Settings > Secrets and variables > Actions):
@@ -28,7 +28,6 @@ jobs:
       EXPO_PUBLIC_API_BASE_URL: ${{ vars.QA_API_BASE_URL }}
       EXPO_PUBLIC_SUPABASE_URL: ${{ vars.EXPO_PUBLIC_SUPABASE_URL }}
       EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
-      EXPO_PUBLIC_ASSISTANT_CHAT: "true"
       MAESTRO_EMAIL: ${{ secrets.QA_MAESTRO_EMAIL }}
       MAESTRO_PASSWORD: ${{ secrets.QA_MAESTRO_PASSWORD }}
 
