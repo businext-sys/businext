@@ -67,6 +67,23 @@ consumen `/trends/insight`, `/trends/insight/refresh`, `/trends/suggestions` y
 
 Las cuentas sociales y las publicaciones van en #172.
 
+## Mensaje a clientes en riesgo (Fase 14, issue #186)
+
+`computeClientProfiles` (`@businext/shared-core/intelligence`) agrupa las
+reservas completadas por nombre y marca a cada cliente `fiel`, `en_riesgo` o
+`nuevo`; `customerEmail` es el email de su última reserva que lo tiene. La web
+(Inteligencia → Tus clientes) y el móvil (`clients-at-risk`) usan el mismo cálculo.
+
+`customerMessageApi` consume el backend (`businext-backend#48`, owner y manager):
+
+- `getDraft(email)` → `GET /customer-messages/draft?email=` con el texto propuesto.
+- `send(email, message)` → `POST /customer-messages/` (máximo 2000 caracteres).
+- Los errores son `CustomerMessageError` con el `detail` del backend y su
+  `status`: 404 si el email no es de ningún cliente, 429 si ya se le escribió en
+  los últimos 7 días, 502 si el email no salió, 403 para employee.
+
+En web pasa por el BFF `apps/web/src/app/api/customer-messages/`.
+
 ## Tema (issue #124)
 
 `@businext/shared-core/theme` exporta los tokens de [`DESIGN.md`](../../DESIGN.md):

@@ -46,6 +46,7 @@ function ThemedStack() {
           options={{ headerShown: true, title: "Detalle de reserva" }}
         />
         <Stack.Screen name="settings" options={{ headerShown: true, title: "Ajustes" }} />
+        <Stack.Screen name="clients-at-risk" options={{ headerShown: true, title: "Clientes en riesgo" }} />
         <Stack.Screen name="conversations" options={{ headerShown: true, title: "Historial" }} />
         <Stack.Screen name="trends/index" options={{ headerShown: true, title: "Tendencias" }} />
         <Stack.Screen name="trends/[id]" options={{ headerShown: true, title: "Idea de contenido" }} />

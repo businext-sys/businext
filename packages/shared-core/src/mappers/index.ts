@@ -5,3 +5,4 @@ export * from "./booking-request";
 export * from "./employee";
 export * from "./voice-agent";
 export * from "./trends";
+export * from "./customer-message";

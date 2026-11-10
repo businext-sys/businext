@@ -177,6 +177,12 @@ que crearla a mano en Supabase.
   webhook `call_inbound` que la de un cliente, asi que prueba el agente real
   con los datos del negocio. En el simulador de iOS `tel:` no abre nada:
   probar en un dispositivo.
+- **Clientes en riesgo** (`app/clients-at-risk.tsx`, issue #186, solo owner y
+  manager; si no, redirige a `/`) — los clientes que `computeClientProfiles` de
+  shared-core marca `en_riesgo`. Cada tarjeta (`src/components/ClientRiskCard.tsx`)
+  pide el texto propuesto, deja editarlo y lo envía por email con
+  `customerMessageApi`; sin email explica que falta y, si ya se le escribió en los
+  últimos 7 días (429), lo dice. Se entra desde Ajustes.
 - **Agenda** (`app/index.tsx` → `src/screens/AgendaScreen.tsx`, issues #030 y #86) — la
   pantalla de inicio tras el login para todos los negocios: reservas del dia agrupadas por
   hora, navegacion entre dias, pull-to-refresh y el boton «Asistente» que abre el chat.

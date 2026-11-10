@@ -8,6 +8,7 @@ import { useFinances } from "@/hooks/useFinances";
 import { useProduct } from "@/hooks/useProduct";
 import { computeClientProfiles } from "@/lib/intelligence/client-scoring";
 import type { ClientProfile } from "@/lib/intelligence/types";
+import { CustomerMessageAction } from "@/components/intelligence/CustomerMessageAction";
 import {
   Users,
   TrendingUp,
@@ -53,6 +54,7 @@ function ClientRow({ client }: { client: ClientProfile }) {
           {client.services.slice(0, 2).join(", ")}
           {client.services.length > 2 && ` +${client.services.length - 2}`}
         </p>
+        {client.loyaltyStatus === "en_riesgo" && <CustomerMessageAction client={client} />}
       </div>
 
       {/* Stats — desktop */}
@@ -127,7 +129,7 @@ function ClientCategory({
       {/* Expandable list */}
       <div
         className={`overflow-hidden transition-all duration-300 ease-out ${
-          open ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+          open ? "max-h-[700px] opacity-100" : "max-h-0 opacity-0"
         }`}
       >
         <div className="border-t border-border-subtle/40 divide-y divide-border-subtle/20">
