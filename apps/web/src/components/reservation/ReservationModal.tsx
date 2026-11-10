@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import {
+  EMAIL_PATTERN,
   Reservation,
   ReservationModalProps,
 } from "@/lib/reservation/types";
@@ -139,7 +140,7 @@ export const ReservationModal = ({
   const handleNext = async () => {
     let valid = false;
     if (step === 1) {
-      valid = await trigger(["customerName", "service"]);
+      valid = await trigger(["customerName", "service", "customerEmail"]);
     } else if (step === 2) {
       valid = await trigger([
         "inCharge",
@@ -207,6 +208,29 @@ export const ReservationModal = ({
                   <ReservationInputError
                     error={errors.service}
                     message="Selecciona un servicio"
+                  />
+                  <div className="mb-1 text-caption text-foreground-muted">
+                    Teléfono del cliente (opcional)
+                  </div>
+                  <ReservationInput
+                    label="customerPhone"
+                    register={register}
+                    required={false}
+                    type="tel"
+                  />
+                  <div className="mb-1 text-caption text-foreground-muted">
+                    Email del cliente (opcional)
+                  </div>
+                  <ReservationInput
+                    label="customerEmail"
+                    register={register}
+                    required={false}
+                    type="email"
+                    pattern={EMAIL_PATTERN}
+                  />
+                  <ReservationInputError
+                    error={errors.customerEmail}
+                    message="Email no válido"
                   />
                 </>
               )}

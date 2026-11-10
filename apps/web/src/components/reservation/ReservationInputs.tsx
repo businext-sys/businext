@@ -11,9 +11,10 @@ export const ReservationInput = ({
   required,
   disabled,
   type,
+  pattern,
 }: ReservationInputProps) => (
   <input
-    {...register(label, { required })}
+    {...register(label, { required, pattern })}
     placeholder={PlaceHoldersReservationMapping[label]}
     disabled={disabled}
     type={type || "text"}

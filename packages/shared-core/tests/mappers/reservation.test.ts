@@ -33,6 +33,35 @@ describe("mapReservationFromApi / mapReservationToApi", () => {
     expect(roundTripped).toEqual(reservation);
   });
 
+  it("mapea el telefono y el email del cliente", () => {
+    const withContact: Reservation = {
+      ...reservation,
+      customerPhone: "+573001234567",
+      customerEmail: "ana@example.com",
+    };
+    const raw = mapReservationToApi(withContact);
+    expect(raw.customer_phone).toBe("+573001234567");
+    expect(raw.customer_email).toBe("ana@example.com");
+    expect(mapReservationFromApi(raw)).toEqual(withContact);
+  });
+
+  it("trata el contacto null del backend como ausente", () => {
+    const raw = {
+      ...mapReservationToApi(reservation),
+      customer_phone: null,
+      customer_email: null,
+    };
+    const mapped = mapReservationFromApi(raw);
+    expect(mapped.customerPhone).toBeUndefined();
+    expect(mapped.customerEmail).toBeUndefined();
+  });
+
+  it("envia null cuando el contacto esta vacio", () => {
+    const raw = mapReservationToApi({ ...reservation, customerPhone: "", customerEmail: "" });
+    expect(raw.customer_phone).toBeNull();
+    expect(raw.customer_email).toBeNull();
+  });
+
   it("lanza si el backend envia una forma invalida", () => {
     expect(() => mapReservationFromApi({ id: 1 })).toThrow();
   });
