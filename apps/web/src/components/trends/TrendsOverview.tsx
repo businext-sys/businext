@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionSkeleton } from "@/components/ui/skeleton";
 import { NETWORK_LABELS, SuggestionCard } from "@/components/trends/SuggestionCard";
+import { NetworkIcon } from "@/components/trends/NetworkIcon";
 import { CalendarClock, ExternalLink, Radar, RefreshCw, Sparkles } from "lucide-react";
 
 export const CONTENT_PREFERENCES_HREF = "/configuration?section=content";
@@ -25,7 +26,7 @@ function formatCapturedAt(insight: TrendInsight) {
   return `Datos de ${day}, ${time}`;
 }
 
-export function TrendsTab() {
+export function TrendsOverview() {
   const router = useRouter();
   const { showToast } = useGlobalToast();
   const { insight, loading: insightLoading, refresh } = useTrendInsight();
@@ -96,7 +97,8 @@ export function TrendsTab() {
                   <ul className="divide-y divide-border-subtle">
                     {insight.trends.map((trend) => (
                       <li key={trend.url} className="flex items-center gap-3 py-3">
-                        <Badge variant="muted" className="shrink-0">
+                        <Badge variant="muted" className="shrink-0 gap-1.5">
+                          <NetworkIcon network={trend.network} className="h-3.5 w-3.5" />
                           {NETWORK_LABELS[trend.network]}
                         </Badge>
                         <span className="flex-1 min-w-0 text-body-sm text-foreground">
@@ -163,7 +165,7 @@ export function TrendsTab() {
             className="py-8"
           />
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 items-start lg:grid-cols-2 gap-4">
             {upcoming.map((suggestion) => (
               <SuggestionCard
                 key={suggestion.id}
