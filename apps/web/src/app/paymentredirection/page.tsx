@@ -3,6 +3,7 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 function PaymentRedirectionContent() {
   const router = useRouter();
@@ -60,7 +61,7 @@ function PaymentRedirectionContent() {
       </div>
       <Link
         href="/"
-        className="px-5 py-2 bg-primary text-primary-foreground rounded-lg font-semibold shadow-md hover:bg-primary-hover transition-colors duration-150"
+        className={buttonVariants()}
       >
         Volver al dashboard
       </Link>

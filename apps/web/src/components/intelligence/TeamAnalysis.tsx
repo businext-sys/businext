@@ -14,7 +14,7 @@ function Stat({
   value: string;
 }) {
   return (
-    <div className="flex items-center gap-1.5 text-[14px] text-foreground-muted/60">
+    <div className="flex items-center gap-1.5 text-[14px] text-foreground-subtle">
       {icon}
       <span>
         <span className="font-semibold text-foreground/90">{value}</span>
@@ -45,7 +45,7 @@ function EmployeeRow({
         </span>
       ) : (
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-raised/50 border border-border-subtle/50">
-          <span className="text-[14px] font-semibold text-foreground-muted/70">
+          <span className="text-[14px] font-semibold text-foreground-subtle">
             {employee.name.charAt(0).toUpperCase()}
           </span>
         </span>
@@ -58,7 +58,7 @@ function EmployeeRow({
             {employee.name}
           </p>
           {isStar && (
-            <span className="text-[11px] font-bold text-warning/70 uppercase tracking-[0.12em] bg-warning/8 px-2 py-0.5 rounded-full">
+            <span className="text-[11px] font-bold text-warning uppercase tracking-[0.12em] bg-warning/8 px-2 py-0.5 rounded-full">
               Estrella
             </span>
           )}
@@ -71,7 +71,7 @@ function EmployeeRow({
               style={{ width: `${pct}%` }}
             />
           </div>
-          <span className="text-[14px] text-foreground-muted/60 shrink-0 tabular-nums font-medium">{pct}%</span>
+          <span className="text-[14px] text-foreground-subtle shrink-0 tabular-nums font-medium">{pct}%</span>
         </div>
       </div>
 
@@ -104,7 +104,7 @@ function EmployeeRow({
         <p className="text-[14px] font-semibold text-foreground/90">
           {employee.income.toLocaleString("es-ES", { minimumFractionDigits: 2 })}€
         </p>
-        <p className="text-[14px] text-foreground-muted/70">
+        <p className="text-[14px] text-foreground-subtle">
           {employee.reservations} res. · {employee.product_sales} prod.
         </p>
       </div>

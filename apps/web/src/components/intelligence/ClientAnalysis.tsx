@@ -25,11 +25,11 @@ import {
 function ClientRow({ client }: { client: ClientProfile }) {
   const trendIcon =
     client.trend === "up" ? (
-      <TrendingUp className="h-3 w-3 text-success/60" />
+      <TrendingUp className="h-3 w-3 text-success" />
     ) : client.trend === "down" ? (
-      <TrendingDown className="h-3 w-3 text-danger/60" />
+      <TrendingDown className="h-3 w-3 text-danger" />
     ) : (
-      <Minus className="h-3 w-3 text-foreground-muted/70" />
+      <Minus className="h-3 w-3 text-foreground-subtle" />
     );
 
   return (
@@ -50,7 +50,7 @@ function ClientRow({ client }: { client: ClientProfile }) {
         <p className="text-[14px] font-medium text-foreground/90 truncate">
           {client.customerName}
         </p>
-        <p className="text-[14px] text-foreground-muted/60 truncate mt-0.5">
+        <p className="text-[14px] text-foreground-subtle truncate mt-0.5">
           {client.services.slice(0, 2).join(", ")}
           {client.services.length > 2 && ` +${client.services.length - 2}`}
         </p>
@@ -58,7 +58,7 @@ function ClientRow({ client }: { client: ClientProfile }) {
       </div>
 
       {/* Stats — desktop */}
-      <div className="hidden sm:flex items-center gap-4 text-[14px] text-foreground-muted/70 shrink-0">
+      <div className="hidden sm:flex items-center gap-4 text-[14px] text-foreground-subtle shrink-0">
         <span className="font-medium">{client.visitCount} visitas</span>
         <span>{client.totalSpend.toLocaleString("es-ES", { minimumFractionDigits: 2 })}€</span>
         <span className="flex items-center gap-1">
@@ -72,7 +72,7 @@ function ClientRow({ client }: { client: ClientProfile }) {
         <p className="text-[14px] font-medium text-foreground/90">
           {client.visitCount} vis.
         </p>
-        <p className="text-[14px] text-foreground-muted/60">
+        <p className="text-[14px] text-foreground-subtle">
           hace {client.daysSinceLastVisit}d
         </p>
       </div>
@@ -120,7 +120,7 @@ function ClientCategory({
           {count}
         </span>
         <ChevronDown
-          className={`h-3.5 w-3.5 text-foreground-muted/70 ml-auto transition-transform duration-250 ease-out ${
+          className={`h-3.5 w-3.5 text-foreground-subtle ml-auto transition-transform duration-250 ease-out ${
             open ? "rotate-180" : ""
           }`}
         />
@@ -137,7 +137,7 @@ function ClientCategory({
             <ClientRow key={c.customerName} client={c} />
           ))}
           {clients.length > 5 && (
-            <p className="text-center text-[14px] text-foreground-muted/70 py-2.5 font-medium">
+            <p className="text-center text-[14px] text-foreground-subtle py-2.5 font-medium">
               +{clients.length - 5} más
             </p>
           )}
@@ -189,15 +189,15 @@ export function ClientAnalysis() {
       <div className="flex gap-5 mb-4">
         <span className="flex items-center gap-2 text-[14px]">
           <span className="h-2 w-2 rounded-full bg-success/80" />
-          <span className="text-foreground-muted/70 font-medium">{loyal.length} fieles</span>
+          <span className="text-foreground-subtle font-medium">{loyal.length} fieles</span>
         </span>
         <span className="flex items-center gap-2 text-[14px]">
           <span className="h-2 w-2 rounded-full bg-danger/80" />
-          <span className="text-foreground-muted/70 font-medium">{atRisk.length} en riesgo</span>
+          <span className="text-foreground-subtle font-medium">{atRisk.length} en riesgo</span>
         </span>
         <span className="flex items-center gap-2 text-[14px]">
           <span className="h-2 w-2 rounded-full bg-foreground-muted/70" />
-          <span className="text-foreground-muted/70 font-medium">{fresh.length} nuevos</span>
+          <span className="text-foreground-subtle font-medium">{fresh.length} nuevos</span>
         </span>
       </div>
 
@@ -209,8 +209,8 @@ export function ClientAnalysis() {
           count={atRisk.length}
           clients={atRisk}
           defaultOpen={true}
-          accentColor="text-danger/60"
-          badgeClasses="text-danger/80 bg-danger/10"
+          accentColor="text-danger"
+          badgeClasses="text-danger bg-danger/10"
         />
         <ClientCategory
           title="Clientes fieles"
@@ -218,8 +218,8 @@ export function ClientAnalysis() {
           count={loyal.length}
           clients={loyal}
           defaultOpen={false}
-          accentColor="text-success/60"
-          badgeClasses="text-success/80 bg-success/10"
+          accentColor="text-success"
+          badgeClasses="text-success bg-success/10"
         />
         <ClientCategory
           title="Nuevos"
@@ -227,8 +227,8 @@ export function ClientAnalysis() {
           count={fresh.length}
           clients={fresh}
           defaultOpen={false}
-          accentColor="text-foreground-muted/60"
-          badgeClasses="text-foreground-muted/60 bg-foreground-muted/8"
+          accentColor="text-foreground-subtle"
+          badgeClasses="text-foreground-subtle bg-foreground-muted/8"
         />
       </div>
     </section>
