@@ -26,8 +26,9 @@ servidores. `runtimeVersion` usa la politica `appVersion` a proposito, para que
 todos los builds y updates sean comparables (evita el "Runtime version
 mismatch" de EAS Update).
 
-Los bundle identifiers (`com.businext.mobile` en iOS y Android) son
-placeholders y deben confirmarse antes de un build distribuible (issue #33).
+El identificador de la app es `com.businext.mobile` en iOS y Android y es
+definitivo: las credenciales de firma de las dos plataformas están creadas con
+él y no se puede cambiar una vez publicada.
 
 ## Estructura
 
@@ -144,10 +145,9 @@ abre su detalle (`/trends/<id>`) si el usuario tiene `canViewTrends`.
 Backend: `POST`/`DELETE /users/{id}/push-tokens` en `businext-backend`, mas el
 envio de notificacion al crear un `BookingRequest`.
 
-**Limitacion actual:** la tabla `push_token` no tiene migracion de Alembic
-porque `alembic/versions/` esta gitignored en el backend y nunca se commiteo
-(ver la nota de migraciones en el [README de la raiz](../../README.md)). Hay
-que crearla a mano en Supabase.
+La tabla `pushtoken` no tiene migración de Alembic (ver la nota de
+migraciones en el [README de la raiz](../../README.md)); está creada a mano en
+Supabase con `docs/sql/031-push-token.sql` del backend.
 
 ## Pantallas
 
@@ -177,6 +177,12 @@ que crearla a mano en Supabase.
   webhook `call_inbound` que la de un cliente, asi que prueba el agente real
   con los datos del negocio. En el simulador de iOS `tel:` no abre nada:
   probar en un dispositivo.
+- **Borrar cuenta** (`src/components/DeleteAccountSection.tsx`, al final de
+  Ajustes) — lo exigen App Store y Google Play. Tras confirmar llama a
+  `accountApi.deleteMe` (`DELETE /users/me` del backend) y cierra la sesión. Si
+  es el owner, se cancela la suscripción y se borra el negocio entero; si es un
+  miembro, solo su usuario y su acceso. Ajustes enlaza también la política de
+  privacidad de la web (`/privacidad`).
 - **Clientes en riesgo** (`app/clients-at-risk.tsx`, issue #186, solo owner y
   manager; si no, redirige a `/`) — los clientes que `computeClientProfiles` de
   shared-core marca `en_riesgo`. Cada tarjeta (`src/components/ClientRiskCard.tsx`)
@@ -200,6 +206,50 @@ que crearla a mano en Supabase.
   dominio: Completar / Revertir / Eliminar. El modelo no tiene un estado
   "cancelada" distinto (ver la nota en el propio archivo).
 - **Login** (issue #029) — Supabase Auth con token en `expo-secure-store`.
+
+## Publicar en App Store y Google Play
+
+La fase está en el tablero como «Publicar la app en App Store y Google Play».
+Lo que ya está en el repo:
+
+- Versión `1.0.0`, solo iPhone (`supportsTablet: false`, así la ficha no pide
+  capturas de iPad) y `ITSAppUsesNonExemptEncryption: false` para no responder
+  a la pregunta de cifrado en cada envío.
+- Borrado de cuenta en Ajustes y páginas públicas en la web:
+  `https://businext.greenfourtech.com/privacidad` y
+  `https://businext.greenfourtech.com/eliminar-cuenta` (las piden las fichas).
+- Textos de las fichas en [`docs/fichas-tiendas.md`](./docs/fichas-tiendas.md).
+- `submit.production` en `eas.json`: Android sube a la pista interna de Play
+  como borrador.
+
+Lo que hay que hacer fuera del repo, una vez:
+
+1. Variables de Supabase en el entorno `production` de EAS (como las de
+   `preview`, ver más abajo).
+2. `STRIPE_SECRET_KEY` en el backend de Render: sin ella, un owner con
+   suscripción activa no puede borrar su cuenta.
+3. **iOS:** crear la app en App Store Connect con el bundle id
+   `com.businext.mobile`. El primer `eas submit` pide el Apple ID y el id de la
+   app; después se puede fijar `submit.production.ios.ascAppId` en `eas.json`.
+4. **Android:** crear la app en Play Console y subir el primer `.aab` a mano
+   (Google no deja que la API cree la app). Después, crear una service account
+   con acceso a Play Console y guardar su JSON como
+   `apps/mobile/google-play-service-account.json` (está en `.gitignore`).
+5. Rellenar en cada tienda la ficha, la privacidad («App Privacy» y «Seguridad
+   de los datos»), la clasificación por edad y la cuenta de prueba para la
+   revisión (un owner con datos de ejemplo).
+
+Y para cada versión:
+
+```bash
+cd apps/mobile
+npx eas-cli build --platform all --profile production
+npx eas-cli submit --platform ios --latest
+npx eas-cli submit --platform android --latest
+```
+
+Prueba primero en TestFlight y en la pista interna de Play antes de mandar a
+revisión.
 
 ## Chat desde la agenda (issue #86)
 

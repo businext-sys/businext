@@ -17,3 +17,4 @@ export * from "./assistantApi";
 export * from "./voiceAgentApi";
 export * from "./trendsApi";
 export * from "./customerMessageApi";
+export * from "./accountApi";

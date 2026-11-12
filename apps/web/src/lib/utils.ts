@@ -39,4 +39,6 @@ export const publicRoutes = [
   "/auth/confirm",
   "/resetpassword",
   "/error",
+  "/privacidad",
+  "/eliminar-cuenta",
 ];
