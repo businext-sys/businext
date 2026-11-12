@@ -43,6 +43,17 @@
   --color-muted-foreground: #b5aba0;
   --color-input: #3a3530;
   --color-ring: #41d9d6;
+  /* Colores de marca de Instagram y TikTok: iguales en los dos modos, solo
+     para sus logos y las vistas previas de sus videos (DESIGN.md). */
+  --color-instagram-yellow: #feda75;
+  --color-instagram-orange: #fa7e1e;
+  --color-instagram-pink: #d62976;
+  --color-instagram-purple: #962fbf;
+  --color-instagram-blue: #4f5bd5;
+  --color-tiktok-cyan: #25f4ee;
+  --color-tiktok-red: #fe2c55;
+  --color-tiktok-black: #010101;
+  --color-brand-foreground: #ffffff;
 
   /* ── Typography ── */
   --font-sans: var(--font-body), system-ui, sans-serif;
