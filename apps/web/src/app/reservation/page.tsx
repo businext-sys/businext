@@ -26,10 +26,12 @@ import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@/components/ui/tab
 import { Select } from "@/components/ui/select";
 import { SectionSkeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageContainer, PageHeader } from "@/components/common/PageLayout";
 import { ProductSaleForm } from "@/components/reservation/ProductSaleForm";
 import { WalkInModal } from "@/components/reservation/WalkInModal";
 
-import { Info, CalendarPlus, ClipboardList, CalendarClock, Zap, ShieldAlert } from "lucide-react";
+import { Info, CalendarPlus, ClipboardList, CalendarClock, CalendarDays, Zap, ShieldAlert } from "lucide-react";
 
 export default function ReservationPage() {
   const {
@@ -208,43 +210,33 @@ export default function ReservationPage() {
   /* ── Loading state ── */
   if (contextLoading) {
     return (
-      <div className="min-h-screen w-full pt-14 md:pt-0">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 space-y-6">
-          <SectionSkeleton />
-          <SectionSkeleton />
-        </div>
-      </div>
+      <PageContainer>
+        <SectionSkeleton />
+        <SectionSkeleton />
+      </PageContainer>
     );
   }
 
   /* ── Access denied ── */
   if (!capabilities.canManageReservations) {
     return (
-      <div className="min-h-screen w-full pt-14 md:pt-0">
-        <div className="flex justify-center items-center min-h-[60vh] px-4">
-          <Card variant="elevated" className="max-w-xl border-warning/40">
-            <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
-              <ShieldAlert className="h-10 w-10 text-warning" />
-              <h2 className="font-heading text-h3 font-bold text-warning">
-                Acceso restringido
-              </h2>
-              <p className="text-body-sm text-foreground-muted">
-                No tienes permisos para gestionar las reservas.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      <PageContainer>
+        <EmptyState
+          icon={<ShieldAlert />}
+          title="Acceso restringido"
+          description="No tienes permisos para gestionar las reservas."
+        />
+      </PageContainer>
     );
   }
 
   return (
-    <div className="min-h-screen w-full bg-background pt-14 md:pt-0">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 space-y-6">
-        {/* Page header */}
-        <h1 className="font-heading text-h2 font-bold text-foreground">
-          Reservas
-        </h1>
+    <PageContainer>
+        <PageHeader
+          icon={CalendarDays}
+          title="Reservas"
+          description="La agenda de hoy, las citas pendientes y las ventas del día"
+        />
 
         {(isOwner || context?.role === "manager") && <ReservationWeekSummary />}
 
@@ -489,7 +481,6 @@ export default function ReservationPage() {
           employees={activeEmployees}
           onSubmit={handleWalkIn}
         />
-      </div>
-    </div>
+    </PageContainer>
   );
 }

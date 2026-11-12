@@ -1,7 +1,8 @@
 "use client";
 
-import { ShieldAlert } from "lucide-react";
+import { PhoneCall, ShieldAlert } from "lucide-react";
 import { useAccessContext } from "@/hooks/useAccessContext";
+import { PageContainer, PageHeader } from "@/components/common/PageLayout";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionSkeleton } from "@/components/ui/skeleton";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@/components/ui/tabs";
@@ -13,16 +14,12 @@ export default function VoiceAgentPage() {
   const { context, loading } = useAccessContext();
 
   return (
-    <div className="min-h-screen w-full bg-background pt-14 md:pt-0">
-      <div className="mx-auto max-w-7xl space-y-6 px-5 py-8 md:px-10">
-        <div>
-          <h1 className="font-heading text-h2 font-bold uppercase text-foreground">
-            Agente de voz
-          </h1>
-          <p className="text-body-sm text-foreground-muted">
-            Las llamadas que atiende tu asistente telefónico, sus resultados y su configuración.
-          </p>
-        </div>
+    <PageContainer>
+        <PageHeader
+          icon={PhoneCall}
+          title="Agente de voz"
+          description="Las llamadas que atiende tu asistente telefónico, sus resultados y su configuración"
+        />
 
         {loading ? (
           <SectionSkeleton />
@@ -52,7 +49,6 @@ export default function VoiceAgentPage() {
             </TabPanels>
           </TabGroup>
         )}
-      </div>
-    </div>
+    </PageContainer>
   );
 }
