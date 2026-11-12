@@ -186,6 +186,7 @@ const es = {
     label: "Pie de página",
     builtTitle: "Webs que hemos hecho",
     join: "Apúntate a la whitelist",
+    privacy: "Privacidad",
     motto: "Revolucionando el sector de la belleza, una barbería a la vez.",
   },
   screens: {
@@ -422,6 +423,7 @@ const en: Copy = {
     label: "Footer",
     builtTitle: "Websites we've built",
     join: "Join the waitlist",
+    privacy: "Privacy",
     motto: "Shaking up the beauty industry, one barbershop at a time.",
   },
   screens: {

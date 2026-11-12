@@ -337,7 +337,12 @@ export function Landing({ lang }: { lang: Lang }) {
           </div>
         </div>
         <div className={`${wrap} mt-12 flex flex-wrap justify-between gap-3 border-t border-border-subtle pt-6 text-caption`}>
-          <span>© {new Date().getFullYear()} Businext</span>
+          <span>
+            © {new Date().getFullYear()} Businext ·{" "}
+            <Link href="/privacidad" className="hover:text-foreground">
+              {t.footer.privacy}
+            </Link>
+          </span>
           <span>{t.footer.motto}</span>
         </div>
       </footer>

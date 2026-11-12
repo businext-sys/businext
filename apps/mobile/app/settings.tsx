@@ -1,14 +1,17 @@
-import { Pressable, Text, View } from "react-native";
+import { Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import { useAccessContext } from "@businext/shared-core/hooks";
 import { useAuth } from "@/context/AuthContext";
 import { VoiceAgentSection } from "@/components/VoiceAgentSection";
 import { AppearanceSection } from "@/components/AppearanceSection";
+import { DeleteAccountSection } from "@/components/DeleteAccountSection";
 import { themedStyles } from "@/theme/ThemeContext";
 
+const PRIVACY_POLICY_URL = "https://businext.greenfourtech.com/privacidad";
+
 /**
- * Ajustes (issue #78): cuenta, agente de voz (solo owner), apariencia y
- * cierre de sesion.
+ * Ajustes (issue #78): cuenta, agente de voz (solo owner), apariencia,
+ * privacidad, cierre de sesion y borrado de cuenta.
  */
 export default function SettingsScreen() {
   const styles = useStyles();
@@ -18,7 +21,7 @@ export default function SettingsScreen() {
   const canMessageClients = context?.role === "owner" || context?.role === "manager";
 
   return (
-    <View style={styles.flex}>
+    <ScrollView style={styles.flex} contentContainerStyle={styles.content}>
       {context && (
         <View style={styles.section}>
           <Text style={styles.label}>Cuenta</Text>
@@ -37,15 +40,24 @@ export default function SettingsScreen() {
       )}
       {context?.role === "owner" && <VoiceAgentSection />}
       <AppearanceSection />
+      <Pressable
+        style={styles.section}
+        onPress={() => Linking.openURL(PRIVACY_POLICY_URL)}
+        accessibilityRole="link"
+      >
+        <Text style={styles.value}>Política de privacidad</Text>
+      </Pressable>
       <Pressable style={styles.logout} onPress={logout} accessibilityRole="button">
         <Text style={styles.logoutText}>Cerrar sesión</Text>
       </Pressable>
-    </View>
+      {context && <DeleteAccountSection isOwner={context.role === "owner"} />}
+    </ScrollView>
   );
 }
 
 const useStyles = themedStyles((colors) => ({
-  flex: { flex: 1, backgroundColor: colors.background, padding: 16, gap: 16 },
+  flex: { flex: 1, backgroundColor: colors.background },
+  content: { padding: 16, gap: 16 },
   section: {
     padding: 16,
     borderRadius: 12,
