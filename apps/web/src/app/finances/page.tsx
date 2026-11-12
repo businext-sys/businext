@@ -105,6 +105,19 @@ export default function FinancesPage() {
     };
   }, [financesData, selectedMonth, selectedYear, isNonOwner]);
 
+  const monthIncomes = useMemo(
+    () =>
+      financesData.filter((f) => {
+        if (!f.created_at || f.type !== "INCOME") return false;
+        const date = new Date(f.created_at);
+        return (
+          date.getMonth() === selectedMonth &&
+          date.getFullYear() === selectedYear
+        );
+      }),
+    [financesData, selectedMonth, selectedYear]
+  );
+
   const totalExpense = useMemo(
     () =>
       financesData
@@ -355,8 +368,14 @@ export default function FinancesPage() {
 
           {/* Right column: charts */}
           <div className="lg:col-span-2 space-y-6">
-            <FinancesBarChart financesData={financesData} />
-            <FinancesPieChart financesData={financesData} />
+            <FinancesBarChart
+              financesData={monthIncomes}
+              period={`${monthName} ${selectedYear}`}
+            />
+            <FinancesPieChart
+              financesData={monthIncomes}
+              period={`${monthName} ${selectedYear}`}
+            />
             <FinancesLineChart
               financesData={anualFinancesData}
               year={selectedYear}

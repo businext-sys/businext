@@ -20,8 +20,10 @@ ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
 export const FinancesPieChart = ({
   financesData,
+  period,
 }: {
   financesData: Finances[];
+  period: string;
 }) => {
   const { getAllProducts, productData } = useProduct();
 
@@ -29,12 +31,12 @@ export const FinancesPieChart = ({
     financesArray: Finances[],
     productsArray: Product[]
   ) => {
-    const getAmountByService = financesArray
-      .filter((item) => item.type === "INCOME")
-      .reduce((acc: Record<string, number>, item: Finances) => {
-        acc[item.concept] = (acc[item.concept] || 0) + 1;
-        return acc;
-      }, {});
+    const incomes = financesArray.filter((item) => item.type === "INCOME");
+
+    const getAmountByService = incomes.reduce((acc: Record<string, number>, item: Finances) => {
+      acc[item.concept] = (acc[item.concept] || 0) + 1;
+      return acc;
+    }, {});
 
     const existingServices = productsArray.map((product: Product) => {
       return {
@@ -43,7 +45,7 @@ export const FinancesPieChart = ({
       };
     });
 
-    const nonExistingServices = financesArray.filter((item) => {
+    const nonExistingServices = incomes.filter((item) => {
       return !existingServices.some(
         (product) => product.label === item.concept
       );
@@ -58,6 +60,7 @@ export const FinancesPieChart = ({
   };
 
   const dataset = createDataSet(financesData, productData);
+  const hasIncomes = dataset.some((data) => data.amount > 0);
   useThemeMode();
   const baseOptions = darkChartOptions();
 
@@ -71,43 +74,51 @@ export const FinancesPieChart = ({
         <h2 className="font-heading text-h4 font-semibold text-foreground">
           Servicios más vendidos
         </h2>
-        <p className="text-caption text-foreground-muted">Todos los registros</p>
+        <p className="text-caption text-foreground-muted">{period}</p>
       </CardHeader>
       <CardContent>
-        <div className="relative w-full h-[220px] sm:h-[260px] md:h-[300px]">
-          <Pie
-            data={{
-              labels: dataset.map((data) => data.label),
-              datasets: [
-                {
-                  label: "Servicios contratados",
-                  data: dataset.map((data) => data.amount),
-                  backgroundColor: dataset.map((_, i) => paletteColor(i)),
-                  borderColor: withAlpha(colorToken("surface"), 0.8),
-                  borderWidth: 2,
-                  hoverOffset: 12,
-                },
-              ],
-            }}
-            options={{
-              responsive: true,
-              maintainAspectRatio: false,
-              animation: baseOptions.animation,
-              plugins: {
-                ...baseOptions.plugins,
-                legend: { display: false },
-                title: { display: false },
-              },
-            }}
-          />
-        </div>
-        <FinancesChartLegend
-          items={dataset.map((data, i) => ({
-            label: data.label,
-            value: data.amount.toLocaleString("es-ES"),
-            color: paletteColor(i),
-          }))}
-        />
+        {hasIncomes ? (
+          <>
+            <div className="relative w-full h-[220px] sm:h-[260px] md:h-[300px]">
+              <Pie
+                data={{
+                  labels: dataset.map((data) => data.label),
+                  datasets: [
+                    {
+                      label: "Servicios contratados",
+                      data: dataset.map((data) => data.amount),
+                      backgroundColor: dataset.map((_, i) => paletteColor(i)),
+                      borderColor: withAlpha(colorToken("surface"), 0.8),
+                      borderWidth: 2,
+                      hoverOffset: 12,
+                    },
+                  ],
+                }}
+                options={{
+                  responsive: true,
+                  maintainAspectRatio: false,
+                  animation: baseOptions.animation,
+                  plugins: {
+                    ...baseOptions.plugins,
+                    legend: { display: false },
+                    title: { display: false },
+                  },
+                }}
+              />
+            </div>
+            <FinancesChartLegend
+              items={dataset.map((data, i) => ({
+                label: data.label,
+                value: data.amount.toLocaleString("es-ES"),
+                color: paletteColor(i),
+              }))}
+            />
+          </>
+        ) : (
+          <p className="py-8 text-center text-body-sm text-foreground-muted">
+            Sin ingresos en {period}.
+          </p>
+        )}
       </CardContent>
     </Card>
   );
