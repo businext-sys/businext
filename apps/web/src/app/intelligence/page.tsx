@@ -119,7 +119,7 @@ function PageHeader() {
         <h1 className="font-heading text-h3 font-bold text-foreground tracking-tight">
           Inteligencia de negocio
         </h1>
-        <p className="text-[14px] text-foreground-muted/70 mt-0.5 tracking-wide">
+        <p className="text-[14px] text-foreground-subtle mt-0.5 tracking-wide">
           Tu negocio, analizado por IA cada semana
         </p>
       </div>

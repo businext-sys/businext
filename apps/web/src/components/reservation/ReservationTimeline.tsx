@@ -196,7 +196,7 @@ function ReservationCard({
         bg: "bg-secondary/[0.04]",
         border: "border-secondary/15",
         hoverBorder: "hover:border-secondary/30",
-        avatar: "bg-secondary/15 text-secondary",
+        avatar: "bg-secondary/15 text-foreground",
         amount: "text-secondary",
         separator: "border-secondary/10",
       }
@@ -204,7 +204,7 @@ function ReservationCard({
         bg: "bg-success/[0.04]",
         border: "border-success/15",
         hoverBorder: "hover:border-success/30",
-        avatar: "bg-success/15 text-success",
+        avatar: "bg-success/15 text-foreground",
         amount: "text-success",
         separator: "border-success/10",
       };
@@ -477,14 +477,14 @@ export function TodayTimeline({
         <button
           type="button"
           onClick={() => onViewChange?.("timeline")}
-          className="focus:outline-none"
+          className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <span
             className={cn(
               "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium transition-all cursor-pointer",
               view === "timeline"
-                ? "bg-secondary/20 text-secondary ring-1 ring-secondary/30"
-                : "bg-secondary/8 text-secondary/60 hover:text-secondary hover:bg-secondary/15"
+                ? "bg-secondary/20 text-foreground ring-1 ring-secondary/30"
+                : "bg-secondary/8 text-foreground-muted hover:text-foreground hover:bg-secondary/15"
             )}
           >
             <Clock className="h-2.5 w-2.5" />
@@ -494,14 +494,14 @@ export function TodayTimeline({
         <button
           type="button"
           onClick={() => onViewChange?.("completed")}
-          className="focus:outline-none"
+          className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <span
             className={cn(
               "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium transition-all cursor-pointer",
               view === "completed"
-                ? "bg-success/20 text-success ring-1 ring-success/30"
-                : "bg-success/8 text-success/60 hover:text-success hover:bg-success/15"
+                ? "bg-success/20 text-foreground ring-1 ring-success/30"
+                : "bg-success/8 text-foreground-muted hover:text-foreground hover:bg-success/15"
             )}
           >
             <CheckCircle className="h-2.5 w-2.5" />

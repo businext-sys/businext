@@ -26,16 +26,16 @@ type BusinessProfileCardProps = {
    categorica (--color-chart-*) y de los tokens de estado solo cuando el hue
    coincide: verde -> success, naranja -> highlight. */
 const CATEGORY_MAP: Record<string, { icon: typeof Store; label: string; color: string }> = {
-  barbería: { icon: Scissors, label: "Barbería", color: "bg-chart-3/20 text-chart-3" },
-  barber: { icon: Scissors, label: "Barbería", color: "bg-chart-3/20 text-chart-3" },
-  "clínica estética": { icon: Sparkles, label: "Clínica estética", color: "bg-chart-5/20 text-chart-5" },
-  estética: { icon: Sparkles, label: "Clínica estética", color: "bg-chart-5/20 text-chart-5" },
-  fisioterapia: { icon: Activity, label: "Fisioterapia", color: "bg-success/20 text-success" },
-  gimnasio: { icon: Dumbbell, label: "Gimnasio", color: "bg-highlight/20 text-highlight" },
-  gym: { icon: Dumbbell, label: "Gimnasio", color: "bg-highlight/20 text-highlight" },
+  barbería: { icon: Scissors, label: "Barbería", color: "bg-chart-3/20 text-foreground" },
+  barber: { icon: Scissors, label: "Barbería", color: "bg-chart-3/20 text-foreground" },
+  "clínica estética": { icon: Sparkles, label: "Clínica estética", color: "bg-chart-5/20 text-foreground" },
+  estética: { icon: Sparkles, label: "Clínica estética", color: "bg-chart-5/20 text-foreground" },
+  fisioterapia: { icon: Activity, label: "Fisioterapia", color: "bg-success/20 text-foreground" },
+  gimnasio: { icon: Dumbbell, label: "Gimnasio", color: "bg-highlight/20 text-foreground" },
+  gym: { icon: Dumbbell, label: "Gimnasio", color: "bg-highlight/20 text-foreground" },
 };
 
-const DEFAULT_CATEGORY_COLOR = "bg-primary/20 text-primary";
+const DEFAULT_CATEGORY_COLOR = "bg-primary/20 text-foreground";
 
 function getCategoryInfo(category: string | null) {
   if (!category) return { icon: Store, label: "Negocio", color: DEFAULT_CATEGORY_COLOR };

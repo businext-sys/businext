@@ -115,10 +115,10 @@ function KPICard({
         {/* Icon + label + sparkline row */}
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2.5">
-            <span className="text-foreground-muted/70 group-hover:text-foreground-muted transition-colors duration-300">
+            <span className="text-foreground-subtle group-hover:text-foreground-muted transition-colors duration-300">
               {icon}
             </span>
-            <span className="text-[11px] uppercase tracking-[0.08em] font-medium text-foreground-muted/70">
+            <span className="text-[11px] uppercase tracking-[0.08em] font-medium text-foreground-subtle">
               {label}
             </span>
           </div>
@@ -133,7 +133,7 @@ function KPICard({
           <span
             className={`inline-flex items-center gap-1 text-[14px] font-semibold px-2 py-0.5 rounded-full ${
               isNeutral
-                ? "text-foreground-muted/60 bg-foreground-muted/5"
+                ? "text-foreground-subtle bg-foreground-muted/5"
                 : isPositive
                 ? "text-success bg-success/8"
                 : "text-danger bg-danger/8"
@@ -180,7 +180,7 @@ export function SummaryPulse({
             <h2 className="text-[16px] font-semibold text-foreground leading-none tracking-tight">
               Pulso semanal
             </h2>
-            <p className="text-[14px] text-foreground-muted/60 mt-1 tracking-wide">
+            <p className="text-[14px] text-foreground-subtle mt-1 tracking-wide">
               {summary.week_start} — {summary.week_end}
             </p>
           </div>
@@ -190,7 +190,7 @@ export function SummaryPulse({
           size="sm"
           onClick={onRegenerate}
           loading={generating}
-          className="text-[14px] text-foreground-muted/70 hover:text-foreground gap-1.5"
+          className="text-[14px] text-foreground-subtle hover:text-foreground gap-1.5"
         >
           <RefreshCw className="h-3 w-3" />
           Regenerar
@@ -234,17 +234,17 @@ export function SummaryPulse({
       {/* Detail chips */}
       <div className="flex flex-wrap gap-2 mt-4">
         {kpis.best_day !== "N/A" && (
-          <span className="inline-flex items-center rounded-full bg-success/8 border border-success/10 px-3 py-1 text-[14px] font-medium text-success/80 tracking-wide">
+          <span className="inline-flex items-center rounded-full bg-success/8 border border-success/10 px-3 py-1 text-[14px] font-medium text-success tracking-wide">
             Mejor día: {kpis.best_day}
           </span>
         )}
         {kpis.worst_day !== "N/A" && (
-          <span className="inline-flex items-center rounded-full bg-danger/8 border border-danger/10 px-3 py-1 text-[14px] font-medium text-danger/80 tracking-wide">
+          <span className="inline-flex items-center rounded-full bg-danger/8 border border-danger/10 px-3 py-1 text-[14px] font-medium text-danger tracking-wide">
             Peor día: {kpis.worst_day}
           </span>
         )}
         {kpis.top_service !== "N/A" && (
-          <span className="inline-flex items-center rounded-full bg-primary/8 border border-primary/10 px-3 py-1 text-[14px] font-medium text-primary/80 tracking-wide">
+          <span className="inline-flex items-center rounded-full bg-primary/8 border border-primary/10 px-3 py-1 text-[14px] font-medium text-primary tracking-wide">
             Top: {kpis.top_service}
           </span>
         )}
@@ -270,7 +270,7 @@ export function SummaryNarrative({ summary }: { summary: WeeklySummaryData }) {
           {summary.client_narrative && (
             <>
               <div className="my-5 border-t border-border-subtle/40" />
-              <p className="text-[11px] uppercase tracking-[0.1em] text-foreground-muted/60 mb-2.5 font-medium">
+              <p className="text-[11px] uppercase tracking-[0.1em] text-foreground-subtle mb-2.5 font-medium">
                 Sobre tus clientes
               </p>
               <p className="text-[14px] text-foreground/90 leading-[1.8] whitespace-pre-line">
@@ -292,17 +292,17 @@ function normalizeOpportunity(opp: Opportunity | string): Opportunity {
 
 const IMPACT_STYLES: Record<string, { badge: string; icon: React.ReactNode; accent: string }> = {
   alto: {
-    badge: "text-warning/90 bg-warning/10 border border-warning/15",
+    badge: "text-warning bg-warning/10 border border-warning/15",
     icon: <Zap className="h-3 w-3" />,
     accent: "from-warning/30 to-warning/5",
   },
   medio: {
-    badge: "text-primary/80 bg-primary/8 border border-primary/10",
+    badge: "text-primary bg-primary/8 border border-primary/10",
     icon: <ArrowRight className="h-3 w-3" />,
     accent: "from-primary/20 to-primary/5",
   },
   bajo: {
-    badge: "text-foreground-muted/60 bg-foreground-muted/8 border border-foreground-muted/10",
+    badge: "text-foreground-subtle bg-foreground-muted/8 border border-foreground-muted/10",
     icon: <CircleDot className="h-3 w-3" />,
     accent: "from-foreground-muted/15 to-foreground-muted/5",
   },
@@ -333,7 +333,7 @@ export function SummaryOpportunities({ kpis }: { kpis: WeeklySummaryKPIs }) {
               {/* Left accent bar */}
               <div className={`absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b ${style.accent}`} />
               <div className="flex gap-3.5 items-start">
-                <span className="text-[14px] font-bold text-foreground-muted/70 mt-0.5 shrink-0 tabular-nums">
+                <span className="text-[14px] font-bold text-foreground-subtle mt-0.5 shrink-0 tabular-nums">
                   {i + 1}
                 </span>
                 <div className="flex-1 min-w-0">
@@ -405,7 +405,7 @@ export function SummaryEmpty({
         <h3 className="text-[16px] font-semibold text-foreground mb-2 tracking-tight">
           Sin resumen semanal
         </h3>
-        <p className="text-[14px] text-foreground-muted/60 mb-6 max-w-sm mx-auto leading-relaxed">
+        <p className="text-[14px] text-foreground-subtle mb-6 max-w-sm mx-auto leading-relaxed">
           Genera un análisis con IA de la semana anterior para entender cómo va tu negocio.
         </p>
         <Button

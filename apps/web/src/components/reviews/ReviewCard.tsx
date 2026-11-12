@@ -16,11 +16,11 @@ type ReviewCardProps = {
    paleta categorica (--color-chart-3, azul) porque no hay token de estado
    entre success y warning. */
 const RATING_AVATAR_COLORS: Record<number, string> = {
-  5: "bg-success/20 text-success",
-  4: "bg-chart-3/20 text-chart-3",
-  3: "bg-warning/20 text-warning",
-  2: "bg-highlight/20 text-highlight",
-  1: "bg-danger/20 text-danger",
+  5: "bg-success/20 text-foreground",
+  4: "bg-chart-3/20 text-foreground",
+  3: "bg-warning/20 text-foreground",
+  2: "bg-highlight/20 text-foreground",
+  1: "bg-danger/20 text-foreground",
 };
 
 function StarRating({ rating }: { rating: number }) {

@@ -11,15 +11,13 @@ export const buttonVariants = cva(
         primary:
           "bg-primary text-primary-foreground hover:bg-primary-hover active:scale-[0.98]",
         secondary:
-          "bg-transparent border border-primary text-primary hover:bg-primary/10 active:scale-[0.98]",
+          "bg-transparent border border-border text-foreground hover:bg-surface-raised active:scale-[0.98]",
         danger:
           "bg-danger text-danger-foreground hover:bg-danger/90 active:scale-[0.98]",
         ghost:
           "text-foreground-muted hover:bg-surface-raised hover:text-foreground",
         accent:
           "bg-accent text-accent-foreground hover:bg-accent-hover active:scale-[0.98]",
-        gradient:
-          "bg-gradient-to-r from-primary to-accent text-foreground hover:brightness-110 active:scale-[0.98]",
       },
       size: {
         sm: "h-8 rounded-md px-3 text-caption",

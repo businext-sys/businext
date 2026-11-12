@@ -125,6 +125,12 @@ paleta por defecto de Tailwind.
   cambiar).
 - La landing (`.landing`) se ve siempre en oscuro: fija los tokens de *Noche de barrio*
   aunque la app esté en claro.
+- Un tamaño de texto nuevo en `@theme` (`--text-*`) se añade también a la lista de
+  `cn()` en `src/lib/utils.ts`. Si falta, `tailwind-merge` lo toma por un color y
+  descarta el color del texto (`text-primary-foreground text-body-sm` se queda sin color).
+- Texto sobre un tinte de su mismo color (`bg-success/15`) va en `text-foreground`: el
+  color sobre su tinte no llega a AA en todos los fondos. Sin opacidad en el texto
+  (`text-foreground-muted/60`): para texto secundario, `text-foreground-subtle`.
 
 ## Landing (`src/app/page.tsx`)
 
