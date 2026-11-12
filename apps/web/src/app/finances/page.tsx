@@ -18,7 +18,6 @@ import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@/components/ui/tabs";
 import { Plus, ChevronLeft, ChevronRight, Receipt } from "lucide-react";
 
 export default function FinancesPage() {
@@ -355,25 +354,13 @@ export default function FinancesPage() {
           </div>
 
           {/* Right column: charts */}
-          <div className="lg:col-span-2">
-            <TabGroup>
-              <TabList>
-                <Tab>Barras</Tab>
-                <Tab>Pastel</Tab>
-                <Tab>Línea</Tab>
-              </TabList>
-              <TabPanels>
-                <TabPanel>
-                  <FinancesBarChart financesData={financesData} />
-                </TabPanel>
-                <TabPanel>
-                  <FinancesPieChart financesData={financesData} />
-                </TabPanel>
-                <TabPanel>
-                  <FinancesLineChart financesData={anualFinancesData} />
-                </TabPanel>
-              </TabPanels>
-            </TabGroup>
+          <div className="lg:col-span-2 space-y-6">
+            <FinancesBarChart financesData={financesData} />
+            <FinancesPieChart financesData={financesData} />
+            <FinancesLineChart
+              financesData={anualFinancesData}
+              year={selectedYear}
+            />
           </div>
         </div>
       </div>

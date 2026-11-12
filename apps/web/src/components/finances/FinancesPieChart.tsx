@@ -14,6 +14,7 @@ import { useThemeMode } from "@/hooks/useThemeMode";
 import { darkChartOptions, paletteColor } from "@/lib/chartjs-dark-theme";
 import { colorToken, withAlpha } from "@/lib/theme-tokens";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { FinancesChartLegend } from "@/components/finances/FinancesChartLegend";
 
 ChartJS.register(ArcElement, Tooltip, Legend, Title);
 
@@ -67,9 +68,10 @@ export const FinancesPieChart = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <h2 className="font-heading text-h4 font-semibold text-foreground text-center">
+        <h2 className="font-heading text-h4 font-semibold text-foreground">
           Servicios más vendidos
         </h2>
+        <p className="text-caption text-foreground-muted">Todos los registros</p>
       </CardHeader>
       <CardContent>
         <div className="relative w-full h-[220px] sm:h-[260px] md:h-[300px]">
@@ -93,22 +95,19 @@ export const FinancesPieChart = ({
               animation: baseOptions.animation,
               plugins: {
                 ...baseOptions.plugins,
-                legend: {
-                  display: true,
-                  position: "bottom" as const,
-                  labels: {
-                    color: colorToken("foreground-muted"),
-                    font: { size: 12 },
-                    padding: 10,
-                    usePointStyle: true,
-                    pointStyleWidth: 8,
-                  },
-                },
+                legend: { display: false },
                 title: { display: false },
               },
             }}
           />
         </div>
+        <FinancesChartLegend
+          items={dataset.map((data, i) => ({
+            label: data.label,
+            value: data.amount.toLocaleString("es-ES"),
+            color: paletteColor(i),
+          }))}
+        />
       </CardContent>
     </Card>
   );

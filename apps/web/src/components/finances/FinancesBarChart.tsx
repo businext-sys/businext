@@ -13,6 +13,7 @@ import {
 import { useThemeMode } from "@/hooks/useThemeMode";
 import { darkChartOptions, paletteColor } from "@/lib/chartjs-dark-theme";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { FinancesChartLegend } from "@/components/finances/FinancesChartLegend";
 
 ChartJS.register(
   CategoryScale,
@@ -52,9 +53,10 @@ export const FinancesBarChart = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <h2 className="font-heading text-h4 font-semibold text-foreground text-center">
-          Ganancias por Servicio/Producto
+        <h2 className="font-heading text-h4 font-semibold text-foreground">
+          Ingresos por servicio
         </h2>
+        <p className="text-caption text-foreground-muted">Todos los registros</p>
       </CardHeader>
       <CardContent>
         <div className="relative w-full h-[220px] sm:h-[260px] md:h-[300px]">
@@ -90,6 +92,10 @@ export const FinancesBarChart = ({
               },
               scales: {
                 ...baseOptions.scales,
+                x: {
+                  ...baseOptions.scales.x,
+                  ticks: { display: false },
+                },
                 y: {
                   ...baseOptions.scales.y,
                   ticks: {
@@ -103,6 +109,13 @@ export const FinancesBarChart = ({
             }}
           />
         </div>
+        <FinancesChartLegend
+          items={dataset.map((data, i) => ({
+            label: data.label,
+            value: `${data.amount.toLocaleString("es-ES")}€`,
+            color: paletteColor(i),
+          }))}
+        />
       </CardContent>
     </Card>
   );
