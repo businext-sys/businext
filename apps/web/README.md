@@ -31,6 +31,7 @@ src/
 │   ├── finances/          # Finanzas
 │   ├── products/          # Productos
 │   ├── reservation/       # Reservas
+│   ├── trends/            # Tendencias e ideas de contenido (owner y manager)
 │   ├── login/             # Auth
 │   └── layout.tsx         # Root layout (AppShell + ErrorBoundary)
 ├── components/

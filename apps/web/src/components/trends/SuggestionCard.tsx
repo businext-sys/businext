@@ -6,7 +6,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGlobalToast } from "@/context/ToastContext";
-import { ChevronDown, Copy, Music2 } from "lucide-react";
+import { NetworkIcon } from "@/components/trends/NetworkIcon";
+import { SuggestionPreview } from "@/components/trends/SuggestionPreview";
+import { ChevronDown, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export const NETWORK_LABELS: Record<SocialNetwork, string> = {
@@ -63,7 +65,10 @@ export function SuggestionCard({
     <Card>
       <CardContent className="p-4 space-y-3">
         <div className="flex flex-wrap items-center gap-2">
-          <Badge variant="muted">{NETWORK_LABELS[suggestion.network]}</Badge>
+          <Badge variant="muted" className="gap-1.5">
+            <NetworkIcon network={suggestion.network} className="h-3.5 w-3.5" />
+            {NETWORK_LABELS[suggestion.network]}
+          </Badge>
           <Badge variant="muted">{FORMAT_LABELS[suggestion.format]}</Badge>
           <span className="ml-auto text-caption font-bold uppercase tracking-[0.1em] text-secondary">
             {formatPublishAt(suggestion.publishAt)}
@@ -78,19 +83,15 @@ export function SuggestionCard({
           aria-expanded={expanded}
           className="flex items-center gap-1 text-label font-medium text-primary hover:text-primary-hover"
         >
-          {expanded ? "Ocultar guion" : "Ver guion"}
+          {expanded ? "Ocultar vista previa" : "Ver vista previa"}
           <ChevronDown className={cn("h-4 w-4 transition-transform", expanded && "rotate-180")} />
         </button>
 
         {expanded && (
-          <div className="space-y-3">
-            <ol className="list-decimal space-y-1 pl-5 text-body-sm text-foreground-muted">
-              {suggestion.script.map((step, index) => (
-                <li key={index}>{step}</li>
-              ))}
-            </ol>
+          <div className="flex flex-col gap-4 sm:flex-row">
+            <SuggestionPreview suggestion={suggestion} />
 
-            <div className="rounded-md bg-muted p-3 space-y-2">
+            <div className="min-w-0 flex-1 self-start rounded-md bg-muted p-3 space-y-2">
               <p className="text-body-sm text-muted-foreground whitespace-pre-line">
                 {suggestion.captionHint}
               </p>
@@ -99,13 +100,6 @@ export function SuggestionCard({
                 Copiar texto
               </Button>
             </div>
-
-            {suggestion.audioHint && (
-              <p className="flex items-center gap-2 text-body-sm text-foreground-muted">
-                <Music2 className="h-4 w-4 shrink-0 text-secondary" />
-                {suggestion.audioHint}
-              </p>
-            )}
           </div>
         )}
 

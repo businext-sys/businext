@@ -13,8 +13,6 @@ import { TeamAnalysis } from "@/components/intelligence/TeamAnalysis";
 import { ClientAnalysis } from "@/components/intelligence/ClientAnalysis";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionSkeleton } from "@/components/ui/skeleton";
-import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@/components/ui/tabs";
-import { TrendsTab } from "@/components/trends/TrendsTab";
 import { ShieldAlert, Brain } from "lucide-react";
 
 export default function IntelligencePage() {
@@ -31,7 +29,7 @@ export default function IntelligencePage() {
     );
   }
 
-  if (!capabilities.canManageTeam && !capabilities.canViewTrends) {
+  if (!capabilities.canManageTeam) {
     return (
       <div className="min-h-screen w-full pt-14 md:pt-0">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
@@ -49,24 +47,7 @@ export default function IntelligencePage() {
     <div className="min-h-screen w-full pt-14 md:pt-0">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 space-y-6">
         <PageHeader />
-        <TabGroup>
-          <TabList>
-            {capabilities.canManageTeam && <Tab>Resumen semanal</Tab>}
-            {capabilities.canViewTrends && <Tab>Tendencias</Tab>}
-          </TabList>
-          <TabPanels className="mt-6">
-            {capabilities.canManageTeam && (
-              <TabPanel>
-                <WeeklySummaryPanel />
-              </TabPanel>
-            )}
-            {capabilities.canViewTrends && (
-              <TabPanel>
-                <TrendsTab />
-              </TabPanel>
-            )}
-          </TabPanels>
-        </TabGroup>
+        <WeeklySummaryPanel />
       </div>
     </div>
   );

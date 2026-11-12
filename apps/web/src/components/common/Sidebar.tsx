@@ -20,6 +20,7 @@ import {
   MessageCircleQuestion,
   Star,
   Brain,
+  TrendingUp,
   Bell,
   PhoneCall,
 } from "lucide-react";
@@ -57,6 +58,12 @@ const NAV_LINKS = [
     href: "/intelligence",
     label: "Inteligencia",
     icon: Brain,
+    cap: "canManageTeam" as const,
+  },
+  {
+    href: "/trends",
+    label: "Tendencias",
+    icon: TrendingUp,
     cap: "canViewTrends" as const,
   },
   {
