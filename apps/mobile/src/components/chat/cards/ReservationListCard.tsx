@@ -57,6 +57,6 @@ const useStyles = themedStyles((colors) => ({
     borderTopColor: colors.border,
   },
   hour: { width: 48, fontSize: 14, fontWeight: "700", color: colors.primary },
-  info: { flex: 1, gap: 2 },
+  info: { flexGrow: 1, flexShrink: 1, gap: 2 },
   client: { fontSize: 15, fontWeight: "600", color: colors.foreground },
 }));
