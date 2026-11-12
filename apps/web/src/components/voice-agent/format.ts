@@ -41,3 +41,21 @@ const SENTIMENTS: Record<string, string> = {
 export function sentimentLabel(sentiment: string | null): string | null {
   return sentiment ? SENTIMENTS[sentiment] ?? null : null;
 }
+
+export type TranscriptTurn = { speaker: "agent" | "user"; text: string };
+
+const SPEAKER_PREFIX = /^(Agent|User):\s*/;
+
+// Retell manda la transcripción como líneas "Agent: …" / "User: …"; una línea sin prefijo sigue el turno anterior.
+export function parseTranscript(transcript: string): TranscriptTurn[] {
+  const turns: TranscriptTurn[] = [];
+  for (const line of transcript.split("\n")) {
+    const text = line.replace(SPEAKER_PREFIX, "").trim();
+    const prefix = line.match(SPEAKER_PREFIX)?.[1];
+    const last = turns[turns.length - 1];
+    if (prefix) turns.push({ speaker: prefix === "Agent" ? "agent" : "user", text });
+    else if (text && last) last.text = `${last.text}\n${text}`;
+    else if (text) turns.push({ speaker: "agent", text });
+  }
+  return turns.filter((turn) => turn.text);
+}
