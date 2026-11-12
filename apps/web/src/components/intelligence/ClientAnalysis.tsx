@@ -107,7 +107,7 @@ function ClientCategory({
   if (count === 0) return null;
 
   return (
-    <div className="rounded-xl border border-border-subtle overflow-hidden">
+    <div className="rounded-xl border border-border-subtle bg-surface overflow-hidden">
       {/* Header */}
       <button
         type="button"
@@ -147,6 +147,21 @@ function ClientCategory({
   );
 }
 
+/* ── Summary counter ─────────────────────────────────────────────── */
+function ClientCount({ label, count, dotClass }: { label: string; count: number; dotClass: string }) {
+  return (
+    <Card>
+      <CardContent className="p-4">
+        <p className="font-heading text-h1 font-bold text-foreground">{count}</p>
+        <p className="mt-1 flex items-center gap-2 text-caption text-foreground-muted">
+          <span className={`h-2 w-2 rounded-full ${dotClass}`} />
+          {label}
+        </p>
+      </CardContent>
+    </Card>
+  );
+}
+
 /* ── Main component ──────────────────────────────────────────────── */
 export function ClientAnalysis() {
   const { reservationData } = useReservation();
@@ -177,32 +192,15 @@ export function ClientAnalysis() {
   const fresh = profiles.filter((p) => p.loyaltyStatus === "nuevo");
 
   return (
-    <section className="h-full flex flex-col">
-      <h2 className="text-[16px] font-semibold text-foreground mb-3 flex items-center gap-2.5 tracking-tight">
-        <div className="h-6 w-6 rounded-lg bg-secondary/10 border border-secondary/10 flex items-center justify-center">
-          <Users className="h-3 w-3 text-secondary" />
-        </div>
-        Tus clientes
-      </h2>
-
-      {/* Summary counters */}
-      <div className="flex gap-5 mb-4">
-        <span className="flex items-center gap-2 text-[14px]">
-          <span className="h-2 w-2 rounded-full bg-success/80" />
-          <span className="text-foreground-subtle font-medium">{loyal.length} fieles</span>
-        </span>
-        <span className="flex items-center gap-2 text-[14px]">
-          <span className="h-2 w-2 rounded-full bg-danger/80" />
-          <span className="text-foreground-subtle font-medium">{atRisk.length} en riesgo</span>
-        </span>
-        <span className="flex items-center gap-2 text-[14px]">
-          <span className="h-2 w-2 rounded-full bg-foreground-muted/70" />
-          <span className="text-foreground-subtle font-medium">{fresh.length} nuevos</span>
-        </span>
+    <section className="space-y-4">
+      <div className="grid grid-cols-3 gap-3 sm:gap-4">
+        <ClientCount label="En riesgo" count={atRisk.length} dotClass="bg-danger" />
+        <ClientCount label="Fieles" count={loyal.length} dotClass="bg-success" />
+        <ClientCount label="Nuevos" count={fresh.length} dotClass="bg-foreground-subtle" />
       </div>
 
       {/* Collapsible categories */}
-      <div className="space-y-2.5 flex-1">
+      <div className="space-y-2.5">
         <ClientCategory
           title="En riesgo de perder"
           icon={<AlertTriangle className="h-3.5 w-3.5" />}

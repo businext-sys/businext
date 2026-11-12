@@ -19,7 +19,7 @@ import {
   X,
   MessageCircleQuestion,
   Star,
-  Brain,
+  Users,
   TrendingUp,
   Bell,
   PhoneCall,
@@ -55,10 +55,11 @@ const NAV_LINKS = [
     cap: "canManageReviews" as const,
   },
   {
-    href: "/intelligence",
-    label: "Inteligencia",
-    icon: Brain,
-    cap: "canManageTeam" as const,
+    href: "/clients",
+    label: "Clientes",
+    icon: Users,
+    cap: "canManageReservations" as const,
+    ownerOrManager: true,
   },
   {
     href: "/trends",
@@ -162,6 +163,7 @@ export function Sidebar() {
         {NAV_LINKS.map(({ href, label, icon: Icon, cap, ...link }) => {
           if (!capabilities[cap]) return null;
           if ("ownerOnly" in link && context?.role !== "owner") return null;
+          if ("ownerOrManager" in link && context?.role !== "owner" && context?.role !== "manager") return null;
           const active = pathname.startsWith(href);
           const badge = href === "/notifications" ? notificationsCount : 0;
           return (
