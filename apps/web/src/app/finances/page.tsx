@@ -10,6 +10,7 @@ import { FinancesPieChart } from "@/components/finances/FinancesPieChart";
 import { FinancesBarChart } from "@/components/finances/FinancesBarChart";
 import { FinancesLineChart } from "@/components/finances/FinancesLineChart";
 import { DailyOverview } from "@/components/finances/DailyOverview";
+import { FinanceWeekInsight } from "@/components/intelligence/FinanceWeekInsight";
 import { monthOptions } from "@/lib/finances/types";
 import { useAccessContext } from "@/hooks/useAccessContext";
 import { useEmployee } from "@/hooks/useEmployee";
@@ -190,6 +191,8 @@ export default function FinancesPage() {
             monthName={monthName}
           />
         </div>
+
+        {(isOwner || context?.role === "manager") && <FinanceWeekInsight />}
 
         {/* ── Daily overview ── */}
         <DailyOverview financesData={financesData} reservationData={reservationData} loading={loading} />

@@ -105,7 +105,7 @@ const es = {
       {
         title: "Sabes cómo creces",
         caption:
-          "Pregúntale al asistente cómo fue la semana, cuánto llevas en caja o qué reservas tienes mañana. Y en Inteligencia ves qué clientes fieles llevan tiempo sin venir.",
+          "Pregúntale al asistente cómo fue la semana, cuánto llevas en caja o qué reservas tienes mañana. Y en Clientes ves qué clientes fieles llevan tiempo sin venir.",
         screen: "chat",
         plate: "stop4",
       },
@@ -341,7 +341,7 @@ const en: Copy = {
       {
         title: "Know how you're growing",
         caption:
-          "Ask the assistant how the week went, what's in the till or what bookings you have tomorrow. And Insights shows which loyal clients haven't been back for a while.",
+          "Ask the assistant how the week went, what's in the till or what bookings you have tomorrow. And Clients shows which loyal clients haven't been back for a while.",
         screen: "chat",
         plate: "stop4",
       },

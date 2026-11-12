@@ -1,14 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import { EmptyState } from "@/components/ui/empty-state";
 import { useWeeklySummary } from "@/hooks/useWeeklySummary";
-import type { WeeklySummaryKPIs, WeeklySummaryData, Opportunity } from "@/lib/intelligence/types";
+import type { WeeklySummaryKPIs, Opportunity } from "@/lib/intelligence/types";
 import {
-  Brain,
   TrendingUp,
   TrendingDown,
   Minus,
@@ -16,8 +11,6 @@ import {
   ShoppingBag,
   Euro,
   Lightbulb,
-  Sparkles,
-  RefreshCw,
   Zap,
   ArrowRight,
   CircleDot,
@@ -32,7 +25,7 @@ import {
  * declaracion inline. Y a diferencia de leer el token con `colorToken()`, esto
  * tambien resuelve en SSR, asi que no hay salto de color al hidratar.
  */
-function Sparkline({ data, accentToken }: { data: number[]; accentToken: string }) {
+export function Sparkline({ data, accentToken }: { data: number[]; accentToken: string }) {
   if (!data || data.length === 0 || data.every((v) => v === 0)) return null;
 
   const width = 80;
@@ -154,133 +147,61 @@ function KPICard({
   );
 }
 
-/* ── Pulse header with KPIs ────────────────────────────────────────── */
-export function SummaryPulse({
-  summary,
-  kpis,
-  onRegenerate,
-  generating,
-  genError,
-}: {
-  summary: WeeklySummaryData;
-  kpis: WeeklySummaryKPIs;
-  onRegenerate: () => void;
-  generating: boolean;
-  genError: string | null;
-}) {
+/* ── KPIs de la semana ─────────────────────────────────────────────── */
+/* Tres series de `--color-chart-*`. Se cogen 1/3/5 (turquesa, azul, rosa) y no
+   1/2/3: chart-2 es un turquesa casi igual que chart-1 y las tres tarjetas se
+   leen en paralelo. */
+export function SummaryKpis({ kpis }: { kpis: WeeklySummaryKPIs }) {
   return (
-    <section className="animate-fade-in-up" style={{ animationDelay: "100ms" }}>
-      {/* Section header */}
-      <div className="flex items-center justify-between mb-5">
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-secondary/10 border border-secondary/10 flex items-center justify-center">
-            <Sparkles className="h-3.5 w-3.5 text-secondary" />
-          </div>
-          <div>
-            <h2 className="text-[16px] font-semibold text-foreground leading-none tracking-tight">
-              Pulso semanal
-            </h2>
-            <p className="text-[14px] text-foreground-subtle mt-1 tracking-wide">
-              {summary.week_start} — {summary.week_end}
-            </p>
-          </div>
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onRegenerate}
-          loading={generating}
-          className="text-[14px] text-foreground-subtle hover:text-foreground gap-1.5"
-        >
-          <RefreshCw className="h-3 w-3" />
-          Regenerar
-        </Button>
-      </div>
-
-      {genError && (
-        <p className="text-[14px] text-danger mb-4">{genError}</p>
-      )}
-
-      {/* KPI cards — tres series de `--color-chart-*`. Se cogen 1/3/5
-          (turquesa, azul, rosa) y no 1/2/3: chart-2 es un turquesa casi igual
-          que chart-1 y las tres tarjetas se leen en paralelo. */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <KPICard
-          label="Ingresos"
-          value={`${kpis.total_income.toLocaleString("es-ES", { minimumFractionDigits: 2 })}€`}
-          change={kpis.income_change_pct}
-          icon={<Euro className="h-4.5 w-4.5" />}
-          accentToken="chart-1"
-          sparklineData={kpis.daily_income}
-        />
-        <KPICard
-          label="Reservas"
-          value={String(kpis.total_reservations)}
-          change={kpis.reservations_change_pct}
-          icon={<CalendarDays className="h-4.5 w-4.5" />}
-          accentToken="chart-3"
-          sparklineData={kpis.daily_reservations}
-        />
-        <KPICard
-          label="Productos"
-          value={String(kpis.total_product_sales)}
-          change={kpis.product_sales_change_pct}
-          icon={<ShoppingBag className="h-4.5 w-4.5" />}
-          accentToken="chart-5"
-          sparklineData={kpis.daily_products}
-        />
-      </div>
-
-      {/* Detail chips */}
-      <div className="flex flex-wrap gap-2 mt-4">
-        {kpis.best_day !== "N/A" && (
-          <span className="inline-flex items-center rounded-full bg-success/8 border border-success/10 px-3 py-1 text-[14px] font-medium text-success tracking-wide">
-            Mejor día: {kpis.best_day}
-          </span>
-        )}
-        {kpis.worst_day !== "N/A" && (
-          <span className="inline-flex items-center rounded-full bg-danger/8 border border-danger/10 px-3 py-1 text-[14px] font-medium text-danger tracking-wide">
-            Peor día: {kpis.worst_day}
-          </span>
-        )}
-        {kpis.top_service !== "N/A" && (
-          <span className="inline-flex items-center rounded-full bg-primary/8 border border-primary/10 px-3 py-1 text-[14px] font-medium text-primary tracking-wide">
-            Top: {kpis.top_service}
-          </span>
-        )}
-      </div>
-    </section>
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <KPICard
+        label="Ingresos"
+        value={`${kpis.total_income.toLocaleString("es-ES", { minimumFractionDigits: 2 })}€`}
+        change={kpis.income_change_pct}
+        icon={<Euro className="h-4.5 w-4.5" />}
+        accentToken="chart-1"
+        sparklineData={kpis.daily_income}
+      />
+      <KPICard
+        label="Reservas"
+        value={String(kpis.total_reservations)}
+        change={kpis.reservations_change_pct}
+        icon={<CalendarDays className="h-4.5 w-4.5" />}
+        accentToken="chart-3"
+        sparklineData={kpis.daily_reservations}
+      />
+      <KPICard
+        label="Productos"
+        value={String(kpis.total_product_sales)}
+        change={kpis.product_sales_change_pct}
+        icon={<ShoppingBag className="h-4.5 w-4.5" />}
+        accentToken="chart-5"
+        sparklineData={kpis.daily_products}
+      />
+    </div>
   );
 }
 
-/* ── Narrative section ─────────────────────────────────────────────── */
-export function SummaryNarrative({ summary }: { summary: WeeklySummaryData }) {
+/* ── Detail chips ──────────────────────────────────────────────────── */
+export function SummaryChips({ kpis }: { kpis: WeeklySummaryKPIs }) {
   return (
-    <section className="h-full flex flex-col animate-fade-in-up" style={{ animationDelay: "200ms" }}>
-      <h2 className="text-[16px] font-semibold text-foreground mb-3 tracking-tight">
-        Qué pasó esta semana
-      </h2>
-      <div className="relative flex-1 rounded-xl border border-border-subtle bg-surface overflow-hidden">
-        {/* Subtle top gradient line */}
-        <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-secondary/30 to-transparent" />
-        <div className="p-6">
-          <p className="text-[14px] text-foreground/90 leading-[1.8] whitespace-pre-line">
-            {summary.narrative}
-          </p>
-          {summary.client_narrative && (
-            <>
-              <div className="my-5 border-t border-border-subtle/40" />
-              <p className="text-[11px] uppercase tracking-[0.1em] text-foreground-subtle mb-2.5 font-medium">
-                Sobre tus clientes
-              </p>
-              <p className="text-[14px] text-foreground/90 leading-[1.8] whitespace-pre-line">
-                {summary.client_narrative}
-              </p>
-            </>
-          )}
-        </div>
-      </div>
-    </section>
+    <div className="flex flex-wrap gap-2">
+      {kpis.best_day !== "N/A" && (
+        <span className="inline-flex items-center rounded-full bg-success/8 border border-success/10 px-3 py-1 text-[14px] font-medium text-success tracking-wide">
+          Mejor día: {kpis.best_day}
+        </span>
+      )}
+      {kpis.worst_day !== "N/A" && (
+        <span className="inline-flex items-center rounded-full bg-danger/8 border border-danger/10 px-3 py-1 text-[14px] font-medium text-danger tracking-wide">
+          Peor día: {kpis.worst_day}
+        </span>
+      )}
+      {kpis.top_service !== "N/A" && (
+        <span className="inline-flex items-center rounded-full bg-primary/8 border border-primary/10 px-3 py-1 text-[14px] font-medium text-primary tracking-wide">
+          Top: {kpis.top_service}
+        </span>
+      )}
+    </div>
   );
 }
 
@@ -382,61 +303,4 @@ export function useWeeklySummaryData() {
   }
 
   return { summary, kpis, loading, error, generating, genError, handleGenerate };
-}
-
-/* ── Empty / loading states ────────────────────────────────────────── */
-export function SummaryEmpty({
-  generating,
-  genError,
-  onGenerate,
-}: {
-  generating: boolean;
-  genError: string | null;
-  onGenerate: () => void;
-}) {
-  return (
-    <div className="relative overflow-hidden rounded-xl bg-surface border border-border-subtle animate-fade-in-up">
-      {/* Decorative gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-secondary/[0.03] via-transparent to-primary/[0.03] pointer-events-none" />
-      <div className="relative px-8 py-14 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary/15 to-primary/15 border border-secondary/10 flex items-center justify-center mx-auto mb-5">
-          <Brain className="w-7 h-7 text-secondary" />
-        </div>
-        <h3 className="text-[16px] font-semibold text-foreground mb-2 tracking-tight">
-          Sin resumen semanal
-        </h3>
-        <p className="text-[14px] text-foreground-subtle mb-6 max-w-sm mx-auto leading-relaxed">
-          Genera un análisis con IA de la semana anterior para entender cómo va tu negocio.
-        </p>
-        <Button
-          variant="primary"
-          onClick={onGenerate}
-          loading={generating}
-          className="px-8 py-2.5"
-        >
-          <Sparkles className="h-4 w-4 mr-2" />
-          Generar resumen
-        </Button>
-        {genError && (
-          <p className="text-[14px] text-danger mt-3">{genError}</p>
-        )}
-      </div>
-    </div>
-  );
-}
-
-export function SummaryLoading() {
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Skeleton className="h-[100px] rounded-xl" />
-        <Skeleton className="h-[100px] rounded-xl" />
-        <Skeleton className="h-[100px] rounded-xl" />
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Skeleton className="h-48 rounded-xl" />
-        <Skeleton className="h-48 rounded-xl" />
-      </div>
-    </div>
-  );
 }

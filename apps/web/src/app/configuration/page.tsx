@@ -40,6 +40,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { TeamAnalysis } from "@/components/intelligence/TeamAnalysis";
 import { cn } from "@/lib/utils";
 
 /* ────────────────────────────────────────────────── */
@@ -508,6 +509,7 @@ export default function ConfigurationPage() {
               )}
 
               {/* ═══ Team ═══ */}
+              {activeSection === "team" && canManageTeam && <TeamAnalysis className="mb-6" />}
               {activeSection === "team" && (
                 <Card>
                   <CardContent className="p-5 sm:p-6 md:p-8 space-y-6">

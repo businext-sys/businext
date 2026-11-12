@@ -1,6 +1,8 @@
 "use client";
 
-import type { WeeklySummaryKPIs, EmployeeStats } from "@/lib/intelligence/types";
+import type { EmployeeStats } from "@/lib/intelligence/types";
+import { AiNote } from "@/components/intelligence/AiNote";
+import { useWeeklySummaryData } from "@/components/intelligence/WeeklySummary";
 import { Star, Users2, Euro, CalendarDays, ShoppingBag, Receipt } from "lucide-react";
 
 /* ── Stat chip ────────────────────────────────────────────────────── */
@@ -113,35 +115,28 @@ function EmployeeRow({
 }
 
 /* ── Main component ──────────────────────────────────────────────── */
-export function TeamAnalysis({ kpis }: { kpis: WeeklySummaryKPIs }) {
-  const employees = kpis.employee_stats ?? [];
-  const teamNarrative = kpis.team_narrative ?? "";
+export function TeamAnalysis({ className }: { className?: string }) {
+  const { kpis } = useWeeklySummaryData();
+  const employees = kpis?.employee_stats ?? [];
+  const teamNarrative = kpis?.team_narrative ?? "";
 
   if (employees.length === 0) return null;
 
   const totalIncome = employees.reduce((s, e) => s + e.income, 0);
 
   return (
-    <section className="h-full flex flex-col">
+    <section className={className}>
       <h2 className="text-[16px] font-semibold text-foreground mb-3 flex items-center gap-2.5 tracking-tight">
         <div className="h-6 w-6 rounded-lg bg-primary/10 border border-primary/10 flex items-center justify-center">
           <Users2 className="h-3 w-3 text-primary" />
         </div>
-        Tu equipo
+        Tu equipo esta semana
       </h2>
 
-      {/* AI narrative */}
-      {teamNarrative && (
-        <div className="relative overflow-hidden rounded-xl border border-border-subtle bg-surface px-5 py-4 mb-3">
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
-          <p className="text-[14px] text-foreground/90 leading-[1.8] whitespace-pre-line">
-            {teamNarrative}
-          </p>
-        </div>
-      )}
+      {teamNarrative && <AiNote text={teamNarrative} className="mb-3" />}
 
       {/* Employee rows */}
-      <div className="flex-1 rounded-xl border border-border-subtle overflow-hidden divide-y divide-border-subtle/30">
+      <div className="rounded-xl border border-border-subtle bg-surface overflow-hidden divide-y divide-border-subtle/30">
         {employees.map((emp, i) => (
           <EmployeeRow
             key={emp.name}

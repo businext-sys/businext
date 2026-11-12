@@ -20,6 +20,7 @@ import {
 } from "@/components/reservation/ReservationTimeline";
 import { CompactCalendar } from "@/components/reservation/CompactCalendar";
 import { ReservationKPIs } from "@/components/reservation/ReservationKPIs";
+import { ReservationWeekSummary } from "@/components/intelligence/ReservationWeekSummary";
 import { Card, CardContent } from "@/components/ui/card";
 import { TabGroup, TabList, Tab, TabPanels, TabPanel } from "@/components/ui/tabs";
 import { Select } from "@/components/ui/select";
@@ -244,6 +245,8 @@ export default function ReservationPage() {
         <h1 className="font-heading text-h2 font-bold text-foreground">
           Reservas
         </h1>
+
+        {(isOwner || context?.role === "manager") && <ReservationWeekSummary />}
 
         {/* Info banner */}
         <div className="flex items-center gap-3 bg-surface-raised/60 border border-border-subtle rounded-md px-4 py-3">
