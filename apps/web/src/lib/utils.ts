@@ -1,5 +1,14 @@
 import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
+import { extendTailwindMerge } from "tailwind-merge";
+
+// Sin esto tailwind-merge toma los tamaños de `--text-*` de globals.css por colores y descarta el color del texto.
+const twMerge = extendTailwindMerge({
+  extend: {
+    theme: {
+      text: ["h1", "h2", "h3", "h4", "body", "body-sm", "caption", "label"],
+    },
+  },
+});
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
