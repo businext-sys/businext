@@ -69,7 +69,7 @@ export function Drawer({
               <div className="flex items-center justify-end p-4">
                 <button
                   onClick={onClose}
-                  className="rounded-md p-1 text-foreground-muted transition-colors duration-150 ease-snappy hover:bg-surface-raised hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  className="-my-2 -mr-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-foreground-muted transition-colors duration-150 ease-snappy hover:bg-surface-raised hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <X className="h-5 w-5" />
                 </button>

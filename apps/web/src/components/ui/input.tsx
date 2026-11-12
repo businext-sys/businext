@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 export const inputVariants = cva(
-  "flex w-full rounded-md bg-surface px-3 py-2 text-body-sm text-foreground placeholder:text-foreground-subtle transition-colors duration-150 ease-snappy file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+  "flex h-11 w-full rounded-md bg-surface px-3 py-2 text-body-sm text-foreground placeholder:text-foreground-subtle transition-colors duration-150 ease-snappy file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {
       state: {

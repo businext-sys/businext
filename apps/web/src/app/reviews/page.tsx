@@ -10,9 +10,9 @@ import { ReviewCharts } from "@/components/reviews/ReviewCharts";
 import { BusinessSummary } from "@/components/reviews/BusinessSummary";
 import { ReviewList } from "@/components/reviews/ReviewList";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { ShieldAlert } from "lucide-react";
-import SkeletonLoader from "@/components/common/SkeletonLoader";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageContainer, PageHeader } from "@/components/common/PageLayout";
+import { ShieldAlert, Star } from "lucide-react";
 
 export default function ReviewsPage() {
   const { capabilities, loading: contextLoading } = useAccessContext();
@@ -45,45 +45,33 @@ export default function ReviewsPage() {
   /* ── Loading state ── */
   if (contextLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen p-6">
-        <SkeletonLoader rows={6} />
-      </div>
+      <PageContainer>
+        <SectionSkeleton />
+        <SectionSkeleton />
+      </PageContainer>
     );
   }
 
   /* ── Access denied ── */
   if (!capabilities.canManageFinances) {
     return (
-      <div className="min-h-screen w-full pt-14 md:pt-0">
-        <div className="flex justify-center items-center min-h-[60vh] px-4">
-          <Card variant="elevated" className="max-w-xl border-warning/40">
-            <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
-              <ShieldAlert className="h-10 w-10 text-warning" />
-              <h2 className="font-heading text-h3 font-bold text-warning">
-                Acceso restringido
-              </h2>
-              <p className="text-body-sm text-foreground-muted">
-                No tienes permisos para ver las reseñas del negocio.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      <PageContainer>
+        <EmptyState
+          icon={<ShieldAlert />}
+          title="Acceso restringido"
+          description="No tienes permisos para ver las reseñas del negocio."
+        />
+      </PageContainer>
     );
   }
 
   return (
-    <div className="min-h-screen w-full bg-background pt-14 md:pt-0">
-      <div className="max-w-7xl mx-auto px-6 py-8 space-y-8">
-        {/* Page Header */}
-        <div>
-          <h1 className="text-h2 font-heading font-bold text-foreground">
-            Reseñas de Google
-          </h1>
-          <p className="text-body-sm text-foreground-muted mt-1">
-            Estadísticas y gestión de reseñas de tu negocio en Google Maps
-          </p>
-        </div>
+    <PageContainer>
+        <PageHeader
+          icon={Star}
+          title="Reseñas"
+          description="Estadísticas y gestión de las reseñas de tu negocio en Google Maps"
+        />
 
         {/* Loading state */}
         {profileLoading && (
@@ -157,7 +145,6 @@ export default function ReviewsPage() {
             />
           </div>
         )}
-      </div>
-    </div>
+    </PageContainer>
   );
 }

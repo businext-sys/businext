@@ -1,7 +1,8 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import { useFinances } from "@/hooks/useFinances";
-import SkeletonLoader, { SectionSkeleton } from "@/components/common/SkeletonLoader";
+import { SectionSkeleton } from "@/components/common/SkeletonLoader";
+import { PageContainer, PageHeader } from "@/components/common/PageLayout";
 import { FinanceRecordItem } from "@/components/finances/FinanceRecordItem";
 import { useReservation } from "@/hooks/useReservation";
 import { FinancesModal } from "@/components/finances/FinancesModal";
@@ -19,7 +20,7 @@ import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Plus, ChevronLeft, ChevronRight, Receipt } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, Receipt, ChartBarBig } from "lucide-react";
 
 export default function FinancesPage() {
   const { context, loading: contextLoading } = useAccessContext();
@@ -140,32 +141,28 @@ export default function FinancesPage() {
   /* ── Loading state ── */
   if (contextLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen p-6">
-        <SkeletonLoader rows={6} />
-      </div>
+      <PageContainer>
+        <SectionSkeleton />
+        <SectionSkeleton />
+      </PageContainer>
     );
   }
 
   return (
-    <div className="min-h-screen w-full pt-14 md:pt-0">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 space-y-6">
-        {/* ── Header + Create button ── */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="font-heading text-h2 font-bold text-foreground">
-              Finanzas
-            </h1>
-            <p className="text-body-sm text-foreground-muted mt-1">
-              Resumen financiero de {monthName} {selectedYear}
-            </p>
-          </div>
-          {isOwner && (
-            <Button variant="primary" onClick={() => setopenModal(true)}>
-              <Plus className="h-4 w-4" />
-              Agregar Registro
-            </Button>
-          )}
-        </div>
+    <PageContainer>
+        <PageHeader
+          icon={ChartBarBig}
+          title="Finanzas"
+          description={`Resumen financiero de ${monthName} ${selectedYear}`}
+          action={
+            isOwner && (
+              <Button variant="primary" onClick={() => setopenModal(true)}>
+                <Plus className="h-4 w-4" />
+                Agregar Registro
+              </Button>
+            )
+          }
+        />
 
         {/* ── Balance cards row ── */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -385,7 +382,6 @@ export default function FinancesPage() {
             />
           </div>
         </div>
-      </div>
 
       {/* ── Create modal ── */}
       {openModal && (
@@ -398,6 +394,6 @@ export default function FinancesPage() {
           currentUserName={context?.profile?.displayName ?? ""}
         />
       )}
-    </div>
+    </PageContainer>
   );
 }

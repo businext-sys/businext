@@ -41,7 +41,8 @@ src/
 │   │   ├── ConfirmDialog.tsx    # Modal de confirmacion accesible
 │   │   ├── SkeletonLoader.tsx   # Skeletons por seccion
 │   │   ├── Toast.tsx            # Notificaciones no bloqueantes
-│   │   ├── Sidebar.tsx          # Navegacion
+│   │   ├── PageLayout.tsx       # PageContainer + PageHeader de toda pagina autenticada
+│   │   ├── Sidebar.tsx          # Navegacion por grupos y barra superior en movil
 │   │   └── ...
 │   ├── configuration/
 │   ├── finances/
@@ -117,6 +118,25 @@ compartida por SWR):
 
 Los textos de la IA se pintan con `AiNote`, que los recorta a dos líneas con
 «Ver más»: primero cifras, chips y mini gráficos; el párrafo, a demanda.
+
+### Estructura de una página
+
+Toda página autenticada se monta con `PageContainer` y `PageHeader`
+(`components/common/PageLayout.tsx`), también en sus estados de carga y de
+«Acceso restringido» (un `EmptyState`). No se repiten a mano el ancho ni los
+márgenes: `max-w-7xl`, 20 px en móvil y 40 px en escritorio, como dice
+`DESIGN.md`. `PageHeader` lleva icono, título, descripción y, si la hay, la
+acción principal de la página en `action`.
+
+El menú (`Sidebar.tsx`) agrupa las secciones en `NAV_GROUPS` (Día a día,
+Negocio, Asistente, Ajustes); una sección nueva se añade a su grupo con su
+`cap`. En móvil el menú se abre desde una barra superior fija que muestra la
+sección activa, y `PageContainer` ya reserva su altura.
+
+Las zonas táctiles miden 44 px: botón `md` e `icon`, `Input`, `Select`, y el
+botón de cerrar de `Modal` y `Drawer`. El tamaño `sm` (32 px) queda para listas
+densas. Para una persona sin foto, `InitialsAvatar`; para un producto o
+servicio sin imagen, `ProductPlaceholder`.
 
 ### Componentes de UI compartidos
 

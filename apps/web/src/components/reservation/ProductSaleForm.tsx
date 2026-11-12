@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Product } from "@/lib/product/types";
 import { Finances } from "@/lib/finances/types";
 import { useGlobalToast } from "@/context/ToastContext";
@@ -8,7 +9,8 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ImageIcon, X } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ImageIcon, Package, X } from "lucide-react";
 import { ProductPlaceholder } from "@/components/common/ProductPlaceholder";
 
 interface ProductSaleFormProps {
@@ -28,6 +30,7 @@ export function ProductSaleForm({
   const [quantity, setQuantity] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const { showToast } = useGlobalToast();
+  const router = useRouter();
 
   const products = productData.filter((p) => p.type === "producto");
 
@@ -71,9 +74,15 @@ export function ProductSaleForm({
 
   if (products.length === 0) {
     return (
-      <p className="text-body-sm text-foreground-muted py-4">
-        No hay productos configurados. Añade productos en la sección de configuración.
-      </p>
+      <EmptyState
+        icon={<Package />}
+        title="Aún no tienes productos"
+        description="Añade los productos que vendes en el local para registrar sus ventas desde aquí."
+        action={{
+          label: "Añadir productos",
+          onClick: () => router.push("/configuration"),
+        }}
+      />
     );
   }
 
