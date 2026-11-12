@@ -79,7 +79,7 @@ Las cuentas sociales y las publicaciones van en #172.
 `computeClientProfiles` (`@businext/shared-core/intelligence`) agrupa las
 reservas completadas por nombre y marca a cada cliente `fiel`, `en_riesgo` o
 `nuevo`; `customerEmail` es el email de su última reserva que lo tiene. La web
-(Inteligencia → Tus clientes) y el móvil (`clients-at-risk`) usan el mismo cálculo.
+(sección Clientes) y el móvil (`clients-at-risk`) usan el mismo cálculo.
 
 `customerMessageApi` consume el backend (`businext-backend#48`, owner y manager):
 

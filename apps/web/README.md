@@ -27,6 +27,7 @@ las convenciones internas de la web.
 src/
 ├── app/
 │   ├── api/               # Route handlers (BFF hacia FastAPI)
+│   ├── clients/           # Analisis de clientes y clientes en riesgo (owner y manager)
 │   ├── configuration/     # Configuracion del negocio
 │   ├── finances/          # Finanzas
 │   ├── products/          # Productos
@@ -100,6 +101,23 @@ useEffect(() => {
 La matriz de permisos por rol (owner / manager / employee) es la del backend:
 ver `src/api/auth.py` en `businext-backend`.
 
+### Inteligencia dentro de cada sección
+
+No hay página de Inteligencia: `/intelligence` redirige a `/reservation`. Los
+bloques viven en `src/components/intelligence/` y cada sección monta el suyo,
+todos sobre el mismo resumen semanal (`useWeeklySummaryData`, una sola petición
+compartida por SWR):
+
+| Sección | Bloque | Quién lo ve |
+|---|---|---|
+| Reservas | `ReservationWeekSummary`: KPIs de la semana y oportunidades, plegable. Aquí se genera y regenera el resumen | owner y manager |
+| Finanzas | `FinanceWeekInsight`: ingresos de la semana, tendencia y lo que destaca la IA | owner y manager |
+| Configuración → Equipo | `TeamAnalysis` | `canManageTeam` (owner) |
+| Clientes (`/clients`) | `ClientAnalysis` con «Enviarle un mensaje» | owner y manager |
+
+Los textos de la IA se pintan con `AiNote`, que los recorta a dos líneas con
+«Ver más»: primero cifras, chips y mini gráficos; el párrafo, a demanda.
+
 ### Componentes de UI compartidos
 
 - **`ConfirmDialog`** — sustituye a `window.confirm`. Accesible, Escape para
@@ -142,7 +160,7 @@ agenda), la app (cinco capítulos), tu web (La Perla y Sito como ejemplo),
 
 - **Solo funciones que existen.** Todo lo que muestran las pantallas está hecho
   (agente de voz, solicitudes con push y email, respuesta a reseñas con IA, chat
-  del asistente, Inteligencia, caja). Las cifras son de ejemplo y la página lo
+  del asistente, análisis de clientes, caja). Las cifras son de ejemplo y la página lo
   dice.
 - **Español en `/` e inglés en `/en`.** Las dos rutas pintan `Landing.tsx` con su
   `lang`; todos los textos, también los de las pantallas de la app, están una vez
