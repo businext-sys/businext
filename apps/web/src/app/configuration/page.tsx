@@ -16,6 +16,8 @@ import {
   Palette,
   Megaphone,
   BellRing,
+  ShieldAlert,
+  ExternalLink,
 } from "lucide-react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { SectionSkeleton } from "@/components/common/SkeletonLoader";
@@ -40,6 +42,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { EmptyState } from "@/components/ui/empty-state";
+import { PageContainer, PageHeader } from "@/components/common/PageLayout";
+import { InitialsAvatar } from "@/components/common/InitialsAvatar";
 import { TeamAnalysis } from "@/components/intelligence/TeamAnalysis";
 import { cn } from "@/lib/utils";
 
@@ -315,36 +320,23 @@ export default function ConfigurationPage() {
 
   if (!contextLoading && !capabilities.canManageConfiguration) {
     return (
-      <div className="min-h-screen w-full pt-14 md:pt-0">
-        <div className="flex justify-center items-center min-h-[60vh] px-4">
-          <Card variant="elevated" className="max-w-xl border-warning/40">
-            <CardContent className="flex flex-col items-center gap-3 p-8 text-center">
-              <ShieldUser className="h-10 w-10 text-warning" />
-              <h2 className="font-heading text-h3 font-bold text-warning">
-                Acceso restringido
-              </h2>
-              <p className="text-body-sm text-foreground-muted">
-                No tienes permisos para acceder a la configuración.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
+      <PageContainer>
+        <EmptyState
+          icon={<ShieldAlert />}
+          title="Acceso restringido"
+          description="No tienes permisos para acceder a la configuración."
+        />
+      </PageContainer>
     );
   }
 
   return (
-    <div className="min-h-screen w-full bg-background pt-14 md:pt-0">
-      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-6 space-y-6">
-        {/* Page header */}
-        <div>
-          <h1 className="font-heading text-h2 font-bold text-foreground">
-            Configuración
-          </h1>
-          <p className="text-body text-foreground-muted mt-1">
-            Gestiona tu perfil, negocio, productos, horarios y equipo.
-          </p>
-        </div>
+    <PageContainer>
+        <PageHeader
+          icon={Settings}
+          title="Configuración"
+          description="Tu perfil, el negocio, los productos, el horario y el equipo"
+        />
 
         {contextLoading || loading ? (
           <SectionSkeleton />
@@ -388,6 +380,20 @@ export default function ConfigurationPage() {
                       title="Mi Perfil"
                       description="Datos de tu cuenta"
                     />
+                    <div className="flex items-center gap-3 rounded-md bg-surface-raised/40 p-4">
+                      <InitialsAvatar
+                        name={context?.profile?.displayName || context?.profile?.email || ""}
+                        className="h-14 w-14 bg-secondary/15 font-heading text-h4"
+                      />
+                      <div className="min-w-0">
+                        <p className="truncate text-body font-semibold text-foreground">
+                          {context?.profile?.displayName || context?.profile?.email || "Sin nombre"}
+                        </p>
+                        <Badge variant={roleBadgeVariant(context?.role ?? "")}>
+                          {roleLabel(context?.role ?? "")}
+                        </Badge>
+                      </div>
+                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
                       <ProfileField
                         label="Nombre"
@@ -406,12 +412,6 @@ export default function ConfigurationPage() {
                         fallback="Sin teléfono"
                       />
                     </div>
-                    <Badge
-                      variant={roleBadgeVariant(context?.role ?? "")}
-                      className="self-start"
-                    >
-                      {roleLabel(context?.role ?? "")}
-                    </Badge>
                   </CardContent>
                 </Card>
               )}
@@ -595,9 +595,11 @@ export default function ConfigurationPage() {
                       {employeesLoading ? (
                         <p className="text-body-sm text-foreground-muted">Cargando personal...</p>
                       ) : employees.length === 0 ? (
-                        <p className="text-body-sm text-foreground-muted">
-                          Todavía no has invitado a ningún empleado.
-                        </p>
+                        <EmptyState
+                          icon={<Users />}
+                          title="Aún no hay nadie en tu equipo"
+                          description="Invita a tus empleados desde esta sección para que cada uno vea su agenda y sus comisiones."
+                        />
                       ) : (
                         <div className="space-y-2">
                           {employees.map((employee) => (
@@ -732,8 +734,7 @@ export default function ConfigurationPage() {
             />
           </ModalContent>
         </Modal>
-      </div>
-    </div>
+    </PageContainer>
   );
 }
 
@@ -850,6 +851,33 @@ function BookingLinkSection({ businessId }: { businessId: string }) {
             <Button variant="primary" size="sm" onClick={handleCopy}>
               Copiar
             </Button>
+          </div>
+        </div>
+
+        {/* Preview */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-label font-semibold text-foreground-muted">
+              Así la ven tus clientes
+            </span>
+            <a
+              href={bookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex min-h-11 items-center gap-1.5 text-body-sm font-medium text-primary hover:underline"
+            >
+              Abrir
+              <ExternalLink className="h-4 w-4" />
+            </a>
+          </div>
+          <div className="mx-auto h-[420px] w-full max-w-[300px] overflow-hidden rounded-lg border border-border bg-background">
+            <iframe
+              src={bookingUrl}
+              title="Vista previa de la página de reserva"
+              loading="lazy"
+              tabIndex={-1}
+              className="pointer-events-none h-[560px] w-[400px] origin-top-left scale-75"
+            />
           </div>
         </div>
 

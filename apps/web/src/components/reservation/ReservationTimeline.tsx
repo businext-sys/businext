@@ -15,7 +15,6 @@ import { DeleteModal } from "@/components/reservation/DeleteReservationModal";
 import {
   Calendar,
   Clock,
-  User,
   Edit3,
   CheckCircle,
   Trash2,
@@ -24,6 +23,7 @@ import {
   Phone,
   Mail,
 } from "lucide-react";
+import { InitialsAvatar } from "@/components/common/InitialsAvatar";
 import { cn } from "@/lib/utils";
 
 /* ── Helpers ── */
@@ -274,7 +274,10 @@ function ReservationCard({
       {/* Row 2: Metadata */}
       <div className="flex flex-wrap items-center gap-x-2.5 gap-y-0.5 mt-1.5 pl-[calc(0.375rem+0.5rem)] text-[11px] text-foreground-subtle">
         <span className="inline-flex items-center gap-1">
-          <User className="h-2.5 w-2.5" />
+          <InitialsAvatar
+            name={reservation.inCharge}
+            className="h-5 w-5 bg-secondary/15 text-[9px]"
+          />
           <span className="truncate max-w-[7rem]">{reservation.inCharge}</span>
         </span>
         <span className="text-foreground-subtle/40">·</span>
@@ -461,7 +464,7 @@ export function TodayTimeline({
       <EmptyState
         icon={<Calendar />}
         title="Día libre"
-        description="No hay reservas programadas para hoy."
+        description="No hay reservas para hoy. Crea una arriba o usa «Atención inmediata» cuando entre alguien sin cita."
       />
     );
   }

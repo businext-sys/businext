@@ -7,7 +7,8 @@ import { useGlobalToast } from "@/context/ToastContext";
 import { Skeleton } from "@/components/ui/skeleton";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Button } from "@/components/ui/button";
-import { Check, X, CalendarClock, Clock, User, Phone, Mail } from "lucide-react";
+import { InitialsAvatar } from "@/components/common/InitialsAvatar";
+import { Check, X, CalendarClock, Clock, Phone, Mail } from "lucide-react";
 
 export function BookingRequestList() {
   const { bookingRequests, loading, acceptRequest, rejectRequest } =
@@ -78,14 +79,12 @@ export function BookingRequestList() {
           key={request.id}
           className="rounded-lg border border-border-subtle bg-surface-raised p-4"
         >
-          <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start justify-between gap-3">
+            <InitialsAvatar name={request.clientName} className="bg-secondary/15" />
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-1">
-                <User className="h-3.5 w-3.5 text-foreground-muted" />
-                <span className="font-medium text-sm truncate">
-                  {request.clientName}
-                </span>
-              </div>
+              <p className="mb-1 truncate text-body-sm font-semibold text-foreground">
+                {request.clientName}
+              </p>
               <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-foreground-subtle">
                 <span className="flex items-center gap-1">
                   <Clock className="h-3 w-3" />
@@ -98,7 +97,13 @@ export function BookingRequestList() {
                 </span>
                 <span>{request.service}</span>
                 {request.employeeName && (
-                  <span>Con: {request.employeeName}</span>
+                  <span className="flex items-center gap-1">
+                    <InitialsAvatar
+                      name={request.employeeName}
+                      className="h-5 w-5 bg-surface text-[9px]"
+                    />
+                    {request.employeeName}
+                  </span>
                 )}
                 <span className="flex items-center gap-1">
                   <Phone className="h-3 w-3" />
