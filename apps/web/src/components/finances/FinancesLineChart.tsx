@@ -16,6 +16,7 @@ import { useThemeMode } from "@/hooks/useThemeMode";
 import { darkChartOptions, paletteColor } from "@/lib/chartjs-dark-theme";
 import { colorToken, withAlpha } from "@/lib/theme-tokens";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { FinancesChartLegend } from "@/components/finances/FinancesChartLegend";
 
 ChartJS.register(
   CategoryScale,
@@ -30,10 +31,12 @@ ChartJS.register(
 
 export const FinancesLineChart = ({
   financesData,
+  year,
 }: {
   financesData: AnualBalances[];
+  year: number;
 }) => {
-  const currentYear = new Date().getFullYear().toString();
+  const yearBalance = financesData.reduce((sum, item) => sum + item.balance, 0);
   useThemeMode();
   const baseOptions = darkChartOptions();
   const seriesColor = paletteColor(0);
@@ -62,9 +65,10 @@ export const FinancesLineChart = ({
   return (
     <Card className="w-full">
       <CardHeader>
-        <h2 className="font-heading text-h4 font-semibold text-foreground text-center">
-          Balance por Mes ({currentYear})
+        <h2 className="font-heading text-h4 font-semibold text-foreground">
+          Balance por mes
         </h2>
+        <p className="text-caption text-foreground-muted">Año {year}</p>
       </CardHeader>
       <CardContent>
         <div className="relative w-full h-[220px] sm:h-[260px] md:h-[300px]">
@@ -92,6 +96,15 @@ export const FinancesLineChart = ({
             }}
           />
         </div>
+        <FinancesChartLegend
+          items={[
+            {
+              label: "Balance del año",
+              value: `${yearBalance.toLocaleString("es-ES")}€`,
+              color: seriesColor,
+            },
+          ]}
+        />
       </CardContent>
     </Card>
   );
