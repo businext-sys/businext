@@ -208,6 +208,13 @@ el mismo papel. En código viven en `packages/shared-core/src/theme` (`themeColo
   `*-foreground` para texto sobre el relleno.
 - **Highlight:** naranja para avisos puntuales que deben saltar a la vista.
 - **Logo:** el color del logo plano: turquesa BN en oscuro, turquesa oscuro en claro.
+- **Marca de Instagram y TikTok (excepción):** sus logos y la tarjeta de respaldo de sus vídeos
+  usan los colores de cada red, iguales en los dos modos: el degradado de Instagram
+  (`instagram-yellow` `#FEDA75`, `instagram-orange` `#FA7E1E`, `instagram-pink` `#D62976`,
+  `instagram-purple` `#962FBF`, `instagram-blue` `#4F5BD5`) y el cian, rojo y negro de TikTok
+  (`tiktok-cyan` `#25F4EE`, `tiktok-red` `#FE2C55`, `tiktok-black` `#010101`), con
+  `brand-foreground` (`#FFFFFF`) para el texto encima. Viven en `apps/web/src/app/globals.css`
+  y no se usan para nada más.
 
 ## Typography
 
@@ -247,6 +254,12 @@ el mismo papel. En código viven en `packages/shared-core/src/theme` (`themeColo
   del servicio. Libre = transparente con texto `foreground-muted`.
 - **Chat:** cabecera con el avatar del asistente (48 px, borde de 2 px en `primary`) y su
   estado. Las tarjetas dentro del chat (una cita reservada) usan `eyebrow` + `h2` + acciones.
+- **Mensaje del asistente:** fuera del chat, lo que escribe la IA (el análisis de tendencias,
+  una idea de contenido) se presenta como un mensaje suyo: el avatar a la izquierda y burbujas
+  `chat-bubble-assistant` con la esquina superior izquierda a 4 px, que entran una tras otra.
+- **Vídeo de una red:** el reproductor oficial de Instagram o TikTok en un marco vertical 9:16.
+  Mientras carga, o si la red no lo sirve, se ve la tarjeta de respaldo con el color de la red,
+  su logo y el enlace.
 - **Logo:** dos formas. El **graffiti** (`apps/web/public/logo-bn.png`) solo en tamaños
   grandes y en la landing. El **plano** (`docs/brand/assets/logo-plano.svg`, letras de
   Big Shoulders Black) en tamaños pequeños: solo letras en color `logo` (sidebar,
@@ -262,7 +275,8 @@ el mismo papel. En código viven en `packages/shared-core/src/theme` (`themeColo
   como decoración. Solo recortes sin las zapatillas.
 - No mezcles los dos modos en una pantalla ni cambies de tipografía entre modos.
 - No uses degradados de fondo, sombras de color ni brillos: la energía la ponen el turquesa y
-  la tipografía.
+  la tipografía. La única excepción es el degradado de marca de Instagram en su logo y en
+  la tarjeta de respaldo de sus vídeos.
 - No uses Inter, Roboto ni la fuente del sistema como fuente de marca.
 - Tras cambiar UI, haz capturas (navegador en web, Maestro en móvil) en los dos modos y
   compáralas con este fichero antes de dar el cambio por bueno.

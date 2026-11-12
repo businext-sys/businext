@@ -23,10 +23,16 @@ el BFF a un bucket público.
 La sección ya existe (resumen semanal, clientes, equipo); se añade una pestaña
 con `components/ui/tabs.tsx`:
 
-1. **Radar**: lista de tendencias con red, crecimiento y enlace a la fuente.
+1. **Para tu barbería**: el `analysis` del insight como mensaje del asistente
+   (avatar y burbujas), con los servicios que encajan (`matchedServices`).
    Etiqueta de fecha de captura ("datos de hoy, 05:00").
-2. **Para tu barbería**: el `analysis` del insight, con los servicios que
-   encajan resaltados (`matchedServices`).
+2. **Radar**: cuadrícula de tarjetas verticales (carrusel en móvil) con el
+   vídeo de cada tendencia en el embed oficial de su red, su red y el enlace a
+   la fuente. Si el enlace no es de un vídeo o la red no lo sirve, se ve una
+   tarjeta de respaldo con el color de la red (`components/trends/TrendEmbed.tsx`).
+   El reproductor solo se enseña cuando la propia red confirma el vídeo por
+   `postMessage` (`MOUNTED` en Instagram; en TikTok, que no llegue `onError`).
+   No se descarga ni se raspa nada de las redes desde el servidor.
 3. **Próximas publicaciones**: tarjetas de `content_suggestion` con red,
    formato, idea, texto sugerido (botón copiar), audio y hora. Acciones:
    "Subir vídeo", "Ya lo publiqué", "No me interesa".
