@@ -35,56 +35,76 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Modal, ModalHeader, ModalContent, ModalFooter } from "@/components/ui/modal";
 
-const NAV_LINKS = [
+const NAV_GROUPS = [
   {
-    href: "/reservation",
-    label: "Reservas",
-    icon: CalendarDays,
-    cap: "canManageReservations" as const,
+    label: "Día a día",
+    links: [
+      {
+        href: "/reservation",
+        label: "Reservas",
+        icon: CalendarDays,
+        cap: "canManageReservations" as const,
+      },
+      {
+        href: "/clients",
+        label: "Clientes",
+        icon: Users,
+        cap: "canManageReservations" as const,
+        ownerOrManager: true,
+      },
+      {
+        href: "/notifications",
+        label: "Notificaciones",
+        icon: Bell,
+        cap: "canManageReservations" as const,
+      },
+    ],
   },
   {
-    href: "/finances",
-    label: "Finanzas",
-    icon: ChartBarBig,
-    cap: "canManageFinances" as const,
+    label: "Negocio",
+    links: [
+      {
+        href: "/finances",
+        label: "Finanzas",
+        icon: ChartBarBig,
+        cap: "canManageFinances" as const,
+      },
+      {
+        href: "/reviews",
+        label: "Reseñas",
+        icon: Star,
+        cap: "canManageReviews" as const,
+      },
+      {
+        href: "/trends",
+        label: "Tendencias",
+        icon: TrendingUp,
+        cap: "canViewTrends" as const,
+      },
+    ],
   },
   {
-    href: "/reviews",
-    label: "Reseñas",
-    icon: Star,
-    cap: "canManageReviews" as const,
+    label: "Asistente",
+    links: [
+      {
+        href: "/voice-agent",
+        label: "Agente de voz",
+        icon: PhoneCall,
+        cap: "canManageConfiguration" as const,
+        ownerOnly: true,
+      },
+    ],
   },
   {
-    href: "/clients",
-    label: "Clientes",
-    icon: Users,
-    cap: "canManageReservations" as const,
-    ownerOrManager: true,
-  },
-  {
-    href: "/trends",
-    label: "Tendencias",
-    icon: TrendingUp,
-    cap: "canViewTrends" as const,
-  },
-  {
-    href: "/voice-agent",
-    label: "Agente de voz",
-    icon: PhoneCall,
-    cap: "canManageConfiguration" as const,
-    ownerOnly: true,
-  },
-  {
-    href: "/notifications",
-    label: "Notificaciones",
-    icon: Bell,
-    cap: "canManageReservations" as const,
-  },
-  {
-    href: "/configuration",
-    label: "Configuración",
-    icon: Settings,
-    cap: "canManageConfiguration" as const,
+    label: "Ajustes",
+    links: [
+      {
+        href: "/configuration",
+        label: "Configuración",
+        icon: Settings,
+        cap: "canManageConfiguration" as const,
+      },
+    ],
   },
 ];
 
@@ -123,6 +143,19 @@ export function Sidebar() {
       ? "Manager"
       : "Empleado";
 
+  const visibleGroups = NAV_GROUPS.map((group) => ({
+    ...group,
+    links: group.links.filter((link) => {
+      if (!capabilities[link.cap]) return false;
+      if ("ownerOnly" in link && context?.role !== "owner") return false;
+      if ("ownerOrManager" in link && context?.role !== "owner" && context?.role !== "manager") return false;
+      return true;
+    }),
+  })).filter((group) => group.links.length > 0);
+  const activeLink = visibleGroups
+    .flatMap((group) => group.links)
+    .find((link) => pathname.startsWith(link.href));
+
   const sendContactEmail = async () => {
     setSending(true);
     try {
@@ -151,7 +184,7 @@ export function Sidebar() {
         <button
           type="button"
           onClick={() => setShowContact(true)}
-          className="ml-1 rounded-md p-1 text-foreground-muted transition-colors duration-150 ease-snappy hover:bg-surface-raised hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          className="-my-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-foreground-muted transition-colors duration-150 ease-snappy hover:bg-surface-raised hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           title="Enviar dudas o quejas"
         >
           <MessageCircleQuestion className="h-5 w-5" />
@@ -159,35 +192,40 @@ export function Sidebar() {
       </div>
 
       {/* Nav links */}
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
-        {NAV_LINKS.map(({ href, label, icon: Icon, cap, ...link }) => {
-          if (!capabilities[cap]) return null;
-          if ("ownerOnly" in link && context?.role !== "owner") return null;
-          if ("ownerOrManager" in link && context?.role !== "owner" && context?.role !== "manager") return null;
-          const active = pathname.startsWith(href);
-          const badge = href === "/notifications" ? notificationsCount : 0;
-          return (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setOpen(false)}
-              className={cn(
-                "flex items-center gap-3 px-4 py-2.5 rounded-lg text-body-sm font-medium transition-all duration-150 ease-snappy",
-                active
-                  ? "bg-primary text-primary-foreground font-semibold"
-                  : "text-foreground-muted hover:bg-surface-raised hover:text-foreground"
-              )}
-            >
-              <Icon className="w-5 h-5 flex-shrink-0" />
-              {label}
-              {badge > 0 && (
-                <span className="ml-auto inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-danger-foreground bg-danger rounded-full">
-                  {badge > 99 ? "99+" : badge}
-                </span>
-              )}
-            </Link>
-          );
-        })}
+      <nav className="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-4">
+        {visibleGroups.map((group) => (
+          <div key={group.label} className="flex flex-col gap-1">
+            <p className="px-4 text-caption font-bold uppercase tracking-[0.1em] text-foreground-subtle">
+              {group.label}
+            </p>
+            {group.links.map(({ href, label, icon: Icon }) => {
+              const active = pathname.startsWith(href);
+              const badge = href === "/notifications" ? notificationsCount : 0;
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={() => setOpen(false)}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "flex min-h-11 items-center gap-3 px-4 py-2.5 rounded-lg text-body-sm font-medium transition-all duration-150 ease-snappy",
+                    active
+                      ? "bg-primary text-primary-foreground font-semibold"
+                      : "text-foreground-muted hover:bg-surface-raised hover:text-foreground"
+                  )}
+                >
+                  <Icon className="w-5 h-5 flex-shrink-0" />
+                  {label}
+                  {badge > 0 && (
+                    <span className="ml-auto inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-danger-foreground bg-danger rounded-full">
+                      {badge > 99 ? "99+" : badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        ))}
       </nav>
 
       {/* User + logout */}
@@ -214,19 +252,31 @@ export function Sidebar() {
   return (
     <>
       {/* Desktop sidebar */}
-      <aside className="hidden md:flex flex-col w-64 bg-surface border-r border-border-subtle fixed top-0 left-0 h-full z-30">
+      <aside className="hidden md:flex flex-col w-60 bg-surface border-r border-border-subtle fixed top-0 left-0 h-full z-30">
         {navContent}
       </aside>
 
-      {/* Mobile: hamburger button */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="md:hidden fixed top-4 left-4 z-40 p-2 rounded-lg bg-surface shadow-md border border-border text-foreground"
-        aria-label="Abrir menú"
-      >
-        <Menu className="w-5 h-5" />
-      </button>
+      {/* Mobile: top bar with the current section */}
+      <header className="md:hidden fixed inset-x-0 top-0 z-40 flex h-14 items-center gap-2 border-b border-border-subtle bg-surface px-2">
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-foreground transition-colors duration-150 ease-snappy hover:bg-surface-raised focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          aria-label="Abrir menú"
+        >
+          <Menu className="w-5 h-5" />
+          {notificationsCount > 0 && (
+            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-danger" />
+          )}
+        </button>
+        {activeLink && (
+          <span className="flex min-w-0 items-center gap-2 font-heading text-h4 font-bold text-foreground">
+            <activeLink.icon className="h-5 w-5 shrink-0 text-primary" />
+            <span className="truncate">{activeLink.label}</span>
+          </span>
+        )}
+        <BrandMark className="ml-auto mr-2 h-6 w-[30px] shrink-0 text-logo" />
+      </header>
 
       {/* Mobile: sliding sidebar via Headless UI Dialog */}
       <Transition show={open} as={Fragment}>
@@ -259,7 +309,8 @@ export function Sidebar() {
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="absolute top-4 right-4 rounded-md p-1.5 text-foreground-muted transition-colors duration-150 ease-snappy hover:bg-surface-raised hover:text-foreground"
+                  className="absolute top-2.5 right-2 flex h-11 w-11 items-center justify-center rounded-md text-foreground-muted transition-colors duration-150 ease-snappy hover:bg-surface-raised hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                  aria-label="Cerrar menú"
                 >
                   <X className="w-5 h-5" />
                 </button>

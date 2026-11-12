@@ -36,7 +36,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen bg-background">
         {showSidebar && <Sidebar />}
         <main
-          className={`flex-1 min-w-0 ${showSidebar ? "md:ml-64" : ""}`}
+          className={`flex-1 min-w-0 ${showSidebar ? "md:ml-60" : ""}`}
         >
           {children}
         </main>
