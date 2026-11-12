@@ -1,20 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import type { ContentFormat, ContentSuggestion, SocialNetwork } from "@businext/shared-core/trends";
+import { useEffect, useRef, useState } from "react";
+import type { ContentFormat, ContentSuggestion } from "@businext/shared-core/trends";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useGlobalToast } from "@/context/ToastContext";
-import { NetworkIcon } from "@/components/trends/NetworkIcon";
+import { AssistantBubble, AssistantMessage } from "@/components/trends/AssistantMessage";
+import { NETWORK_LABELS, NetworkIcon } from "@/components/trends/NetworkIcon";
 import { SuggestionPreview } from "@/components/trends/SuggestionPreview";
 import { ChevronDown, Copy } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-export const NETWORK_LABELS: Record<SocialNetwork, string> = {
-  instagram: "Instagram",
-  tiktok: "TikTok",
-};
 
 const FORMAT_LABELS: Record<ContentFormat, string> = {
   reel: "Reel",
@@ -38,19 +34,23 @@ export function SuggestionCard({
   onOpen,
   onDismiss,
   onPublished,
+  defaultExpanded = false,
 }: {
   suggestion: ContentSuggestion;
   onOpen: (id: number) => void;
   onDismiss: (id: number) => void;
   onPublished?: (id: number) => void;
+  defaultExpanded?: boolean;
 }) {
   const { showToast } = useGlobalToast();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(defaultExpanded);
+  const markedOpened = useRef(false);
 
-  const toggle = () => {
-    if (!expanded && suggestion.status === "sent") onOpen(suggestion.id);
-    setExpanded((value) => !value);
-  };
+  useEffect(() => {
+    if (!expanded || markedOpened.current || suggestion.status !== "sent") return;
+    markedOpened.current = true;
+    onOpen(suggestion.id);
+  }, [expanded, suggestion.status, suggestion.id, onOpen]);
 
   const copyCaption = async () => {
     try {
@@ -75,33 +75,38 @@ export function SuggestionCard({
           </span>
         </div>
 
-        <p className="text-body font-medium text-foreground">{suggestion.idea}</p>
+        <div className="flex flex-col gap-4 sm:flex-row">
+          <div className="min-w-0 flex-1 space-y-3">
+            <AssistantMessage compact>
+              <AssistantBubble className="bg-surface-raised font-medium">{suggestion.idea}</AssistantBubble>
+              {expanded && (
+                <AssistantBubble order={1} className="bg-surface-raised text-body-sm text-foreground-muted">
+                  Así quedaría. El texto de la publicación ya está listo para pegar.
+                  <Button variant="secondary" size="sm" onClick={copyCaption} className="mt-2 flex">
+                    <Copy className="h-4 w-4" />
+                    Copiar texto
+                  </Button>
+                </AssistantBubble>
+              )}
+            </AssistantMessage>
 
-        <button
-          type="button"
-          onClick={toggle}
-          aria-expanded={expanded}
-          className="flex items-center gap-1 text-label font-medium text-primary hover:text-primary-hover"
-        >
-          {expanded ? "Ocultar vista previa" : "Ver vista previa"}
-          <ChevronDown className={cn("h-4 w-4 transition-transform", expanded && "rotate-180")} />
-        </button>
-
-        {expanded && (
-          <div className="flex flex-col gap-4 sm:flex-row">
-            <SuggestionPreview suggestion={suggestion} />
-
-            <div className="min-w-0 flex-1 self-start rounded-md bg-muted p-3 space-y-2">
-              <p className="text-body-sm text-muted-foreground whitespace-pre-line">
-                {suggestion.captionHint}
-              </p>
-              <Button variant="ghost" size="sm" onClick={copyCaption}>
-                <Copy className="h-4 w-4" />
-                Copiar texto
-              </Button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setExpanded((value) => !value)}
+              aria-expanded={expanded}
+              className="flex min-h-11 items-center gap-1 text-label font-medium text-primary hover:text-primary-hover"
+            >
+              {expanded ? "Ocultar vista previa" : "Ver vista previa"}
+              <ChevronDown className={cn("h-4 w-4 transition-transform", expanded && "rotate-180")} />
+            </button>
           </div>
-        )}
+
+          {expanded && (
+            <div className="sm:order-first">
+              <SuggestionPreview suggestion={suggestion} />
+            </div>
+          )}
+        </div>
 
         <div className="flex flex-wrap justify-end gap-2 pt-1">
           <Button variant="ghost" size="sm" onClick={() => onDismiss(suggestion.id)}>

@@ -6,13 +6,14 @@ import type { TrendInsight } from "@businext/shared-core/trends";
 import { isCurrentSuggestion } from "@businext/shared-core/services";
 import { useContentPreferences, useContentSuggestions, useTrendInsight } from "@/hooks/useTrends";
 import { useGlobalToast } from "@/context/ToastContext";
-import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { SectionSkeleton } from "@/components/ui/skeleton";
-import { NETWORK_LABELS, SuggestionCard } from "@/components/trends/SuggestionCard";
-import { NetworkIcon } from "@/components/trends/NetworkIcon";
+import { SuggestionCard } from "@/components/trends/SuggestionCard";
+import { NETWORK_LABELS, NetworkIcon } from "@/components/trends/NetworkIcon";
+import { TrendEmbed } from "@/components/trends/TrendEmbed";
+import { AssistantBubble, AssistantMessage } from "@/components/trends/AssistantMessage";
 import { CalendarClock, ExternalLink, Radar, RefreshCw, Sparkles } from "lucide-react";
 
 export const CONTENT_PREFERENCES_HREF = "/configuration?section=content";
@@ -24,6 +25,10 @@ function formatCapturedAt(insight: TrendInsight) {
     : date.toLocaleDateString("es-ES", { day: "numeric", month: "short" });
   const time = date.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
   return `Datos de ${day}, ${time}`;
+}
+
+function splitSentences(text: string) {
+  return text.split(/(?<=[.!?…])\s+/).filter(Boolean);
 }
 
 export function TrendsOverview() {
@@ -85,61 +90,66 @@ export function TrendsOverview() {
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <CardContent className="p-5 space-y-4">
-                <h2 className="font-heading text-h4 font-semibold text-foreground">Radar</h2>
-                {insight.trends.length === 0 ? (
-                  <p className="text-body-sm text-foreground-muted">
-                    Hoy no hay tendencias para tus redes.
-                  </p>
-                ) : (
-                  <ul className="divide-y divide-border-subtle">
-                    {insight.trends.map((trend) => (
-                      <li key={trend.url} className="flex items-center gap-3 py-3">
-                        <Badge variant="muted" className="shrink-0 gap-1.5">
+          <section className="space-y-3">
+            <h2 className="text-caption font-bold uppercase tracking-[0.1em] text-secondary">
+              Para tu barbería
+            </h2>
+            <AssistantMessage>
+              {splitSentences(insight.analysis).map((sentence, index) => (
+                <AssistantBubble key={sentence} order={index}>
+                  {sentence}
+                </AssistantBubble>
+              ))}
+              {insight.matchedServices.length > 0 && (
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <span className="text-caption text-foreground-muted">Encaja con</span>
+                  {insight.matchedServices.map((service) => (
+                    <Badge key={service} variant="accent">
+                      {service}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </AssistantMessage>
+          </section>
+
+          <section className="space-y-3">
+            <h2 className="flex items-center gap-2 font-heading text-h4 font-semibold text-foreground">
+              <Radar className="h-5 w-5 text-secondary" />
+              Radar
+            </h2>
+            {insight.trends.length === 0 ? (
+              <p className="text-body-sm text-foreground-muted">Hoy no hay tendencias para tus redes.</p>
+            ) : (
+              <ul className="scrollbar-hide flex snap-x gap-4 overflow-x-auto sm:grid sm:grid-cols-[repeat(auto-fill,minmax(17rem,1fr))] sm:overflow-visible">
+                {insight.trends.map((trend) => (
+                  <li key={trend.url} className="w-64 shrink-0 snap-start space-y-2 sm:w-auto">
+                    <TrendEmbed trend={trend} />
+                    <div className="flex items-start gap-2">
+                      <div className="min-w-0 flex-1 space-y-1.5">
+                        <Badge variant="muted" className="gap-1.5">
                           <NetworkIcon network={trend.network} className="h-3.5 w-3.5" />
                           {NETWORK_LABELS[trend.network]}
                         </Badge>
-                        <span className="flex-1 min-w-0 text-body-sm text-foreground">
+                        <p className="line-clamp-2 text-body-sm font-medium text-foreground">
                           {trend.title}
-                        </span>
-                        <a
-                          href={trend.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`Ver "${trend.title}" en ${NETWORK_LABELS[trend.network]}`}
-                          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-foreground-muted hover:bg-surface-raised hover:text-foreground"
-                        >
-                          <ExternalLink className="h-4 w-4" />
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-5 space-y-4">
-                <h2 className="font-heading text-h4 font-semibold text-foreground">
-                  Para tu barbería
-                </h2>
-                <p className="text-body-sm text-foreground-muted whitespace-pre-line">
-                  {insight.analysis}
-                </p>
-                {insight.matchedServices.length > 0 && (
-                  <div className="flex flex-wrap gap-2">
-                    {insight.matchedServices.map((service) => (
-                      <Badge key={service} variant="accent">
-                        {service}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+                        </p>
+                      </div>
+                      <a
+                        href={trend.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Ver "${trend.title}" en ${NETWORK_LABELS[trend.network]}`}
+                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-md text-foreground-muted hover:bg-surface-raised hover:text-foreground"
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
         </>
       ) : (
         <EmptyState
@@ -170,6 +180,7 @@ export function TrendsOverview() {
               <SuggestionCard
                 key={suggestion.id}
                 suggestion={suggestion}
+                defaultExpanded
                 onOpen={markOpened}
                 onDismiss={(id) => handleUpdate(dismiss(id))}
                 onPublished={(id) => handleUpdate(markPublished(id))}
