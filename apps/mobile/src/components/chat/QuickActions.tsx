@@ -34,6 +34,7 @@ export function QuickActions({ chips, onPress, wrap = false, disabled = false }:
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
+      style={styles.scroll}
       contentContainerStyle={styles.row}
       keyboardShouldPersistTaps="handled"
     >
@@ -43,6 +44,7 @@ export function QuickActions({ chips, onPress, wrap = false, disabled = false }:
 }
 
 const useStyles = themedStyles((colors) => ({
+  scroll: { flexGrow: 0 },
   row: { gap: 8, paddingHorizontal: 12, paddingVertical: 8 },
   wrap: { flexDirection: "row", flexWrap: "wrap", justifyContent: "center", gap: 8 },
   chip: {
