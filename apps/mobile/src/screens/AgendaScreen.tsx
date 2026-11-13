@@ -6,12 +6,11 @@ import {
   Text,
   View,
 } from "react-native";
-import { useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { useAccessContext, useReservation } from "@businext/shared-core/hooks";
 import type { Reservation } from "@businext/shared-core";
 import { ReservationListItem } from "@/components/ReservationListItem";
 import { TrendSuggestionCard } from "@/components/TrendSuggestionCard";
-import { useAuth } from "@/context/AuthContext";
 import { usePushRegistration } from "@/hooks/usePushRegistration";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
 import { fonts } from "@/theme/fonts";
@@ -21,6 +20,7 @@ import {
   formatHour,
   isSameDay,
   isToday,
+  toDateParam,
 } from "@/lib/date";
 
 type Section = { title: string; data: Reservation[] };
@@ -33,16 +33,18 @@ type Section = { title: string; data: Reservation[] };
 export default function AgendaScreen() {
   const styles = useStyles();
   const { colors } = useTheme();
-  const { logout } = useAuth();
   const [selectedDay, setSelectedDay] = useState(new Date());
   const { reservationData, loading, getAllReservations } = useReservation();
   const pushState = usePushRegistration();
   const router = useRouter();
-  const { capabilities } = useAccessContext();
+  const { context, capabilities } = useAccessContext();
+  const isOwner = context?.role === "owner";
+  const currentUserName = context?.profile?.displayName ?? context?.profile?.email ?? "";
 
   const sections = useMemo<Section[]>(() => {
     const dayReservations = reservationData
       .filter((r) => isSameDay(r.reservationStartDate, selectedDay))
+      .filter((r) => isOwner || r.inCharge.toLowerCase() === currentUserName.toLowerCase())
       .sort((a, b) => a.reservationStartDate.localeCompare(b.reservationStartDate));
 
     const groups = new Map<string, Reservation[]>();
@@ -56,31 +58,26 @@ export default function AgendaScreen() {
     return Array.from(groups.entries())
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([title, data]) => ({ title, data }));
-  }, [reservationData, selectedDay]);
+  }, [reservationData, selectedDay, isOwner, currentUserName]);
 
   return (
     <View style={styles.flex}>
-      <View style={styles.titleBar}>
-        <Text style={styles.title}>Agenda</Text>
-        <View style={styles.titleActions}>
-          <Pressable
-            style={styles.chatButton}
-            onPress={() => router.push("/chat")}
-            accessibilityRole="button"
-            testID="agenda-chat-button"
-          >
-            <Text style={styles.chatButtonText}>Asistente</Text>
-          </Pressable>
-          {capabilities.canViewTrends && (
-            <Pressable onPress={() => router.push("/trends")} accessibilityRole="button" hitSlop={8}>
-              <Text style={styles.trendsText}>Tendencias</Text>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <Pressable
+              onPress={() =>
+                router.push({ pathname: "/reservation/form", params: { date: toDateParam(selectedDay) } })
+              }
+              accessibilityRole="button"
+              hitSlop={8}
+              testID="agenda-new-reservation"
+            >
+              <Text style={styles.headerLink}>Nueva reserva</Text>
             </Pressable>
-          )}
-          <Pressable onPress={logout}>
-            <Text style={styles.logoutText}>Salir</Text>
-          </Pressable>
-        </View>
-      </View>
+          ),
+        }}
+      />
 
       <View style={styles.header}>
         <Pressable
@@ -148,56 +145,13 @@ export default function AgendaScreen() {
 
 const useStyles = themedStyles((colors) => ({
   flex: { flex: 1, backgroundColor: colors.background },
-  titleBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingTop: 56,
-    paddingBottom: 8,
-    backgroundColor: colors.background,
-  },
-  title: {
-    fontFamily: fonts.display,
-    fontSize: 28,
-    textTransform: "uppercase",
-    color: colors.foreground,
-  },
-  titleActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
-  },
-  chatButton: {
-    height: 44,
-    paddingHorizontal: 20,
-    borderRadius: 6,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.primary,
-  },
-  chatButtonText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: colors.primaryForeground,
-  },
-  trendsText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.primary,
-  },
-  logoutText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.danger,
-  },
+  headerLink: { fontFamily: fonts.bodyBold, fontSize: 14, color: colors.primary },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingTop: 4,
-    paddingBottom: 16,
+    paddingVertical: 16,
     backgroundColor: colors.background,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,

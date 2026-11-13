@@ -41,10 +41,14 @@ function ThemedStack() {
           contentStyle: { backgroundColor: colors.background },
         }}
       >
+        <Stack.Screen name="agenda" options={{ headerShown: true, title: "Agenda" }} />
         <Stack.Screen
           name="reservation/[id]"
           options={{ headerShown: true, title: "Detalle de reserva" }}
         />
+        <Stack.Screen name="reservation/form" options={{ headerShown: true, title: "Nueva reserva" }} />
+        <Stack.Screen name="cash/index" options={{ headerShown: true, title: "Caja" }} />
+        <Stack.Screen name="cash/new" options={{ headerShown: true, title: "Nuevo movimiento" }} />
         <Stack.Screen name="settings" options={{ headerShown: true, title: "Ajustes" }} />
         <Stack.Screen name="clients-at-risk" options={{ headerShown: true, title: "Clientes en riesgo" }} />
         <Stack.Screen name="conversations" options={{ headerShown: true, title: "Historial" }} />
