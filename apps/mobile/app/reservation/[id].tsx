@@ -9,12 +9,12 @@ import {
   Text,
   View,
 } from "react-native";
-import { useReservation } from "@businext/shared-core/hooks";
+import { useAccessContext, useReservation } from "@businext/shared-core/hooks";
 import { useFinances } from "@businext/shared-core/hooks";
 import { useProduct } from "@businext/shared-core/hooks";
 import { StatusOptions } from "@businext/shared-core";
 import { buildFinanceRecordFromReservation } from "@businext/shared-core/services";
-import { formatHour } from "@/lib/date";
+import { formatDayLabel, formatHour, isSameDay, parseWallClock } from "@/lib/date";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 /**
@@ -41,6 +41,7 @@ export default function ReservationDetailScreen() {
     useReservation();
   const { createFinance } = useFinances();
   const { productData } = useProduct();
+  const { context } = useAccessContext();
 
   const reservation = useMemo(
     () => reservationData.find((r) => String(r.id) === id),
@@ -58,6 +59,10 @@ export default function ReservationDetailScreen() {
   const statusLabel =
     StatusOptions[reservation.status as keyof typeof StatusOptions] ??
     reservation.status;
+
+  const isPending = reservation.status === "PENDING";
+  const canComplete = isPending && isSameDay(reservation.reservationStartDate, new Date());
+  const canRevert = reservation.status === "COMPLETED" && context?.role === "owner";
 
   const handleComplete = async () => {
     if (submitting) return;
@@ -142,16 +147,16 @@ export default function ReservationDetailScreen() {
       <Text style={styles.label}>Encargado</Text>
       <Text style={styles.value}>{reservation.inCharge}</Text>
 
-      <Text style={styles.label}>Hora</Text>
+      <Text style={styles.label}>Fecha</Text>
       <Text style={styles.value}>
-        {formatHour(reservation.reservationStartDate)} ({reservation.timePerReservation} min)
+        {formatDayLabel(parseWallClock(reservation.reservationStartDate))}, {formatHour(reservation.reservationStartDate)} ({reservation.timePerReservation} min)
       </Text>
 
       <Text style={styles.label}>Estado</Text>
       <Text style={styles.value}>{statusLabel}</Text>
 
       <View style={styles.actions}>
-        {reservation.status === "PENDING" && (
+        {canComplete && (
           <Pressable
             style={[styles.button, styles.primaryButton]}
             onPress={handleComplete}
@@ -165,7 +170,7 @@ export default function ReservationDetailScreen() {
           </Pressable>
         )}
 
-        {reservation.status === "COMPLETED" && (
+        {canRevert && (
           <Pressable
             style={[styles.button, styles.secondaryButton]}
             onPress={handleRevert}
@@ -175,13 +180,27 @@ export default function ReservationDetailScreen() {
           </Pressable>
         )}
 
-        <Pressable
-          style={[styles.button, styles.dangerButton]}
-          onPress={handleDelete}
-          disabled={submitting}
-        >
-          <Text style={styles.dangerButtonText}>Eliminar</Text>
-        </Pressable>
+        {isPending && (
+          <Pressable
+            style={[styles.button, styles.secondaryButton]}
+            onPress={() =>
+              router.push({ pathname: "/reservation/form", params: { id: String(reservation.id) } })
+            }
+            disabled={submitting}
+          >
+            <Text style={styles.secondaryButtonText}>Editar</Text>
+          </Pressable>
+        )}
+
+        {isPending && (
+          <Pressable
+            style={[styles.button, styles.dangerButton]}
+            onPress={handleDelete}
+            disabled={submitting}
+          >
+            <Text style={styles.dangerButtonText}>Eliminar</Text>
+          </Pressable>
+        )}
       </View>
     </ScrollView>
   );

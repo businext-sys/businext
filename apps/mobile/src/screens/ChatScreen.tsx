@@ -28,7 +28,7 @@ import { assistantClient } from "@/lib/assistantClient";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 /**
- * Chat del asistente (issue #78), abierto desde la agenda (issue #86).
+ * Chat del asistente (issue #78), pantalla principal de la app (issue #218).
  */
 export default function ChatScreen() {
   const styles = useStyles();
@@ -93,7 +93,12 @@ export default function ChatScreen() {
         menuItems={[
           { label: "Nueva conversación", onPress: () => chat.reset() },
           { label: "Historial", onPress: () => router.push("/conversations") },
-          { label: "Agenda", onPress: () => router.navigate("/") },
+          ...(capabilities.canManageReservations
+            ? [{ label: "Agenda", onPress: () => router.push("/agenda") }]
+            : []),
+          ...(capabilities.canManageFinances && context?.role !== "employee"
+            ? [{ label: "Caja", onPress: () => router.push("/cash") }]
+            : []),
           ...(capabilities.canViewTrends
             ? [{ label: "Tendencias", onPress: () => router.push("/trends") }]
             : []),

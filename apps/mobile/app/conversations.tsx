@@ -22,7 +22,7 @@ export default function ConversationsScreen() {
     client: assistantClient,
   });
 
-  const open = (id?: string) => router.navigate({ pathname: "/chat", params: { conversation: id ?? "new" } });
+  const open = (id?: string) => router.navigate({ pathname: "/", params: { conversation: id ?? "new" } });
 
   const confirmDelete = (conversation: ConversationSummary) =>
     Alert.alert("Borrar conversación", `¿Borrar «${conversation.title}»? No se puede deshacer.`, [

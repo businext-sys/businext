@@ -81,12 +81,12 @@ export function usePushRegistration(): PushRegistrationState {
     if (data?.type === "content_suggestion") {
       if (capabilities.canViewTrends && data.id) router.navigate(`/trends/${data.id}`);
     } else if (data?.conversationId) {
-      router.navigate({ pathname: "/chat", params: { conversation: data.conversationId } });
+      router.navigate({ pathname: "/", params: { conversation: data.conversationId } });
     } else if (data?.type === "booking_request") {
       router.navigate(
         data.bookingRequestId
-          ? { pathname: "/chat", params: { bookingRequest: String(data.bookingRequestId) } }
-          : "/"
+          ? { pathname: "/", params: { bookingRequest: String(data.bookingRequestId) } }
+          : "/agenda"
       );
     }
   }, [lastResponse, router, context, capabilities.canViewTrends]);

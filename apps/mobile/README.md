@@ -133,8 +133,8 @@ Para probar una rama en un dispositivo antes del merge (sin simulador ni
 automatico del token al autenticarse, manejo explicito del rechazo de permisos
 (banner en la home) y deep link al tocar una notificacion, tambien con la app
 cerrada (`useLastNotificationResponse`). La push de una solicitud
-(`{ type: "booking_request", bookingRequestId }`, issue #83) abre el chat
-(`/chat`) en una conversacion nueva con un mensaje que la explica y su tarjeta
+(`{ type: "booking_request", bookingRequestId }`, issue #83) abre el asistente
+(`/`) en una conversacion nueva con un mensaje que la explica y su tarjeta
 con Aceptar/Rechazar; si la push trae `conversationId`, abre esa
 conversacion. Sin `bookingRequestId`, abre la agenda.
 
@@ -151,8 +151,8 @@ Supabase con `docs/sql/031-push-token.sql` del backend.
 
 ## Pantallas
 
-- **Chat del asistente** (`app/chat.tsx` → `src/screens/ChatScreen.tsx`, issues
-  #78 y #86) — se abre con el boton «Asistente» de la Agenda. Usa `useAssistantChat` de shared-core
+- **Chat del asistente** (`app/index.tsx` → `src/screens/ChatScreen.tsx`, issues
+  #78, #86 y #218) — la pantalla de inicio tras el login. Usa `useAssistantChat` de shared-core
   con `assistantClient` (`expo/fetch`, streaming). Componentes en
   `src/components/chat/`: burbujas con markdown basico, indicador de
   escribiendo/herramienta, input con enviar y parar, error con reintento y
@@ -165,11 +165,12 @@ Supabase con `docs/sql/031-push-token.sql` del backend.
   (Confirmar/Cancelar llama a `confirm` del chat).
   Colores del tema (ver *Tema* abajo); la cabecera lleva el avatar del asistente
   (`assets/avatar-asistente.png`). Sin tabs: el menu de la
-  cabecera lleva a nueva conversacion, historial, agenda (vuelve al inicio),
-  ajustes y cerrar sesion.
+  cabecera lleva a nueva conversacion, historial, agenda (con
+  `canManageReservations`), caja (con `canManageFinances` y sin ser employee),
+  tendencias, ajustes y cerrar sesion.
 - **Historial** (`app/conversations.tsx`, issue #82) — conversaciones con el
-  asistente (`useAssistantConversations`): abrir (`/chat?conversation=<id>`),
-  borrar con confirmacion o empezar una nueva (`/chat?conversation=new`).
+  asistente (`useAssistantConversations`): abrir (`/?conversation=<id>`),
+  borrar con confirmacion o empezar una nueva (`/?conversation=new`).
 - **Ajustes** (`app/settings.tsx`) — cuenta y cierre de sesion. Para el owner,
   la seccion **Agente de voz** (`src/components/VoiceAgentSection.tsx`, issue
   #119) lee `useVoiceAgentConfig` y, por cada numero asignado, un boton
@@ -189,22 +190,34 @@ Supabase con `docs/sql/031-push-token.sql` del backend.
   pide el texto propuesto, deja editarlo y lo envía por email con
   `customerMessageApi`; sin email explica que falta y, si ya se le escribió en los
   últimos 7 días (429), lo dice. Se entra desde Ajustes.
-- **Agenda** (`app/index.tsx` → `src/screens/AgendaScreen.tsx`, issues #030 y #86) — la
-  pantalla de inicio tras el login para todos los negocios: reservas del dia agrupadas por
-  hora, navegacion entre dias, pull-to-refresh y el boton «Asistente» que abre el chat.
+- **Agenda** (`app/agenda.tsx` → `src/screens/AgendaScreen.tsx`, issues #030, #86 y #218) —
+  reservas del dia agrupadas por hora (el owner ve todas; el resto, solo las suyas, como en la
+  web), navegacion entre dias, pull-to-refresh y «Nueva reserva» en la cabecera.
 - **Tendencias** (`app/trends/`, issue #171, solo con `canViewTrends`; si no,
   redirigen a `/`) — `index.tsx`: análisis del día con actualizar, servicios que
   encajan, tendencias con enlace y próximas ideas. `[id].tsx`: hora, red, idea,
   guion en 3 pasos, texto sugerido con **Copiar texto** (`expo-clipboard`, cambia
   el binario), **Ya lo publiqué** y **No me interesa**; al abrirla, una idea
   `pending` o `sent` pasa a `opened`. `settings.tsx`: preferencias del radar. Se
-  entra desde la cabecera de la Agenda, el menú del chat, la push y la tarjeta
+  entra desde el menú del chat, la push y la tarjeta
   de la Agenda (`src/components/TrendSuggestionCard.tsx`), que sale cuando hay
   una idea para hoy y avisa si las notificaciones están denegadas. Grabar y
   publicar el vídeo es #172.
 - **Detalle de reserva** (`app/reservation/[id].tsx`) — acciones reales del
-  dominio: Completar / Revertir / Eliminar. El modelo no tiene un estado
-  "cancelada" distinto (ver la nota en el propio archivo).
+  dominio con las reglas de la web: Editar y Eliminar mientras está pendiente,
+  Completar si es de hoy (crea el ingreso) y Revertir solo el owner. El modelo no
+  tiene un estado "cancelada" distinto (ver la nota en el propio archivo).
+- **Formulario de reserva** (`app/reservation/form.tsx`, issue #218) — crea
+  (`/reservation/form?date=<YYYY-MM-DD>`, desde la Agenda) o edita
+  (`?id=<id>`, desde el detalle): cliente, teléfono, email, servicio, encargado
+  (lo elige el owner; el resto reserva a su nombre), día y hora. Las nuevas duran
+  30 min, como en la web, y avisa de solapes con `detectReservationConflict`.
+- **Caja** (`app/cash/`, issue #218, con `canManageFinances` y sin ser employee;
+  si no, redirige a `/`) — `index.tsx`: balance, ingresos y gastos de hoy, la
+  semana o el mes y sus movimientos (`useFinances`). Quien no es owner ve sus
+  ingresos netos de comisión, como en la web. Solo el owner añade movimientos
+  (`new.tsx`: tipo, concepto, importe y emisor) y los borra; uno que viene de
+  una reserva no se borra hasta revertirla.
 - **Login** (issue #029) — Supabase Auth con token en `expo-secure-store`.
 
 ## Publicar en App Store y Google Play
