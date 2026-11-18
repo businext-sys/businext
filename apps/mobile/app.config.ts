@@ -10,7 +10,7 @@ const EAS_PROJECT_ID = "468dbb33-6433-4484-842e-41f65d74121f";
 const config: ExpoConfig = {
   name: "Businext",
   slug: "businext-mobile",
-  version: "1.0.0",
+  version: "1.1.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
   scheme: "businext",
