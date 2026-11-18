@@ -1,5 +1,6 @@
 import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
+import { AndroidImportance } from "expo-notifications";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 
@@ -48,11 +49,11 @@ export async function registerForPushNotificationsAsync(): Promise<PushRegistrat
   if (Platform.OS === "android") {
     await Notifications.setNotificationChannelAsync("default", {
       name: "default",
-      importance: Notifications.AndroidImportance.DEFAULT,
+      importance: AndroidImportance.DEFAULT,
     });
     await Notifications.setNotificationChannelAsync("content", {
       name: "Ideas de contenido",
-      importance: Notifications.AndroidImportance.DEFAULT,
+      importance: AndroidImportance.DEFAULT,
     });
   }
 

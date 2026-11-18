@@ -12,6 +12,7 @@ function mapProductFromApi(data: Record<string, unknown>): Product {
     type: data.type as string | undefined,
     imageUrl: data.image_url as string | undefined,
     seller: data.seller as string | undefined,
+    durationMinutes: typeof data.duration_minutes === "number" ? data.duration_minutes : null,
   };
 }
 
@@ -22,6 +23,7 @@ function mapProductToApi(product: Omit<Product, "id">) {
     type: product.type ?? null,
     image_url: product.imageUrl ?? null,
     seller: product.seller ?? null,
+    ...(product.durationMinutes !== undefined ? { duration_minutes: product.durationMinutes } : {}),
   };
 }
 

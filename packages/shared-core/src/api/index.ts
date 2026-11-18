@@ -18,3 +18,6 @@ export * from "./voiceAgentApi";
 export * from "./trendsApi";
 export * from "./customerMessageApi";
 export * from "./accountApi";
+export * from "./customersApi";
+export * from "./notificationPreferencesApi";
+export * from "./availabilityApi";

@@ -22,6 +22,7 @@ import {
   Undo2,
   Phone,
   Mail,
+  UserX,
 } from "lucide-react";
 import { InitialsAvatar } from "@/components/common/InitialsAvatar";
 import { cn } from "@/lib/utils";
@@ -190,8 +191,18 @@ function ReservationCard({
   highlight,
 }: ReservationCardProps) {
   const isPending = reservation.status === "PENDING";
+  const isNoShow = reservation.status === "NO_SHOW";
 
-  const styles = isPending
+  const styles = isNoShow
+    ? {
+        bg: "bg-danger/[0.04]",
+        border: "border-danger/15",
+        hoverBorder: "hover:border-danger/30",
+        avatar: "bg-danger/15 text-foreground",
+        amount: "text-danger",
+        separator: "border-danger/10",
+      }
+    : isPending
     ? {
         bg: "bg-secondary/[0.04]",
         border: "border-secondary/15",
@@ -226,7 +237,7 @@ function ReservationCard({
           <span
             className={cn(
               "flex-shrink-0 h-1.5 w-1.5 rounded-full",
-              isPending ? "bg-secondary" : "bg-success"
+              isNoShow ? "bg-danger" : isPending ? "bg-secondary" : "bg-success"
             )}
           />
           <div
@@ -244,6 +255,7 @@ function ReservationCard({
             </p>
             <p className="text-[11px] text-foreground-muted truncate leading-tight">
               {reservation.service}
+              {isNoShow && <span className="text-danger font-medium"> · No vino</span>}
             </p>
           </div>
         </div>
@@ -346,17 +358,45 @@ function RevertAction({
   );
 }
 
+function NoShowRevertAction({
+  reservation,
+  onUpdate,
+}: {
+  reservation: Reservation;
+  onUpdate: (r: Reservation) => Promise<unknown>;
+}) {
+  const [saving, setSaving] = useState(false);
+  return (
+    <Button
+      variant="ghost"
+      size="icon"
+      disabled={saving}
+      title="Volver a pendiente"
+      onClick={async () => {
+        setSaving(true);
+        await onUpdate({ ...reservation, status: "PENDING" });
+        setSaving(false);
+      }}
+    >
+      <Undo2 className="h-3.5 w-3.5 text-warning" />
+    </Button>
+  );
+}
+
 function PendingActions({
   reservation,
   onEdit,
   onComplete,
   onDelete,
+  onNoShow,
 }: {
   reservation: Reservation;
   onEdit: (r: Reservation) => void;
   onComplete: (r: Reservation) => void;
   onDelete: (r: Reservation) => void;
+  onNoShow?: (r: Reservation) => void;
 }) {
+  const isPast = new Date(reservation.reservationStartDate).getTime() <= Date.now();
   const isToday = (() => {
     const now = new Date();
     const d = new Date(reservation.reservationStartDate);
@@ -371,6 +411,11 @@ function PendingActions({
       {isToday && (
         <Button variant="ghost" size="icon" onClick={() => onComplete(reservation)} title="Completar">
           <CheckCircle className="h-3.5 w-3.5" />
+        </Button>
+      )}
+      {onNoShow && isPast && (
+        <Button variant="ghost" size="icon" onClick={() => onNoShow(reservation)} title="No vino">
+          <UserX className="h-3.5 w-3.5" />
         </Button>
       )}
       <Button variant="ghost" size="icon" onClick={() => onDelete(reservation)} title="Eliminar">
@@ -579,7 +624,7 @@ export function TodayTimeline({
               <div className="space-y-2">
                 {items.map((reservation) => {
                   const isPending = reservation.status === "PENDING";
-                  const price = !isPending
+                  const price = reservation.status === "COMPLETED"
                     ? productData.find((p) => p.name === reservation.service)?.price ?? 0
                     : undefined;
 
@@ -597,6 +642,12 @@ export function TodayTimeline({
                             onEdit={setEditTarget}
                             onComplete={setCompleteTarget}
                             onDelete={setDeleteTarget}
+                            onNoShow={(r) => updateReservation({ ...r, status: "NO_SHOW" })}
+                          />
+                        ) : reservation.status === "NO_SHOW" ? (
+                          <NoShowRevertAction
+                            reservation={reservation}
+                            onUpdate={updateReservation}
                           />
                         ) : isOwner ? (
                           <RevertAction

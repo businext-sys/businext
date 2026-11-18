@@ -1,18 +1,22 @@
 import { ActivityIndicator, Alert, FlatList, Pressable, RefreshControl, Text, View } from "react-native";
-import { useRouter } from "expo-router";
-import type { ConversationSummary } from "@businext/shared-core/assistant";
+import { Stack, useRouter } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { readablePreview, type ConversationSummary } from "@businext/shared-core/assistant";
 import { useAssistantConversations } from "@businext/shared-core/hooks";
+import { HeaderIconButton } from "@/components/HeaderIconButton";
+import { SwipeToDeleteRow } from "@/components/SwipeToDeleteRow";
 import { assistantClient } from "@/lib/assistantClient";
 import { formatHour, isSameDay } from "@/lib/date";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 function formatUpdatedAt(dateStr: string): string {
-  if (isSameDay(dateStr, new Date())) return `Hoy, ${formatHour(dateStr)}`;
+  if (isSameDay(dateStr, new Date())) return formatHour(dateStr);
   return new Date(dateStr).toLocaleDateString("es-ES", { day: "numeric", month: "short" });
 }
 
 /**
- * Historial de conversaciones con el asistente (issue #82).
+ * Historial de conversaciones con el asistente (issues #82 y #218): toca para
+ * abrir; desliza a la izquierda o mantén pulsado para borrar.
  */
 export default function ConversationsScreen() {
   const styles = useStyles();
@@ -39,51 +43,72 @@ export default function ConversationsScreen() {
 
   return (
     <View style={styles.flex}>
-      <Pressable style={styles.newButton} onPress={() => open()} accessibilityRole="button" testID="conversations-new">
-        <Text style={styles.newButtonText}>Nueva conversación</Text>
-      </Pressable>
-
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <HeaderIconButton
+              icon="create-outline"
+              label="Nueva conversación"
+              onPress={() => open()}
+              testID="conversations-new"
+            />
+          ),
+        }}
+      />
       <FlatList
         data={conversations}
         keyExtractor={(conversation) => conversation.id}
-        refreshControl={<RefreshControl refreshing={loading} onRefresh={async () => { await mutate(); }} tintColor={colors.primary} />}
+        refreshControl={
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={async () => {
+              await mutate();
+            }}
+            tintColor={colors.primary}
+          />
+        }
         contentContainerStyle={conversations.length === 0 ? styles.emptyContainer : undefined}
-        renderItem={({ item }) => (
-          <View style={styles.row}>
-            <Pressable
-              style={styles.info}
-              onPress={() => open(item.id)}
-              accessibilityRole="button"
-              accessibilityLabel={`${item.title}, ${formatUpdatedAt(item.updated_at)}`}
-              accessibilityHint="Abre la conversación"
-            >
-              <Text style={styles.title} numberOfLines={1}>
-                {item.title}
-              </Text>
-              {item.last_message_preview && (
-                <Text style={styles.preview} numberOfLines={1}>
-                  {item.last_message_preview}
-                </Text>
-              )}
-              <Text style={styles.date}>{formatUpdatedAt(item.updated_at)}</Text>
-            </Pressable>
-            <Pressable
-              style={styles.delete}
-              onPress={() => confirmDelete(item)}
-              accessibilityRole="button"
-              accessibilityLabel={`Borrar ${item.title}`}
-            >
-              <Text style={styles.deleteText}>Borrar</Text>
-            </Pressable>
-          </View>
-        )}
+        renderItem={({ item }) => {
+          const preview = readablePreview(item.last_message_preview);
+          return (
+            <SwipeToDeleteRow onDelete={() => confirmDelete(item)} deleteLabel={`Borrar ${item.title}`}>
+              <Pressable
+                style={({ pressed }) => [styles.row, pressed && styles.pressed]}
+                onPress={() => open(item.id)}
+                onLongPress={() => confirmDelete(item)}
+                accessibilityRole="button"
+                accessibilityLabel={`${item.title}, ${formatUpdatedAt(item.updated_at)}`}
+                accessibilityHint="Abre la conversación. Mantén pulsado para borrarla."
+                accessibilityActions={[{ name: "delete", label: "Borrar" }]}
+                onAccessibilityAction={(event) => {
+                  if (event.nativeEvent.actionName === "delete") confirmDelete(item);
+                }}
+              >
+                <View style={styles.titleRow}>
+                  <Text style={styles.title} numberOfLines={1}>
+                    {item.title}
+                  </Text>
+                  <Text style={styles.date}>{formatUpdatedAt(item.updated_at)}</Text>
+                </View>
+                {preview && (
+                  <Text style={styles.preview} numberOfLines={1}>
+                    {preview}
+                  </Text>
+                )}
+              </Pressable>
+            </SwipeToDeleteRow>
+          );
+        }}
         ListEmptyComponent={
           loading ? (
             <ActivityIndicator color={colors.primary} />
           ) : (
-            <Text style={styles.empty}>
-              {error ? "No se ha podido cargar el historial." : "Aún no hay conversaciones."}
-            </Text>
+            <View style={styles.empty}>
+              <Ionicons name="chatbubbles-outline" size={40} color={colors.foregroundSubtle} />
+              <Text style={styles.emptyText}>
+                {error ? "No se ha podido cargar el historial." : "Aún no hay conversaciones."}
+              </Text>
+            </View>
           )
         }
       />
@@ -93,28 +118,20 @@ export default function ConversationsScreen() {
 
 const useStyles = themedStyles((colors) => ({
   flex: { flex: 1, backgroundColor: colors.background },
-  newButton: {
-    margin: 16,
-    minHeight: 48,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 12,
-    backgroundColor: colors.primary,
-  },
-  newButtonText: { fontSize: 15, fontWeight: "700", color: colors.primaryForeground },
   row: {
-    flexDirection: "row",
-    alignItems: "center",
     paddingHorizontal: 16,
+    paddingVertical: 14,
+    gap: 4,
+    backgroundColor: colors.background,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: colors.borderSubtle,
   },
-  info: { flex: 1, paddingVertical: 12, gap: 2 },
-  title: { fontSize: 15, fontWeight: "600", color: colors.foreground },
-  preview: { fontSize: 13, color: colors.foregroundMuted },
-  date: { fontSize: 12, color: colors.foregroundSubtle },
-  delete: { minHeight: 44, justifyContent: "center", paddingLeft: 12 },
-  deleteText: { fontSize: 14, color: colors.danger },
+  pressed: { backgroundColor: colors.surface },
+  titleRow: { flexDirection: "row", alignItems: "center", gap: 12 },
+  title: { flex: 1, fontSize: 16, fontWeight: "600", color: colors.foreground },
+  date: { fontSize: 13, color: colors.foregroundSubtle },
+  preview: { fontSize: 14, color: colors.foregroundMuted },
   emptyContainer: { flexGrow: 1, justifyContent: "center" },
-  empty: { textAlign: "center", fontSize: 14, color: colors.foregroundMuted },
+  empty: { alignItems: "center", gap: 12 },
+  emptyText: { textAlign: "center", fontSize: 15, color: colors.foregroundMuted },
 }));

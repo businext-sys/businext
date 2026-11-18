@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { ActivityIndicator, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { Stack, useRouter } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { HeaderIconButton } from "@/components/HeaderIconButton";
 import { useContentSuggestions, useTrendInsight } from "@businext/shared-core/hooks";
 import { TrendsGate } from "@/components/TrendsGate";
 import { isCurrentSuggestion } from "@businext/shared-core/services";
-import { formatLabels, formatPublishAt, networkLabels } from "@/lib/trends";
+import { formatLabels, formatPublishAt, networkIcon, networkLabels } from "@/lib/trends";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
 import { fonts } from "@/theme/fonts";
 
@@ -40,9 +42,11 @@ function TrendsScreen() {
       <Stack.Screen
         options={{
           headerRight: () => (
-            <Pressable onPress={() => router.push("/trends/settings")} accessibilityRole="button" hitSlop={8}>
-              <Text style={styles.headerLink}>Preferencias</Text>
-            </Pressable>
+            <HeaderIconButton
+              icon="options-outline"
+              label="Preferencias de tendencias"
+              onPress={() => router.push("/trends/settings")}
+            />
           ),
         }}
       />
@@ -66,12 +70,16 @@ function TrendsScreen() {
             {insight.trends.map((trend) => (
               <Pressable
                 key={trend.url}
+                style={({ pressed }) => [styles.trend, pressed && styles.pressed]}
                 onPress={() => Linking.openURL(trend.url)}
                 accessibilityRole="link"
+                accessibilityLabel={`${networkLabels[trend.network]}: ${trend.title}`}
               >
-                <Text style={styles.link}>
-                  {networkLabels[trend.network]} · {trend.title}
+                <Ionicons name={networkIcon(trend.network)} size={22} color={colors.foreground} />
+                <Text style={styles.trendTitle} numberOfLines={2}>
+                  {trend.title}
                 </Text>
+                <Ionicons name="open-outline" size={16} color={colors.foregroundSubtle} />
               </Pressable>
             ))}
           </>
@@ -104,10 +112,12 @@ function TrendsScreen() {
             onPress={() => router.push(`/trends/${suggestion.id}`)}
             accessibilityRole="button"
           >
-            <Text style={styles.eyebrow}>
-              {formatPublishAt(suggestion.publishAt)} · {networkLabels[suggestion.network]} ·{" "}
-              {formatLabels[suggestion.format]}
-            </Text>
+            <View style={styles.ideaMeta}>
+              <Ionicons name={networkIcon(suggestion.network)} size={18} color={colors.foreground} />
+              <Text style={styles.eyebrow}>
+                {formatPublishAt(suggestion.publishAt)} · {formatLabels[suggestion.format]}
+              </Text>
+            </View>
             <Text style={styles.body}>{suggestion.idea}</Text>
           </Pressable>
         ))
@@ -119,31 +129,34 @@ function TrendsScreen() {
 const useStyles = themedStyles((colors) => ({
   flex: { flex: 1, backgroundColor: colors.background },
   content: { padding: 16, gap: 12 },
-  headerLink: { fontFamily: fonts.bodyBold, fontSize: 14, color: colors.primary },
   sectionTitle: {
-    fontFamily: fonts.display,
-    fontSize: 22,
-    textTransform: "uppercase",
+    fontFamily: fonts.bodyBold,
+    fontSize: 17,
     color: colors.foreground,
     marginTop: 8,
   },
+  trend: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: colors.surfaceRaised,
+  },
+  trendTitle: { flex: 1, fontFamily: fonts.body, fontSize: 14, color: colors.foreground },
+  pressed: { opacity: 0.7 },
+  ideaMeta: { flexDirection: "row", alignItems: "center", gap: 8 },
   card: {
     padding: 16,
     borderRadius: 8,
     backgroundColor: colors.surface,
     gap: 8,
   },
-  eyebrow: {
-    fontFamily: fonts.bodyBold,
-    fontSize: 13,
-    letterSpacing: 1.3,
-    textTransform: "uppercase",
-    color: colors.secondary,
-  },
+  eyebrow: { fontFamily: fonts.bodyBold, fontSize: 13, color: colors.secondary },
   body: { fontFamily: fonts.body, fontSize: 15, lineHeight: 22, color: colors.foreground },
   muted: { fontFamily: fonts.body, fontSize: 15, color: colors.foregroundMuted },
   error: { fontFamily: fonts.body, fontSize: 14, color: colors.danger },
-  link: { fontFamily: fonts.body, fontSize: 15, color: colors.primary },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   chip: {
     fontFamily: fonts.body,

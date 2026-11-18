@@ -5,7 +5,7 @@ import { bootstrapApiClient } from "@/lib/bootstrapApiClient";
 import { AuthProvider } from "@/context/AuthContext";
 import { AuthGate } from "@/context/AuthGate";
 import { ThemeProvider, useTheme } from "@/theme/ThemeContext";
-import { fontAssets } from "@/theme/fonts";
+import { fontAssets, fonts } from "@/theme/fonts";
 
 // Se ejecuta una unica vez, al cargar este modulo (que Expo Router carga
 // antes de montar cualquier pantalla), configurando el apiClient
@@ -35,26 +35,26 @@ function ThemedStack() {
       <StatusBar style={mode === "dark" ? "light" : "dark"} />
       <Stack
         screenOptions={{
-          headerShown: false,
-          headerStyle: { backgroundColor: colors.surface },
+          headerShown: true,
+          headerStyle: { backgroundColor: colors.background },
+          headerShadowVisible: false,
           headerTintColor: colors.foreground,
+          headerTitleStyle: { fontFamily: fonts.bodyBold, fontSize: 17 },
+          headerBackButtonDisplayMode: "minimal",
           contentStyle: { backgroundColor: colors.background },
         }}
       >
-        <Stack.Screen name="agenda" options={{ headerShown: true, title: "Agenda" }} />
-        <Stack.Screen
-          name="reservation/[id]"
-          options={{ headerShown: true, title: "Detalle de reserva" }}
-        />
-        <Stack.Screen name="reservation/form" options={{ headerShown: true, title: "Nueva reserva" }} />
-        <Stack.Screen name="cash/index" options={{ headerShown: true, title: "Caja" }} />
-        <Stack.Screen name="cash/new" options={{ headerShown: true, title: "Nuevo movimiento" }} />
-        <Stack.Screen name="settings" options={{ headerShown: true, title: "Ajustes" }} />
-        <Stack.Screen name="clients-at-risk" options={{ headerShown: true, title: "Clientes en riesgo" }} />
-        <Stack.Screen name="conversations" options={{ headerShown: true, title: "Historial" }} />
-        <Stack.Screen name="trends/index" options={{ headerShown: true, title: "Tendencias" }} />
-        <Stack.Screen name="trends/[id]" options={{ headerShown: true, title: "Idea de contenido" }} />
-        <Stack.Screen name="trends/settings" options={{ headerShown: true, title: "Preferencias" }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false, title: "Inicio" }} />
+        <Stack.Screen name="login" options={{ headerShown: false, title: "Entrar" }} />
+        <Stack.Screen name="reservation/[id]" options={{ title: "Reserva" }} />
+        <Stack.Screen name="reservation/form" options={{ title: "Nueva reserva" }} />
+        <Stack.Screen name="cash/new" options={{ title: "Nuevo movimiento" }} />
+        <Stack.Screen name="clients-at-risk" options={{ title: "Clientes en riesgo" }} />
+        <Stack.Screen name="customer" options={{ title: "Cliente" }} />
+        <Stack.Screen name="customers" options={{ title: "Clientes" }} />
+        <Stack.Screen name="conversations" options={{ title: "Historial" }} />
+        <Stack.Screen name="trends/[id]" options={{ title: "Idea de contenido" }} />
+        <Stack.Screen name="trends/settings" options={{ title: "Preferencias" }} />
       </Stack>
     </>
   );

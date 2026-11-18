@@ -1,5 +1,7 @@
 "use client";
 
+import { DEFAULT_SERVICE_DURATION } from "@businext/shared-core";
+
 import React, { useState, useEffect, useMemo } from "react";
 import {
   BookingServicesResponse,
@@ -103,6 +105,7 @@ export default function PublicBookingPage({
     setSlotsLoading(true);
     const params = new URLSearchParams({ date: selectedDate });
     if (selectedEmployee) params.set("employee_name", selectedEmployee);
+    if (selectedService) params.set("service", selectedService.name);
     fetch(`/api/public-book/${businessId}/availability?${params}`)
       .then((r) => r.json())
       .then((data) => {
@@ -110,7 +113,7 @@ export default function PublicBookingPage({
         setSlotsLoading(false);
       })
       .catch(() => setSlotsLoading(false));
-  }, [selectedDate, selectedEmployee, businessId]);
+  }, [selectedDate, selectedEmployee, selectedService, businessId]);
 
   const handleSubmit = async () => {
     if (!selectedSlot || !selectedService) return;
@@ -456,7 +459,7 @@ export default function PublicBookingPage({
                       {svc.name}
                     </p>
                     <p className="text-xs text-foreground-subtle mt-0.5">
-                      30 min
+                      {svc.duration_minutes ?? DEFAULT_SERVICE_DURATION} min
                     </p>
                   </div>
 

@@ -13,6 +13,8 @@ import { useAccessContext, useFinances } from "@businext/shared-core/hooks";
 import type { Finances } from "@businext/shared-core/finances";
 import { addDays, formatHour, isSameDay } from "@/lib/date";
 import { Chip } from "@/components/Chip";
+import { HeaderIconButton } from "@/components/HeaderIconButton";
+import { SwipeToDeleteRow } from "@/components/SwipeToDeleteRow";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
 import { fonts } from "@/theme/fonts";
 
@@ -109,14 +111,12 @@ function CashScreen({ isOwner }: { isOwner: boolean }) {
         <Stack.Screen
           options={{
             headerRight: () => (
-              <Pressable
+              <HeaderIconButton
+                icon="add"
+                label="Añadir movimiento"
                 onPress={() => router.push("/cash/new")}
-                accessibilityRole="button"
-                hitSlop={8}
                 testID="cash-new"
-              >
-                <Text style={styles.headerLink}>Añadir</Text>
-              </Pressable>
+              />
             ),
           }}
         />
@@ -157,8 +157,13 @@ function CashScreen({ isOwner }: { isOwner: boolean }) {
         }
         renderItem={({ item }) => {
           const isIncome = item.type === "INCOME";
-          return (
-            <View style={styles.row}>
+          const canDelete = isOwner && item.id !== undefined && item.id > 0;
+          const row = (
+            <Pressable
+              style={styles.row}
+              onLongPress={canDelete ? () => confirmDelete(item) : undefined}
+              accessibilityHint={canDelete ? "Desliza a la izquierda o mantén pulsado para eliminar" : undefined}
+            >
               <View style={styles.info}>
                 <Text style={styles.concept} numberOfLines={1}>
                   {item.concept}
@@ -172,17 +177,14 @@ function CashScreen({ isOwner }: { isOwner: boolean }) {
                 {isIncome ? "+" : "-"}
                 {formatMoney(item.amount)}
               </Text>
-              {isOwner && item.id !== undefined && item.id > 0 && (
-                <Pressable
-                  style={styles.delete}
-                  onPress={() => confirmDelete(item)}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Eliminar ${item.concept}`}
-                >
-                  <Text style={styles.deleteText}>Eliminar</Text>
-                </Pressable>
-              )}
-            </View>
+            </Pressable>
+          );
+          return canDelete ? (
+            <SwipeToDeleteRow onDelete={() => confirmDelete(item)} deleteLabel={`Eliminar ${item.concept}`}>
+              {row}
+            </SwipeToDeleteRow>
+          ) : (
+            row
           );
         }}
         ListEmptyComponent={
@@ -205,7 +207,6 @@ const useStyles = themedStyles((colors) => ({
     justifyContent: "center",
     backgroundColor: colors.background,
   },
-  headerLink: { fontFamily: fonts.bodyBold, fontSize: 14, color: colors.primary },
   summary: {
     padding: 16,
     gap: 8,
@@ -228,6 +229,7 @@ const useStyles = themedStyles((colors) => ({
   income: { color: colors.success },
   expense: { color: colors.danger },
   row: {
+    backgroundColor: colors.background,
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
@@ -241,8 +243,6 @@ const useStyles = themedStyles((colors) => ({
   meta: { fontSize: 13, color: colors.foregroundMuted },
   date: { fontSize: 12, color: colors.foregroundSubtle },
   amount: { fontSize: 15, fontWeight: "700" },
-  delete: { minHeight: 44, justifyContent: "center" },
-  deleteText: { fontSize: 14, color: colors.danger },
   empty: {
     marginTop: 24,
     textAlign: "center",

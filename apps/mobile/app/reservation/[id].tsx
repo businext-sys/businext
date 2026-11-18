@@ -1,34 +1,36 @@
-import { useMemo, useState } from "react";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useMemo, useState, type ComponentProps } from "react";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from "react-native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import {
-  ActivityIndicator,
-  Alert,
-  Linking,
-  Pressable,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
-import { useAccessContext, useReservation } from "@businext/shared-core/hooks";
-import { useFinances } from "@businext/shared-core/hooks";
-import { useProduct } from "@businext/shared-core/hooks";
-import { StatusOptions } from "@businext/shared-core";
+  useAccessContext,
+  useFinances,
+  useProduct,
+  useReservation,
+} from "@businext/shared-core/hooks";
 import { buildFinanceRecordFromReservation } from "@businext/shared-core/services";
-import { formatDayLabel, formatHour, isSameDay, parseWallClock } from "@/lib/date";
+import { ContactButtons } from "@/components/ContactButtons";
+import { HeaderIconButton } from "@/components/HeaderIconButton";
+import { StatusPill } from "@/components/StatusPill";
+import { formatDayLabel, formatHour, parseWallClock } from "@/lib/date";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
+import { fonts } from "@/theme/fonts";
+
+type IconName = ComponentProps<typeof Ionicons>["name"];
+
+async function ensure(result: Promise<unknown>) {
+  if (!(await result)) throw new Error("not saved");
+}
+
+function endOfToday(): number {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime();
+}
 
 /**
- * Detalle de una reserva (issue #030).
- *
- * Nota sobre los estados: el modelo real de `Reservation` solo tiene
- * `PENDING` y `COMPLETED` (no existe un estado `CANCELLED`/`confirmed`
- * distinto, a diferencia de lo que sugeria la descripcion original de la
- * issue). Se mapean las acciones pedidas a las que realmente existen en
- * el dominio (ver apps/web/src/components/reservation/ReservationItem.tsx):
- * "Confirmar" -> "Completar" (PENDING -> COMPLETED, genera tambien un
- * registro financiero, igual que en web); "Cancelar" -> "Eliminar" (no
- * hay una tercera categoria "cancelada", eliminar es la unica forma de
- * quitar una reserva pendiente).
+ * Detalle de una reserva (issues #030 y #218), con las acciones de la web:
+ * completar y cobrar, «No vino», volver a pendiente, editar y cancelar
+ * (cancelar la borra: el modelo no tiene estado «cancelada»).
  */
 export default function ReservationDetailScreen() {
   const styles = useStyles();
@@ -36,8 +38,9 @@ export default function ReservationDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const [submitting, setSubmitting] = useState(false);
+  const [now] = useState(() => Date.now());
 
-  const { reservationData, updateReservation, revertReservation, deleteReservation } =
+  const { reservationData, loading, updateReservation, revertReservation, deleteReservation } =
     useReservation();
   const { createFinance } = useFinances();
   const { productData } = useProduct();
@@ -51,212 +54,217 @@ export default function ReservationDetailScreen() {
   if (!reservation) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator color={colors.primary} />
+        {loading ? (
+          <ActivityIndicator color={colors.primary} />
+        ) : (
+          <Text style={styles.muted}>No se encuentra la reserva.</Text>
+        )}
       </View>
     );
   }
 
-  const statusLabel =
-    StatusOptions[reservation.status as keyof typeof StatusOptions] ??
-    reservation.status;
+  const status = reservation.status.toUpperCase();
+  const isPending = status === "PENDING";
+  const start = parseWallClock(reservation.reservationStartDate).getTime();
+  const canComplete = isPending && start < endOfToday();
+  const canMarkNoShow = isPending && start <= now;
+  const canRevertCompleted = status === "COMPLETED" && context?.role === "owner";
+  const price = productData.find((p) => p.name === reservation.service)?.price ?? 0;
 
-  const isPending = reservation.status === "PENDING";
-  const canComplete = isPending && isSameDay(reservation.reservationStartDate, new Date());
-  const canRevert = reservation.status === "COMPLETED" && context?.role === "owner";
-
-  const handleComplete = async () => {
+  const run = async (action: () => Promise<unknown>, after?: () => void) => {
     if (submitting) return;
     setSubmitting(true);
     try {
-      const completed = { ...reservation, status: "COMPLETED" };
-      const updated = await updateReservation(completed);
-      if (updated) {
-        await createFinance(buildFinanceRecordFromReservation(completed, productData));
-      }
-      router.back();
+      await action();
+      after?.();
+    } catch {
+      Alert.alert("No se ha podido guardar el cambio.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  const handleRevert = async () => {
-    if (submitting || !reservation.id) return;
-    setSubmitting(true);
-    try {
-      await revertReservation(reservation.id);
-      router.back();
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleDelete = () => {
-    if (!reservation.id) return;
+  const complete = () =>
     Alert.alert(
-      "Eliminar reserva",
-      `¿Seguro que quieres eliminar la reserva de ${reservation.customerName}?`,
+      "Completar y cobrar",
+      `Se registra un ingreso de ${price.toLocaleString("es-ES")}€ por ${reservation.service}.`,
       [
-        { text: "Cancelar", style: "cancel" },
+        { text: "Volver", style: "cancel" },
         {
-          text: "Eliminar",
-          style: "destructive",
-          onPress: async () => {
-            setSubmitting(true);
-            try {
-              await deleteReservation(reservation.id!);
-              router.back();
-            } finally {
-              setSubmitting(false);
-            }
-          },
+          text: "Completar",
+          onPress: () =>
+            run(async () => {
+              const completed = { ...reservation, status: "COMPLETED" };
+              await ensure(updateReservation(completed));
+              await createFinance(buildFinanceRecordFromReservation(completed, productData));
+            }),
         },
       ]
     );
-  };
+
+  const markNoShow = () =>
+    Alert.alert("No vino", `¿Marcar que ${reservation.customerName} no vino?`, [
+      { text: "Volver", style: "cancel" },
+      {
+        text: "No vino",
+        style: "destructive",
+        onPress: () => run(() => ensure(updateReservation({ ...reservation, status: "NO_SHOW" }))),
+      },
+    ]);
+
+  const backToPending = () =>
+    run(() =>
+      ensure(
+        status === "COMPLETED"
+          ? revertReservation(reservation.id!)
+          : updateReservation({ ...reservation, status: "PENDING" })
+      )
+    );
+
+  const cancel = () =>
+    Alert.alert(
+      "Cancelar reserva",
+      `Se borra la reserva de ${reservation.customerName}. No se puede deshacer.`,
+      [
+        { text: "Volver", style: "cancel" },
+        {
+          text: "Cancelar reserva",
+          style: "destructive",
+          onPress: () => run(() => deleteReservation(reservation.id!), () => router.back()),
+        },
+      ]
+    );
+
+  const actions: { label: string; icon: IconName; onPress: () => void; tone: "primary" | "default" | "danger" }[] = [];
+  if (canComplete) actions.push({ label: "Completar y cobrar", icon: "checkmark-circle", onPress: complete, tone: "primary" });
+  if (canMarkNoShow) actions.push({ label: "No vino", icon: "person-remove-outline", onPress: markNoShow, tone: "default" });
+  if (status === "NO_SHOW" || canRevertCompleted) {
+    actions.push({ label: "Volver a pendiente", icon: "arrow-undo-outline", onPress: backToPending, tone: "default" });
+  }
+  if (isPending) actions.push({ label: "Cancelar reserva", icon: "close-circle-outline", onPress: cancel, tone: "danger" });
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.label}>Cliente</Text>
-      <Text style={styles.value}>{reservation.customerName}</Text>
-
-      {reservation.customerPhone && (
-        <>
-          <Text style={styles.label}>Teléfono</Text>
-          <Pressable
-            onPress={() => Linking.openURL(`tel:${reservation.customerPhone}`)}
-            accessibilityRole="link"
-            accessibilityLabel={`Llamar a ${reservation.customerName}`}
-          >
-            <Text style={[styles.value, styles.link]}>{reservation.customerPhone}</Text>
-          </Pressable>
-        </>
+    <ScrollView style={styles.flex} contentContainerStyle={styles.container}>
+      {isPending && (
+        <Stack.Screen
+          options={{
+            headerRight: () => (
+              <HeaderIconButton
+                icon="create-outline"
+                label="Editar reserva"
+                onPress={() =>
+                  router.push({ pathname: "/reservation/form", params: { id: String(reservation.id) } })
+                }
+              />
+            ),
+          }}
+        />
       )}
 
-      {reservation.customerEmail && (
-        <>
-          <Text style={styles.label}>Email</Text>
-          <Text style={styles.value} selectable>
-            {reservation.customerEmail}
-          </Text>
-        </>
-      )}
+      <Pressable
+        style={styles.customer}
+        onPress={() => router.push({ pathname: "/customer", params: { name: reservation.customerName } })}
+        accessibilityRole="button"
+        accessibilityHint="Abre la ficha del cliente"
+      >
+        <View style={styles.customerText}>
+          <Text style={styles.name}>{reservation.customerName}</Text>
+          <Text style={styles.muted}>Ver ficha del cliente</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color={colors.foregroundSubtle} />
+      </Pressable>
 
-      <Text style={styles.label}>Servicio</Text>
-      <Text style={styles.value}>{reservation.service}</Text>
+      <ContactButtons phone={reservation.customerPhone} email={reservation.customerEmail} />
 
-      <Text style={styles.label}>Encargado</Text>
-      <Text style={styles.value}>{reservation.inCharge}</Text>
-
-      <Text style={styles.label}>Fecha</Text>
-      <Text style={styles.value}>
-        {formatDayLabel(parseWallClock(reservation.reservationStartDate))}, {formatHour(reservation.reservationStartDate)} ({reservation.timePerReservation} min)
-      </Text>
-
-      <Text style={styles.label}>Estado</Text>
-      <Text style={styles.value}>{statusLabel}</Text>
+      <View style={styles.card}>
+        <Row icon="calendar-outline" text={formatDayLabel(parseWallClock(reservation.reservationStartDate))} />
+        <Row
+          icon="time-outline"
+          text={`${formatHour(reservation.reservationStartDate)} · ${reservation.timePerReservation} min`}
+        />
+        <Row icon="cut-outline" text={reservation.service} />
+        <Row icon="person-outline" text={reservation.inCharge} />
+        <StatusPill status={reservation.status} />
+      </View>
 
       <View style={styles.actions}>
-        {canComplete && (
+        {actions.map((action) => (
           <Pressable
-            style={[styles.button, styles.primaryButton]}
-            onPress={handleComplete}
+            key={action.label}
+            style={({ pressed }) => [
+              styles.button,
+              action.tone === "primary" ? styles.primaryButton : styles.secondaryButton,
+              action.tone === "danger" && styles.dangerButton,
+              (pressed || submitting) && styles.pressed,
+            ]}
+            onPress={action.onPress}
             disabled={submitting}
+            accessibilityRole="button"
           >
-            {submitting ? (
-              <ActivityIndicator color={colors.primaryForeground} />
-            ) : (
-              <Text style={styles.primaryButtonText}>Completar</Text>
-            )}
+            <Ionicons
+              name={action.icon}
+              size={20}
+              color={
+                action.tone === "primary"
+                  ? colors.primaryForeground
+                  : action.tone === "danger"
+                    ? colors.danger
+                    : colors.foreground
+              }
+            />
+            <Text
+              style={[
+                styles.buttonText,
+                action.tone === "primary" && styles.primaryText,
+                action.tone === "danger" && styles.dangerText,
+              ]}
+            >
+              {action.label}
+            </Text>
           </Pressable>
-        )}
-
-        {canRevert && (
-          <Pressable
-            style={[styles.button, styles.secondaryButton]}
-            onPress={handleRevert}
-            disabled={submitting}
-          >
-            <Text style={styles.secondaryButtonText}>Revertir</Text>
-          </Pressable>
-        )}
-
-        {isPending && (
-          <Pressable
-            style={[styles.button, styles.secondaryButton]}
-            onPress={() =>
-              router.push({ pathname: "/reservation/form", params: { id: String(reservation.id) } })
-            }
-            disabled={submitting}
-          >
-            <Text style={styles.secondaryButtonText}>Editar</Text>
-          </Pressable>
-        )}
-
-        {isPending && (
-          <Pressable
-            style={[styles.button, styles.dangerButton]}
-            onPress={handleDelete}
-            disabled={submitting}
-          >
-            <Text style={styles.dangerButtonText}>Eliminar</Text>
-          </Pressable>
-        )}
+        ))}
+        {submitting && <ActivityIndicator color={colors.primary} />}
       </View>
     </ScrollView>
   );
 }
 
+function Row({ icon, text }: { icon: IconName; text: string }) {
+  const styles = useStyles();
+  const { colors } = useTheme();
+  return (
+    <View style={styles.row}>
+      <Ionicons name={icon} size={18} color={colors.foregroundSubtle} />
+      <Text style={styles.rowText}>{text}</Text>
+    </View>
+  );
+}
+
 const useStyles = themedStyles((colors) => ({
-  center: { flex: 1, alignItems: "center", justifyContent: "center" },
-  container: {
-    padding: 24,
-    gap: 4,
-  },
-  label: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: colors.foregroundSubtle,
-    textTransform: "uppercase",
-    marginTop: 16,
-  },
-  value: {
-    fontSize: 16,
-    color: colors.foreground,
-  },
-  link: {
-    color: colors.primary,
-    fontWeight: "600",
-  },
-  actions: {
-    marginTop: 32,
-    gap: 12,
-  },
+  flex: { flex: 1, backgroundColor: colors.background },
+  center: { flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: colors.background },
+  container: { padding: 20, gap: 16 },
+  customer: { flexDirection: "row", alignItems: "center", gap: 12 },
+  customerText: { flex: 1, gap: 2 },
+  name: { fontFamily: fonts.display, fontSize: 30, color: colors.foreground },
+  muted: { fontSize: 14, color: colors.foregroundMuted },
+  card: { padding: 16, borderRadius: 8, backgroundColor: colors.surface, gap: 12 },
+  row: { flexDirection: "row", alignItems: "center", gap: 10 },
+  rowText: { fontSize: 16, color: colors.foreground, flex: 1 },
+  actions: { gap: 10, marginTop: 8 },
   button: {
-    paddingVertical: 14,
+    minHeight: 48,
     borderRadius: 6,
+    flexDirection: "row",
     alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
   },
-  primaryButton: {
-    backgroundColor: colors.primary,
-  },
-  primaryButtonText: {
-    color: colors.primaryForeground,
-    fontWeight: "700",
-  },
-  secondaryButton: {
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  secondaryButtonText: {
-    color: colors.foreground,
-    fontWeight: "600",
-  },
-  dangerButton: {
-    borderWidth: 1,
-    borderColor: colors.danger,
-  },
-  dangerButtonText: {
-    color: colors.danger,
-    fontWeight: "600",
-  },
+  primaryButton: { backgroundColor: colors.primary },
+  secondaryButton: { borderWidth: 1, borderColor: colors.border },
+  dangerButton: { borderColor: colors.danger },
+  pressed: { opacity: 0.6 },
+  buttonText: { fontSize: 15, fontWeight: "600", color: colors.foreground },
+  primaryText: { color: colors.primaryForeground, fontWeight: "700" },
+  dangerText: { color: colors.danger },
 }));

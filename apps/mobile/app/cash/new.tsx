@@ -161,13 +161,7 @@ const useStyles = themedStyles((colors) => ({
     backgroundColor: colors.background,
   },
   container: { padding: 24, gap: 8 },
-  label: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: colors.foregroundSubtle,
-    textTransform: "uppercase",
-    marginTop: 12,
-  },
+  label: { fontSize: 15, fontWeight: "700", color: colors.foreground, marginTop: 14 },
   input: {
     borderWidth: 1,
     borderColor: colors.input,

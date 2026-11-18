@@ -10,7 +10,7 @@ const EAS_PROJECT_ID = "468dbb33-6433-4484-842e-41f65d74121f";
 const config: ExpoConfig = {
   name: "Businext",
   slug: "businext-mobile",
-  version: "1.1.0",
+  version: "1.2.0",
   orientation: "portrait",
   icon: "./assets/icon.png",
   scheme: "businext",
@@ -43,6 +43,15 @@ const config: ExpoConfig = {
         image: "./assets/splash-icon.png",
         imageWidth: 200,
         backgroundColor: "#0F0E0C",
+      },
+    ],
+    [
+      "expo-speech-recognition",
+      {
+        microphonePermission:
+          "Businext usa el micrófono para que puedas dictar mensajes al asistente.",
+        speechRecognitionPermission:
+          "Businext convierte tu voz en texto para escribir al asistente sin teclear.",
       },
     ],
     [
