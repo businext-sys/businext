@@ -18,6 +18,7 @@ export interface BookingService {
   price: number;
   type: string;
   image_url: string | null;
+  duration_minutes?: number | null;
 }
 
 export interface BookingServicesResponse {

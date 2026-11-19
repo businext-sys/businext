@@ -1,6 +1,6 @@
 # @businext/mobile
 
-App movil de Businext: Expo SDK 57 + React Native + Expo Router.
+App movil de Businext: Expo SDK 58 + React Native + Expo Router.
 
 **Arranque local, variables de entorno y requisitos: ver el
 [README de la raiz del monorepo](../../README.md)** (incluida la nota sobre
@@ -71,10 +71,8 @@ la crea e instala `eslint-config-expo`, lo que deja `eslint-plugin-react-hooks@7
 la raíz de `node_modules`. Con eso `pnpm lint:web` y `pnpm build:web` fallan en
 código que no ha cambiado. Si pasa, no commitees esos cambios: deja
 `pnpm-lock.yaml` y `package.json` como en `main` y ejecuta `pnpm install`.
-Aun así, `lint` ya sale en rojo en `main`: `react-hooks/set-state-in-effect` en
-`src/screens/ChatScreen.tsx` e `import/namespace` sobre
-`Notifications.AndroidImportance` (falso positivo: el type-check lo acepta).
-Compara con esos errores, no con cero.
+Con esa configuración temporal, `lint` sale limpio desde #218 (se quitaron el
+`set-state-in-effect` de `ChatScreen.tsx` y el falso positivo de `AndroidImportance`).
 
 ## Distribucion via EAS
 
@@ -133,8 +131,8 @@ Para probar una rama en un dispositivo antes del merge (sin simulador ni
 automatico del token al autenticarse, manejo explicito del rechazo de permisos
 (banner en la home) y deep link al tocar una notificacion, tambien con la app
 cerrada (`useLastNotificationResponse`). La push de una solicitud
-(`{ type: "booking_request", bookingRequestId }`, issue #83) abre el chat
-(`/chat`) en una conversacion nueva con un mensaje que la explica y su tarjeta
+(`{ type: "booking_request", bookingRequestId }`, issue #83) abre el asistente
+(`/`) en una conversacion nueva con un mensaje que la explica y su tarjeta
 con Aceptar/Rechazar; si la push trae `conversationId`, abre esa
 conversacion. Sin `bookingRequestId`, abre la agenda.
 
@@ -151,60 +149,62 @@ Supabase con `docs/sql/031-push-token.sql` del backend.
 
 ## Pantallas
 
-- **Chat del asistente** (`app/chat.tsx` → `src/screens/ChatScreen.tsx`, issues
-  #78 y #86) — se abre con el boton «Asistente» de la Agenda. Usa `useAssistantChat` de shared-core
-  con `assistantClient` (`expo/fetch`, streaming). Componentes en
-  `src/components/chat/`: burbujas con markdown basico, indicador de
-  escribiendo/herramienta, input con enviar y parar, error con reintento y
-  chips de acciones rapidas (`quickActionsFor` de shared-core, por rol) en el
-  estado vacio y sobre el input; las `quick_replies` del asistente tambien se
-  muestran como chips. Los bloques ricos son tarjetas nativas en
-  `src/components/chat/cards/`: reservas (abren `reservation/[id]`), caja
-  (balance, ingresos frente a gastos y comparativa), solicitud de reserva
-  (Aceptar/Rechazar contra `/booking-requests`) y confirmacion de acciones
-  (Confirmar/Cancelar llama a `confirm` del chat).
-  Colores del tema (ver *Tema* abajo); la cabecera lleva el avatar del asistente
-  (`assets/avatar-asistente.png`). Sin tabs: el menu de la
-  cabecera lleva a nueva conversacion, historial, agenda (vuelve al inicio),
-  ajustes y cerrar sesion.
-- **Historial** (`app/conversations.tsx`, issue #82) — conversaciones con el
-  asistente (`useAssistantConversations`): abrir (`/chat?conversation=<id>`),
-  borrar con confirmacion o empezar una nueva (`/chat?conversation=new`).
-- **Ajustes** (`app/settings.tsx`) — cuenta y cierre de sesion. Para el owner,
-  la seccion **Agente de voz** (`src/components/VoiceAgentSection.tsx`, issue
-  #119) lee `useVoiceAgentConfig` y, por cada numero asignado, un boton
-  «Llamar al agente» abre el marcador (`tel:`). La llamada entra por el mismo
-  webhook `call_inbound` que la de un cliente, asi que prueba el agente real
-  con los datos del negocio. En el simulador de iOS `tel:` no abre nada:
-  probar en un dispositivo.
-- **Borrar cuenta** (`src/components/DeleteAccountSection.tsx`, al final de
-  Ajustes) — lo exigen App Store y Google Play. Tras confirmar llama a
-  `accountApi.deleteMe` (`DELETE /users/me` del backend) y cierra la sesión. Si
-  es el owner, se cancela la suscripción y se borra el negocio entero; si es un
-  miembro, solo su usuario y su acceso. Ajustes enlaza también la política de
-  privacidad de la web (`/privacidad`).
-- **Clientes en riesgo** (`app/clients-at-risk.tsx`, issue #186, solo owner y
-  manager; si no, redirige a `/`) — los clientes que `computeClientProfiles` de
-  shared-core marca `en_riesgo`. Cada tarjeta (`src/components/ClientRiskCard.tsx`)
-  pide el texto propuesto, deja editarlo y lo envía por email con
-  `customerMessageApi`; sin email explica que falta y, si ya se le escribió en los
-  últimos 7 días (429), lo dice. Se entra desde Ajustes.
-- **Agenda** (`app/index.tsx` → `src/screens/AgendaScreen.tsx`, issues #030 y #86) — la
-  pantalla de inicio tras el login para todos los negocios: reservas del dia agrupadas por
-  hora, navegacion entre dias, pull-to-refresh y el boton «Asistente» que abre el chat.
-- **Tendencias** (`app/trends/`, issue #171, solo con `canViewTrends`; si no,
-  redirigen a `/`) — `index.tsx`: análisis del día con actualizar, servicios que
-  encajan, tendencias con enlace y próximas ideas. `[id].tsx`: hora, red, idea,
-  guion en 3 pasos, texto sugerido con **Copiar texto** (`expo-clipboard`, cambia
-  el binario), **Ya lo publiqué** y **No me interesa**; al abrirla, una idea
-  `pending` o `sent` pasa a `opened`. `settings.tsx`: preferencias del radar. Se
-  entra desde la cabecera de la Agenda, el menú del chat, la push y la tarjeta
-  de la Agenda (`src/components/TrendSuggestionCard.tsx`), que sale cuando hay
-  una idea para hoy y avisa si las notificaciones están denegadas. Grabar y
-  publicar el vídeo es #172.
-- **Detalle de reserva** (`app/reservation/[id].tsx`) — acciones reales del
-  dominio: Completar / Revertir / Eliminar. El modelo no tiene un estado
-  "cancelada" distinto (ver la nota en el propio archivo).
+Navegación por pestañas con iconos (`app/(tabs)/_layout.tsx`, issue #218): **Asistente**,
+**Agenda** (con `canManageReservations`), **Caja** (con `canManageFinances` y sin ser
+employee), **Tendencias** (con `canViewTrends`) y **Ajustes**. Las pestañas sin permiso se
+ocultan (`href: null`). El resto de pantallas se apilan encima, con título propio y botón
+de volver sin texto; las acciones de cabecera son iconos (`src/components/HeaderIconButton.tsx`).
+
+- **Asistente** (`app/(tabs)/index.tsx` → `src/screens/ChatScreen.tsx`, issues #78, #86 y
+  #218) — inicio tras el login. Cabecera con el avatar, el nombre del negocio
+  (`useConfiguration`) y los iconos de historial y nueva conversación. Usa
+  `useAssistantChat` de shared-core con `assistantClient` (`expo/fetch`, streaming). Las
+  tarjetas que el historial guarda como texto `[tarjeta mostrada al usuario: {...}]` se
+  convierten de nuevo en tarjetas (`expandTextBlocks` de shared-core) y nunca se ve el JSON;
+  una confirmación pendiente se puede pulsar aunque venga de un mensaje anterior.
+  **Dictado:** sin texto escrito, el botón de enviar es un micrófono
+  (`src/hooks/useDictation.ts`, `expo-speech-recognition`, es-ES, en el dispositivo si lo
+  admite): toca para hablar y toca la flecha para enviar, o mantén pulsado y suelta. La
+  transcripción se ve en vivo. Un binario sin el módulo nativo oculta el micrófono.
+- **Historial** (`app/conversations.tsx`, issues #82 y #218) — título, hora y una línea de
+  vista previa (sin tarjetas internas). Desliza a la izquierda o mantén pulsado para borrar.
+- **Agenda** (`app/(tabs)/agenda.tsx` → `src/screens/AgendaScreen.tsx`) — reservas del día
+  con su franja (`12:00–12:45`), filtro de pendientes, pull-to-refresh y, en la cabecera,
+  compartir el enlace público de reservas (owner y manager) y nueva reserva. Acepta
+  `?date=YYYY-MM-DD&filter=pending` (lo usan las push).
+- **Detalle de reserva** (`app/reservation/[id].tsx`) — llamar, WhatsApp y email al
+  cliente; completar y cobrar (de hoy o pasadas; crea el ingreso como en la web), «No vino»
+  (estado `NO_SHOW`, cuando ya ha pasado la hora), volver a pendiente (una completada solo
+  el owner), cancelar (borra la reserva) y editar en la cabecera. El nombre abre la ficha.
+- **Formulario de reserva** (`app/reservation/form.tsx`) — crea (`?date=`, o con
+  `?name=&phone=&email=` desde la ficha) o edita (`?id=`). El cliente autocompleta con
+  `customersApi.search` (`GET /customers/`) y rellena teléfono y email; sin email avisa de
+  que no habrá recordatorios. La duración sale del servicio (`durationMinutes`, 30 por
+  defecto) y la hora se elige entre los huecos libres (`getAvailableSlots` de shared-core,
+  inicios cada 15 min donde cabe el servicio, con el horario del encargado o el general) o
+  con «Otra hora». Avisa de solapes con `detectReservationConflict`.
+- **Clientes** (`app/customers.tsx`) y **ficha de cliente** (`app/customer.tsx?name=`) —
+  buscador y ficha (`GET /customers/detail`): contacto, visitas, «no vino», gasto, próxima
+  cita, historial y «Nueva reserva» con el cliente puesto. Si el backend aún no tiene la
+  ficha, se monta con las reservas cargadas.
+- **Caja** (`app/(tabs)/cash.tsx` y `app/cash/new.tsx`) — balance, ingresos y gastos de hoy,
+  la semana o el mes y sus movimientos. Quien no es owner ve sus ingresos netos de comisión.
+  Solo el owner añade (icono +) y borra (deslizar o mantener pulsado); uno que viene de una
+  reserva no se borra hasta revertirla.
+- **Tendencias** (`app/(tabs)/trends.tsx`, `app/trends/`, issue #171) — análisis del día
+  con las tendencias en tarjetas con el logo de su red, próximas ideas y preferencias
+  (icono de la cabecera). `[id].tsx`: idea, guion, copiar texto, publicada y descartar.
+- **Ajustes** (`app/(tabs)/settings.tsx`) — cuenta, clientes, clientes en riesgo y
+  compartir enlace de reservas (owner y manager), **Notificaciones**
+  (`src/components/NotificationsSection.tsx`, `GET/PUT /notification-preferences`:
+  interruptor general, próxima cita con minutos, resumen de la mañana con hora, cambios en
+  reservas y cierre del día; si el permiso del sistema está denegado, avisa con «Abrir
+  ajustes»), agente de voz (owner), apariencia, privacidad, cerrar sesión y borrar cuenta.
+- **Clientes en riesgo** (`app/clients-at-risk.tsx`, issue #186) — igual que antes.
+- **Push** (`src/hooks/usePushRegistration.ts`) — al tocar una notificación, también con la
+  app cerrada: `reservation_id` abre el detalle; `daily_summary`, `upcoming` y
+  `reservation_changed` abren la Agenda en `date`; `day_close`, la Agenda con solo
+  pendientes.
 - **Login** (issue #029) — Supabase Auth con token en `expo-secure-store`.
 
 ## Publicar en App Store y Google Play

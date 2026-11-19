@@ -45,3 +45,13 @@ export function formatDayLabel(day: Date): string {
   });
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
+
+export function toDateParam(day: Date): string {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${day.getFullYear()}-${pad(day.getMonth() + 1)}-${pad(day.getDate())}`;
+}
+
+export function parseDateParam(value: string): Date {
+  const [year, month, day] = value.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}

@@ -4,8 +4,6 @@ name: Chat - aceptar una solicitud de reserva desde su tarjeta
 - launchApp:
     clearState: true
 - runFlow: ../subflows/login.yaml
-- tapOn:
-    id: "agenda-chat-button"
 - extendedWaitUntil:
     visible: "¿En qué te ayudo hoy?"
     timeout: 20000

@@ -21,4 +21,5 @@ export type Reservation = {
 export const StatusOptions = {
   PENDING: "Pendiente",
   COMPLETED: "Completada",
+  NO_SHOW: "No vino",
 };

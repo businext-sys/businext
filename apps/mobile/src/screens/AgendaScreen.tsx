@@ -1,108 +1,133 @@
-import { useMemo, useState } from "react";
-import {
-  Pressable,
-  RefreshControl,
-  SectionList,
-  Text,
-  View,
-} from "react-native";
-import { useRouter } from "expo-router";
-import { useAccessContext, useReservation } from "@businext/shared-core/hooks";
-import type { Reservation } from "@businext/shared-core";
+import { useEffect, useMemo, useState } from "react";
+import { FlatList, Pressable, RefreshControl, Text, View } from "react-native";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { useAccessContext, useConfiguration, useReservation } from "@businext/shared-core/hooks";
+import { Chip } from "@/components/Chip";
+import { HeaderIconButton } from "@/components/HeaderIconButton";
 import { ReservationListItem } from "@/components/ReservationListItem";
 import { TrendSuggestionCard } from "@/components/TrendSuggestionCard";
-import { useAuth } from "@/context/AuthContext";
 import { usePushRegistration } from "@/hooks/usePushRegistration";
+import { shareBookingLink } from "@/lib/links";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
-import { fonts } from "@/theme/fonts";
 import {
   addDays,
   formatDayLabel,
-  formatHour,
   isSameDay,
   isToday,
+  parseDateParam,
+  toDateParam,
 } from "@/lib/date";
 
-type Section = { title: string; data: Reservation[] };
+type Filter = "all" | "pending";
 
 /**
- * Agenda del dia (issue #030): lista de reservas del dia seleccionado,
- * agrupadas por hora, con navegacion entre dias y pull-to-refresh.
- * Usa `useReservation` de shared-core tal cual, sin reescritura (issue #028).
+ * Agenda del día (issues #030 y #218): reservas del día elegido, navegación
+ * entre días, filtro de pendientes y pull-to-refresh.
  */
 export default function AgendaScreen() {
   const styles = useStyles();
   const { colors } = useTheme();
-  const { logout } = useAuth();
+  const router = useRouter();
+  const params = useLocalSearchParams<{ date?: string; filter?: string }>();
   const [selectedDay, setSelectedDay] = useState(new Date());
+  const [filter, setFilter] = useState<Filter>("all");
   const { reservationData, loading, getAllReservations } = useReservation();
   const pushState = usePushRegistration();
-  const router = useRouter();
-  const { capabilities } = useAccessContext();
+  const { context, capabilities } = useAccessContext();
+  const { configurationData } = useConfiguration();
+  const isOwner = context?.role === "owner";
+  const canShare = isOwner || context?.role === "manager";
+  const currentUserName = context?.profile?.displayName ?? context?.profile?.email ?? "";
 
-  const sections = useMemo<Section[]>(() => {
-    const dayReservations = reservationData
-      .filter((r) => isSameDay(r.reservationStartDate, selectedDay))
-      .sort((a, b) => a.reservationStartDate.localeCompare(b.reservationStartDate));
-
-    const groups = new Map<string, Reservation[]>();
-    for (const reservation of dayReservations) {
-      const hour = formatHour(reservation.reservationStartDate);
-      const group = groups.get(hour) ?? [];
-      group.push(reservation);
-      groups.set(hour, group);
+  const paramsKey = params.date || params.filter ? `${params.date ?? ""}|${params.filter ?? ""}` : "";
+  const [appliedParams, setAppliedParams] = useState("");
+  if (paramsKey !== appliedParams) {
+    setAppliedParams(paramsKey);
+    if (paramsKey) {
+      if (params.date) setSelectedDay(parseDateParam(params.date));
+      setFilter(params.filter === "pending" ? "pending" : "all");
     }
+  }
 
-    return Array.from(groups.entries())
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([title, data]) => ({ title, data }));
-  }, [reservationData, selectedDay]);
+  useEffect(() => {
+    if (paramsKey) router.setParams({ date: undefined, filter: undefined });
+  }, [paramsKey, router]);
+
+  const reservations = useMemo(
+    () =>
+      reservationData
+        .filter((r) => isSameDay(r.reservationStartDate, selectedDay))
+        .filter((r) => isOwner || r.inCharge.toLowerCase() === currentUserName.toLowerCase())
+        .filter((r) => filter === "all" || r.status === "PENDING")
+        .sort((a, b) => a.reservationStartDate.localeCompare(b.reservationStartDate)),
+    [reservationData, selectedDay, isOwner, currentUserName, filter]
+  );
 
   return (
     <View style={styles.flex}>
-      <View style={styles.titleBar}>
-        <Text style={styles.title}>Agenda</Text>
-        <View style={styles.titleActions}>
-          <Pressable
-            style={styles.chatButton}
-            onPress={() => router.push("/chat")}
-            accessibilityRole="button"
-            testID="agenda-chat-button"
-          >
-            <Text style={styles.chatButtonText}>Asistente</Text>
-          </Pressable>
-          {capabilities.canViewTrends && (
-            <Pressable onPress={() => router.push("/trends")} accessibilityRole="button" hitSlop={8}>
-              <Text style={styles.trendsText}>Tendencias</Text>
-            </Pressable>
-          )}
-          <Pressable onPress={logout}>
-            <Text style={styles.logoutText}>Salir</Text>
-          </Pressable>
-        </View>
-      </View>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <View style={styles.headerActions}>
+              {canShare && context?.businessId && (
+                <HeaderIconButton
+                  icon="share-outline"
+                  label="Compartir enlace de reservas"
+                  onPress={() =>
+                    shareBookingLink(context.businessId, configurationData[0]?.businessName)
+                  }
+                />
+              )}
+              <HeaderIconButton
+                icon="add"
+                label="Nueva reserva"
+                onPress={() =>
+                  router.push({ pathname: "/reservation/form", params: { date: toDateParam(selectedDay) } })
+                }
+                testID="agenda-new-reservation"
+              />
+            </View>
+          ),
+        }}
+      />
 
       <View style={styles.header}>
         <Pressable
           style={styles.navButton}
           onPress={() => setSelectedDay((d) => addDays(d, -1))}
+          accessibilityRole="button"
+          accessibilityLabel="Día anterior"
+          hitSlop={4}
         >
-          <Text style={styles.navButtonText}>{"<"}</Text>
+          <Ionicons name="chevron-back" size={22} color={colors.foreground} />
         </Pressable>
 
-        <Pressable onPress={() => setSelectedDay(new Date())}>
+        <Pressable
+          onPress={() => setSelectedDay(new Date())}
+          accessibilityRole="button"
+          accessibilityHint="Vuelve a hoy"
+        >
           <Text style={styles.dayLabel} testID="agenda-day-label">
             {formatDayLabel(selectedDay)}
           </Text>
-          {isToday(selectedDay) && <Text style={styles.todayHint}>Hoy</Text>}
+          <Text style={styles.todayHint}>{isToday(selectedDay) ? "Hoy" : "Toca para ir a hoy"}</Text>
         </Pressable>
 
         <Pressable
           style={styles.navButton}
           onPress={() => setSelectedDay((d) => addDays(d, 1))}
+          accessibilityRole="button"
+          accessibilityLabel="Día siguiente"
+          hitSlop={4}
         >
-          <Text style={styles.navButtonText}>{">"}</Text>
+          <Ionicons name="chevron-forward" size={22} color={colors.foreground} />
         </Pressable>
+      </View>
+
+      <View style={styles.filters}>
+        <Chip label="Todas" selected={filter === "all"} onPress={() => setFilter("all")} />
+        <Chip label="Pendientes" selected={filter === "pending"} onPress={() => setFilter("pending")} />
       </View>
 
       {pushState.status === "denied" && (
@@ -111,17 +136,15 @@ export default function AgendaScreen() {
         </View>
       )}
 
-      {capabilities.canViewTrends && isToday(selectedDay) && (
-        <TrendSuggestionCard notificationsDenied={pushState.status === "denied"} />
-      )}
-
-      <SectionList
-        sections={sections}
+      <FlatList
+        data={reservations}
         keyExtractor={(item, index) => String(item.id ?? index)}
         renderItem={({ item }) => <ReservationListItem reservation={item} />}
-        renderSectionHeader={({ section }) => (
-          <Text style={styles.sectionHeader}>{section.title}</Text>
-        )}
+        ListHeaderComponent={
+          capabilities.canViewTrends && isToday(selectedDay) ? (
+            <TrendSuggestionCard notificationsDenied={pushState.status === "denied"} />
+          ) : undefined
+        }
         refreshControl={
           <RefreshControl
             refreshing={loading}
@@ -131,14 +154,15 @@ export default function AgendaScreen() {
             }}
           />
         }
-        contentContainerStyle={
-          sections.length === 0 ? styles.emptyContainer : styles.listContainer
-        }
+        contentContainerStyle={reservations.length === 0 ? styles.emptyContainer : styles.listContainer}
         ListEmptyComponent={
           !loading ? (
-            <Text style={styles.emptyText}>
-              No hay reservas para este dia.
-            </Text>
+            <View style={styles.empty}>
+              <Ionicons name="calendar-clear-outline" size={40} color={colors.foregroundSubtle} />
+              <Text style={styles.emptyText}>
+                {filter === "pending" ? "No quedan reservas pendientes." : "No hay reservas este día."}
+              </Text>
+            </View>
           ) : undefined
         }
       />
@@ -148,112 +172,34 @@ export default function AgendaScreen() {
 
 const useStyles = themedStyles((colors) => ({
   flex: { flex: 1, backgroundColor: colors.background },
-  titleBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingTop: 56,
-    paddingBottom: 8,
-    backgroundColor: colors.background,
-  },
-  title: {
-    fontFamily: fonts.display,
-    fontSize: 28,
-    textTransform: "uppercase",
-    color: colors.foreground,
-  },
-  titleActions: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
-  },
-  chatButton: {
-    height: 44,
-    paddingHorizontal: 20,
-    borderRadius: 6,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.primary,
-  },
-  chatButtonText: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: colors.primaryForeground,
-  },
-  trendsText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.primary,
-  },
-  logoutText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: colors.danger,
-  },
+  headerActions: { flexDirection: "row", alignItems: "center" },
   header: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingTop: 4,
-    paddingBottom: 16,
-    backgroundColor: colors.background,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    paddingTop: 8,
+    paddingBottom: 12,
   },
   navButton: {
-    width: 36,
-    height: 36,
+    width: 44,
+    height: 44,
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 18,
-    backgroundColor: colors.surfaceRaised,
+    borderRadius: 22,
+    backgroundColor: colors.surface,
   },
-  navButtonText: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: colors.foreground,
-  },
-  dayLabel: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: colors.foreground,
-    textAlign: "center",
-  },
-  todayHint: {
-    fontSize: 11,
-    color: colors.secondary,
-    textAlign: "center",
-  },
-  sectionHeader: {
-    fontSize: 13,
-    fontWeight: "700",
-    color: colors.foregroundSubtle,
-    backgroundColor: colors.background,
-    paddingHorizontal: 16,
-    paddingTop: 12,
-    paddingBottom: 4,
-  },
-  listContainer: {
-    paddingBottom: 24,
-  },
-  emptyContainer: {
-    flexGrow: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  emptyText: {
-    fontSize: 14,
-    color: colors.foregroundMuted,
-  },
+  dayLabel: { fontSize: 16, fontWeight: "700", color: colors.foreground, textAlign: "center" },
+  todayHint: { fontSize: 12, color: colors.foregroundSubtle, textAlign: "center", marginTop: 2 },
+  filters: { flexDirection: "row", gap: 8, paddingHorizontal: 16, paddingBottom: 8 },
+  listContainer: { paddingBottom: 24 },
+  emptyContainer: { flexGrow: 1, alignItems: "center", justifyContent: "center" },
+  empty: { alignItems: "center", gap: 12 },
+  emptyText: { fontSize: 15, color: colors.foregroundMuted },
   pushBanner: {
     backgroundColor: `${colors.warning}26`,
     paddingHorizontal: 16,
     paddingVertical: 10,
   },
-  pushBannerText: {
-    fontSize: 12,
-    color: colors.warning,
-  },
+  pushBannerText: { fontSize: 12, color: colors.warning },
 }));

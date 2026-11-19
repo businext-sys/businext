@@ -59,6 +59,8 @@ export const BookListItem = (reservation: Reservation) => {
       ? "accent"
       : status === "COMPLETED"
       ? "success"
+      : status === "NO_SHOW"
+      ? "danger"
       : "muted";
 
   return (

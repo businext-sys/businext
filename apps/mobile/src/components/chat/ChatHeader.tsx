@@ -1,61 +1,48 @@
-import { useState } from "react";
-import { Image, Modal, Pressable, Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { HeaderIconButton } from "@/components/HeaderIconButton";
 import { themedStyles } from "@/theme/ThemeContext";
 import { fonts } from "@/theme/fonts";
 
-export type ChatMenuItem = { label: string; onPress: () => void; destructive?: boolean };
+type Props = {
+  businessName: string;
+  onNewConversation: () => void;
+  onOpenHistory: () => void;
+};
 
-export function ChatHeader({ menuItems }: { menuItems: ChatMenuItem[] }) {
+export function ChatHeader({ businessName, onNewConversation, onOpenHistory }: Props) {
   const styles = useStyles();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const insets = useSafeAreaInsets();
 
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
       <View style={styles.identity}>
         <Image
           source={require("../../../assets/avatar-asistente.png")}
           style={styles.avatar}
           accessibilityLabel="Avatar del asistente"
         />
-        <View>
-          <Text style={styles.title} accessibilityRole="header">
-            Tu asistente
+        <View style={styles.names}>
+          <Text style={styles.title} accessibilityRole="header" numberOfLines={1}>
+            {businessName}
           </Text>
-          <Text style={styles.subtitle}>Businext</Text>
+          <Text style={styles.subtitle}>Asistente</Text>
         </View>
       </View>
-      <Pressable
-        style={styles.menuButton}
-        onPress={() => setMenuOpen(true)}
-        accessibilityRole="button"
-        accessibilityLabel="Abrir menú"
-        hitSlop={8}
-        testID="chat-menu-button"
-      >
-        <Text style={styles.menuIcon}>⋯</Text>
-      </Pressable>
-
-      <Modal transparent visible={menuOpen} animationType="fade" onRequestClose={() => setMenuOpen(false)}>
-        <Pressable style={styles.backdrop} onPress={() => setMenuOpen(false)} accessibilityLabel="Cerrar menú">
-          <View style={styles.menu}>
-            {menuItems.map((item) => (
-              <Pressable
-                key={item.label}
-                style={styles.menuItem}
-                accessibilityRole="menuitem"
-                onPress={() => {
-                  setMenuOpen(false);
-                  item.onPress();
-                }}
-              >
-                <Text style={[styles.menuItemText, item.destructive && styles.destructive]}>
-                  {item.label}
-                </Text>
-              </Pressable>
-            ))}
-          </View>
-        </Pressable>
-      </Modal>
+      <View style={styles.actions}>
+        <HeaderIconButton
+          icon="time-outline"
+          label="Historial de conversaciones"
+          onPress={onOpenHistory}
+          testID="chat-history-button"
+        />
+        <HeaderIconButton
+          icon="create-outline"
+          label="Nueva conversación"
+          onPress={onNewConversation}
+          testID="chat-new-button"
+        />
+      </View>
     </View>
   );
 }
@@ -66,69 +53,21 @@ const useStyles = themedStyles((colors) => ({
     alignItems: "center",
     justifyContent: "space-between",
     paddingHorizontal: 16,
-    paddingTop: 56,
-    paddingBottom: 12,
+    paddingBottom: 10,
     backgroundColor: colors.background,
     borderBottomWidth: 1,
-    borderBottomColor: colors.border,
+    borderBottomColor: colors.borderSubtle,
   },
-  identity: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-  },
+  identity: { flex: 1, flexDirection: "row", alignItems: "center", gap: 12 },
+  names: { flex: 1 },
   avatar: {
-    width: 48,
-    height: 48,
+    width: 40,
+    height: 40,
     borderRadius: 999,
     borderWidth: 2,
     borderColor: colors.primary,
   },
-  title: {
-    fontFamily: fonts.display,
-    fontSize: 24,
-    textTransform: "uppercase",
-    color: colors.foreground,
-  },
-  subtitle: {
-    fontFamily: fonts.bodyBold,
-    fontSize: 13,
-    color: colors.secondary,
-  },
-  menuButton: {
-    width: 44,
-    height: 44,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  menuIcon: {
-    fontSize: 24,
-    color: colors.foreground,
-  },
-  backdrop: {
-    flex: 1,
-    backgroundColor: `${colors.background}99`,
-    alignItems: "flex-end",
-    paddingTop: 100,
-    paddingHorizontal: 16,
-  },
-  menu: {
-    minWidth: 220,
-    borderRadius: 12,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.border,
-    paddingVertical: 4,
-  },
-  menuItem: {
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  menuItemText: {
-    fontSize: 15,
-    color: colors.foreground,
-  },
-  destructive: {
-    color: colors.danger,
-  },
+  title: { fontFamily: fonts.bodyBold, fontSize: 17, color: colors.foreground },
+  subtitle: { fontFamily: fonts.body, fontSize: 13, color: colors.foregroundSubtle },
+  actions: { flexDirection: "row", alignItems: "center" },
 }));

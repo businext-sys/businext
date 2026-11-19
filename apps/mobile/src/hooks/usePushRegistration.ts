@@ -5,6 +5,18 @@ import { useAccessContext } from "@businext/shared-core/hooks";
 import { pushTokenApi } from "@businext/shared-core/api";
 import { registerForPushNotificationsAsync } from "@/lib/pushNotifications";
 
+// Varias pantallas usan este hook: el id tocado se guarda a nivel de módulo para navegar una sola vez.
+let lastHandledNotificationId: string | null = null;
+
+type PushData = {
+  type?: string;
+  id?: number;
+  bookingRequestId?: number;
+  conversationId?: string;
+  reservation_id?: number;
+  date?: string;
+};
+
 export type PushRegistrationState =
   | { status: "idle" | "registering" | "granted" }
   | { status: "denied" | "unavailable"; message: string };
@@ -60,7 +72,6 @@ export function usePushRegistration(): PushRegistrationState {
   // incluye la que abrio la app estando cerrada, no solo las recibidas con
   // la app viva.
   const lastResponse = Notifications.useLastNotificationResponse();
-  const handledRef = useRef<string | null>(null);
 
   useEffect(() => {
     if (
@@ -71,22 +82,35 @@ export function usePushRegistration(): PushRegistrationState {
       return;
     }
     const notificationId = lastResponse.notification.request.identifier;
-    if (handledRef.current === notificationId) return;
-    handledRef.current = notificationId;
+    if (lastHandledNotificationId === notificationId) return;
+    lastHandledNotificationId = notificationId;
     Notifications.clearLastNotificationResponse();
 
-    const data = lastResponse.notification.request.content.data as
-      | { type?: string; id?: number; bookingRequestId?: number; conversationId?: string }
-      | undefined;
-    if (data?.type === "content_suggestion") {
+    const data = lastResponse.notification.request.content.data as PushData | undefined;
+    if (data?.reservation_id) {
+      router.navigate(`/reservation/${data.reservation_id}`);
+    } else if (
+      data?.type === "daily_summary" ||
+      data?.type === "day_close" ||
+      data?.type === "reservation_changed" ||
+      data?.type === "upcoming"
+    ) {
+      router.navigate({
+        pathname: "/agenda",
+        params: {
+          ...(data.date ? { date: data.date } : {}),
+          ...(data.type === "day_close" ? { filter: "pending" } : {}),
+        },
+      });
+    } else if (data?.type === "content_suggestion") {
       if (capabilities.canViewTrends && data.id) router.navigate(`/trends/${data.id}`);
     } else if (data?.conversationId) {
-      router.navigate({ pathname: "/chat", params: { conversation: data.conversationId } });
+      router.navigate({ pathname: "/", params: { conversation: data.conversationId } });
     } else if (data?.type === "booking_request") {
       router.navigate(
         data.bookingRequestId
-          ? { pathname: "/chat", params: { bookingRequest: String(data.bookingRequestId) } }
-          : "/"
+          ? { pathname: "/", params: { bookingRequest: String(data.bookingRequestId) } }
+          : "/agenda"
       );
     }
   }, [lastResponse, router, context, capabilities.canViewTrends]);

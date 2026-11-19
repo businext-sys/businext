@@ -4,7 +4,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import * as Clipboard from "expo-clipboard";
 import { useContentSuggestions } from "@businext/shared-core/hooks";
 import { TrendsGate } from "@/components/TrendsGate";
-import { formatLabels, formatPublishAt, networkLabels } from "@/lib/trends";
+import { formatLabels, formatPublishAt, networkIcon } from "@/lib/trends";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
 import { fonts } from "@/theme/fonts";
 
@@ -69,10 +70,12 @@ function TrendSuggestionScreen() {
 
   return (
     <ScrollView style={styles.flex} contentContainerStyle={styles.content}>
-      <Text style={styles.eyebrow}>
-        {formatPublishAt(suggestion.publishAt)} · {networkLabels[suggestion.network]} ·{" "}
-        {formatLabels[suggestion.format]}
-      </Text>
+      <View style={styles.meta}>
+        <Ionicons name={networkIcon(suggestion.network)} size={18} color={colors.foreground} />
+        <Text style={styles.eyebrow}>
+          {formatPublishAt(suggestion.publishAt)} · {formatLabels[suggestion.format]}
+        </Text>
+      </View>
       <Text style={styles.idea} accessibilityRole="header">
         {suggestion.idea}
       </Text>
@@ -135,11 +138,10 @@ const useStyles = themedStyles((colors) => ({
     backgroundColor: colors.background,
   },
   muted: { fontFamily: fonts.body, fontSize: 15, color: colors.foregroundMuted, textAlign: "center" },
+  meta: { flexDirection: "row", alignItems: "center", gap: 8 },
   eyebrow: {
     fontFamily: fonts.bodyBold,
     fontSize: 13,
-    letterSpacing: 1.3,
-    textTransform: "uppercase",
     color: colors.secondary,
   },
   idea: {

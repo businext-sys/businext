@@ -10,6 +10,7 @@ import { useBookingRequests } from "@/hooks/useBookingRequests";
 import { useGlobalToast } from "@/context/ToastContext";
 import { Reservation } from "@/lib/reservation/types";
 import { Product } from "@/lib/product/types";
+import { serviceDuration } from "@businext/shared-core";
 import { getAvailableSlots, isDayClosed } from "@/lib/scheduling/availability";
 import { AvailableSlots } from "@/components/reservation/AvailableSlots";
 import { ServiceCards } from "@/components/reservation/ServiceCards";
@@ -109,9 +110,13 @@ export default function ReservationPage() {
       effectiveWorkingHours,
       reservationData, // all reservations for slot availability
       slotInCharge,
-      bookingRequests
+      bookingRequests,
+      new Date(),
+      selectedService
+        ? { durationMinutes: serviceDuration(productData, selectedService.name), stepMinutes: 15 }
+        : {}
     );
-  }, [selectedDate, effectiveWorkingHours, reservationData, slotInCharge, dayClosed, bookingRequests]);
+  }, [selectedDate, effectiveWorkingHours, reservationData, slotInCharge, dayClosed, bookingRequests, selectedService, productData]);
 
   const handleServiceSelect = (product: Product) => {
     setSelectedService(

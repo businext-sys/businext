@@ -3,6 +3,7 @@ import { apiClient } from "./client";
 import {
   parseChatEvent,
   parseConversation,
+  readablePreview,
   type ChatEvent,
   type ChatRequest,
   type ConfirmActionRequest,
@@ -105,7 +106,12 @@ export const assistantApi = {
   listConversations: (client: ApiClient = apiClient): Promise<ConversationSummary[]> =>
     client
       .get<unknown[]>(`${PATH}/conversations`)
-      .then((data) => data.map((item) => ConversationSummarySchema.parse(item))),
+      .then((data) =>
+        data.map((item) => {
+          const summary = ConversationSummarySchema.parse(item);
+          return { ...summary, last_message_preview: readablePreview(summary.last_message_preview) };
+        })
+      ),
 
   getConversation: (id: string, client: ApiClient = apiClient): Promise<Conversation> =>
     client.get<unknown>(`${PATH}/conversations/${id}`).then(parseConversation),

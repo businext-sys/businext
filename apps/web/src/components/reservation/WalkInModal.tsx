@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { useGlobalToast } from "@/context/ToastContext";
 import { Reservation } from "@/lib/reservation/types";
 import { Product } from "@/lib/product/types";
+import { serviceDuration } from "@businext/shared-core";
 import { Employee } from "@/lib/employee/types";
 import {
   Modal,
@@ -36,7 +37,6 @@ interface WalkInFormData {
   inCharge: string;
 }
 
-const FIXED_DURATION = 30;
 
 export function WalkInModal({
   open,
@@ -72,12 +72,13 @@ export function WalkInModal({
     setIsSubmitting(true);
     try {
       const now = nowAsWallClock();
+      const duration = serviceDuration(services, data.service);
       const reservation: Reservation = {
         customerName: data.customerName,
         inCharge: data.inCharge,
         reservationStartDate: now,
-        reservationEndDate: addMinutesToWallClock(now, FIXED_DURATION),
-        timePerReservation: FIXED_DURATION,
+        reservationEndDate: addMinutesToWallClock(now, duration),
+        timePerReservation: duration,
         status: "COMPLETED",
         service: data.service,
       };
