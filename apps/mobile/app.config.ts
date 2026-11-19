@@ -18,7 +18,11 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: false,
     bundleIdentifier: "com.businext.mobile",
-    infoPlist: { ITSAppUsesNonExemptEncryption: false },
+    infoPlist: {
+      ITSAppUsesNonExemptEncryption: false,
+      // Lo exige Apple porque una dependencia referencia la fototeca, aunque la app no la usa.
+      NSPhotoLibraryUsageDescription: "Businext no accede a tus fotos.",
+    },
   },
   android: {
     adaptiveIcon: {
