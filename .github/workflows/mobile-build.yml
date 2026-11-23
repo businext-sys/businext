@@ -1,7 +1,9 @@
 name: mobile-build
 
-# Genera un build preview de apps/mobile via EAS al mergear a main, y lo
-# publica como preview instalable (issue #033, Fase 5).
+# Genera un build de apps/mobile via EAS (issue #033, Fase 5).
+#
+# Solo se lanza a mano (Actions > mobile-build > Run workflow): al hacerlo en
+# cada merge gastaba las builds gratis de EAS (businext-sys/businext#223).
 #
 # Requiere el secret EXPO_TOKEN configurado en el repo (token de acceso
 # de una cuenta de Expo con permisos sobre el proyecto). Sin ese secret,
@@ -9,13 +11,6 @@ name: mobile-build
 # fallar de forma confusa mas adelante.
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - "apps/mobile/**"
-      - "packages/shared-core/**"
-      - "pnpm-workspace.yaml"
-      - ".github/workflows/mobile-build.yml"
   workflow_dispatch:
     inputs:
       profile:
