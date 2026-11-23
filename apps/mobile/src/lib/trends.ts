@@ -6,6 +6,13 @@ export const networkLabels: Record<SocialNetwork, string> = {
   tiktok: "TikTok",
 };
 
+export function networkIcon(network: string): "logo-tiktok" | "logo-instagram" | "logo-youtube" | "globe-outline" {
+  if (network === "tiktok") return "logo-tiktok";
+  if (network === "instagram") return "logo-instagram";
+  if (network === "youtube") return "logo-youtube";
+  return "globe-outline";
+}
+
 export const formatLabels: Record<ContentFormat, string> = {
   reel: "Reel",
   short: "Short",

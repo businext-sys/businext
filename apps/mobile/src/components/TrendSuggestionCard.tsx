@@ -57,8 +57,6 @@ const useStyles = themedStyles((colors) => ({
   eyebrow: {
     fontFamily: fonts.bodyBold,
     fontSize: 13,
-    letterSpacing: 1.3,
-    textTransform: "uppercase",
     color: colors.accentForeground,
   },
   idea: { fontFamily: fonts.body, fontSize: 15, lineHeight: 22, color: colors.accentForeground },

@@ -44,7 +44,78 @@ export function parseChatBlock(raw: unknown): ChatBlock {
   };
 }
 
-const lenientBlocks = z.array(z.unknown()).transform((blocks) => blocks.map(parseChatBlock));
+const INTERNAL_CARD_MARKER = "[tarjeta";
+
+function matchingBrace(text: string, open: number): number {
+  let depth = 0;
+  let inString = false;
+  for (let i = open; i < text.length; i++) {
+    const char = text[i];
+    if (inString) {
+      if (char === "\\") i++;
+      else if (char === '"') inString = false;
+    } else if (char === '"') inString = true;
+    else if (char === "{") depth++;
+    else if (char === "}" && --depth === 0) return i;
+  }
+  return -1;
+}
+
+/**
+ * El historial del backend guarda las tarjetas como texto
+ * `[tarjeta mostrada al usuario: {...}]`. Las convierte de vuelta en tarjetas
+ * y nunca deja ver el JSON (si no se puede leer, se quita).
+ */
+export function expandInternalCards(text: string): ChatBlock[] {
+  const blocks: ChatBlock[] = [];
+  const pushText = (part: string) => {
+    if (part.trim()) blocks.push({ type: "text", text: part.trim() });
+  };
+  let cursor = 0;
+  while (cursor < text.length) {
+    const start = text.indexOf(INTERNAL_CARD_MARKER, cursor);
+    if (start === -1) {
+      pushText(text.slice(cursor));
+      break;
+    }
+    pushText(text.slice(cursor, start));
+    const open = text.indexOf("{", start);
+    const close = open === -1 ? -1 : matchingBrace(text, open);
+    if (close === -1) break;
+    try {
+      const card = ChatBlockSchema.safeParse(JSON.parse(text.slice(open, close + 1)));
+      if (card.success && card.data.type !== "text") blocks.push(card.data);
+    } catch {
+      // JSON ilegible: se descarta la tarjeta.
+    }
+    const end = text.indexOf("]", close);
+    cursor = end === -1 ? close + 1 : end + 1;
+  }
+  return blocks;
+}
+
+/** Sustituye en cada bloque de texto las tarjetas internas por tarjetas de verdad. */
+export function expandTextBlocks(blocks: ChatBlock[]): ChatBlock[] {
+  return blocks.flatMap((block) =>
+    block.type === "text" && block.text.includes(INTERNAL_CARD_MARKER)
+      ? expandInternalCards(block.text)
+      : [block]
+  );
+}
+
+/** Vista previa legible de una conversación: sin tarjetas internas, o `null`. */
+export function readablePreview(preview: string | null): string | null {
+  if (!preview) return null;
+  const text = expandInternalCards(preview)
+    .map((block) => (block.type === "text" ? block.text : ""))
+    .join(" ")
+    .trim();
+  return text || null;
+}
+
+const lenientBlocks = z
+  .array(z.unknown())
+  .transform((blocks) => expandTextBlocks(blocks.map(parseChatBlock)));
 
 const LenientChatMessageSchema = ChatMessageSchema.extend({ blocks: lenientBlocks });
 

@@ -10,6 +10,7 @@ import { useAccessContext } from "@/hooks/useAccessContext";
 import { useGlobalToast } from "@/context/ToastContext";
 import { convertToJpeg } from "@/lib/image-to-jpeg";
 import { Product } from "@/lib/product/types";
+import { DEFAULT_SERVICE_DURATION, SERVICE_DURATION_OPTIONS } from "@businext/shared-core";
 import { ConfirmDialog } from "@/components/common/ConfirmDialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -113,6 +114,7 @@ export function ProductsSection() {
       type: product.type ?? "producto",
       imageUrl: product.imageUrl,
       seller: product.seller,
+      durationMinutes: product.durationMinutes ?? null,
     });
     setImageFile(null);
     setImagePreview(product.imageUrl ?? null);
@@ -159,7 +161,12 @@ export function ProductsSection() {
         imageUrl = uploaded;
       }
 
-      const payload = { ...form, imageUrl };
+      const payload = {
+        ...form,
+        imageUrl,
+        durationMinutes:
+          form.type === "servicio" ? form.durationMinutes ?? DEFAULT_SERVICE_DURATION : null,
+      };
 
       if (editing?.id) {
         await updateProduct({ ...payload, id: editing.id });
@@ -295,6 +302,8 @@ export function ProductsSection() {
                   {product.type && (
                     <span className="text-caption text-primary font-medium capitalize">
                       {product.type}
+                      {product.type === "servicio" &&
+                        ` · ${product.durationMinutes ?? DEFAULT_SERVICE_DURATION} min`}
                     </span>
                   )}
                   {product.seller && (
@@ -395,6 +404,26 @@ export function ProductsSection() {
                   </Select>
                 </div>
               </div>
+
+              {form.type === "servicio" && (
+                <div className="flex flex-col gap-1">
+                  <label className="text-label font-semibold text-foreground-muted">
+                    Duración
+                  </label>
+                  <Select
+                    value={String(form.durationMinutes ?? DEFAULT_SERVICE_DURATION)}
+                    onChange={(e) =>
+                      setForm((f) => ({ ...f, durationMinutes: Number(e.target.value) }))
+                    }
+                  >
+                    {SERVICE_DURATION_OPTIONS.map((minutes) => (
+                      <option key={minutes} value={minutes}>
+                        {minutes} min
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+              )}
 
               {/* Seller / Vendedor */}
               <div className="flex flex-col gap-1">

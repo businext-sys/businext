@@ -58,8 +58,8 @@ const useStyles = themedStyles((colors) => ({
     backgroundColor: colors.surface,
     gap: 8,
   },
-  label: { fontSize: 12, color: colors.foregroundSubtle },
-  hint: { fontSize: 15, color: colors.foregroundMuted },
+  label: { fontSize: 13, fontWeight: "700", color: colors.foregroundSubtle },
+  hint: { fontSize: 14, color: colors.foregroundMuted },
   button: { minHeight: 44, alignItems: "center", justifyContent: "center" },
   buttonText: { fontSize: 15, fontWeight: "600", color: colors.danger },
 }));

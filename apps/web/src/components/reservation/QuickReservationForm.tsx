@@ -10,6 +10,7 @@ import { Select } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import { addMinutesToWallClock } from "@businext/shared-core/services";
+import { DEFAULT_SERVICE_DURATION } from "@businext/shared-core";
 
 interface QuickReservationFormProps {
   selectedService: Product | null;
@@ -25,8 +26,6 @@ interface QuickReservationFormProps {
   /** For owners: the in-charge selected in step 2 */
   ownerSelectedInCharge?: string;
 }
-
-const FIXED_DURATION = 30;
 
 export function QuickReservationForm({
   selectedService,
@@ -93,17 +92,15 @@ export function QuickReservationForm({
     const startDateTimeStr = `${dateStr}T${prefilledSlot}:00`;
 
     const reservationStartDate = startDateTimeStr;
-    const reservationEndDate = addMinutesToWallClock(
-      reservationStartDate,
-      FIXED_DURATION
-    );
+    const duration = selectedService.durationMinutes ?? DEFAULT_SERVICE_DURATION;
+    const reservationEndDate = addMinutesToWallClock(reservationStartDate, duration);
 
     const reservation: Reservation = {
       customerName: data.customerName,
       inCharge,
       reservationStartDate,
       reservationEndDate,
-      timePerReservation: FIXED_DURATION,
+      timePerReservation: duration,
       status: "PENDING",
       service: selectedService.name,
       customerPhone: data.customerPhone,
@@ -241,7 +238,7 @@ export function QuickReservationForm({
                 Duración
               </label>
               <div className="flex items-center h-10 px-3 rounded-lg border border-border-subtle bg-surface-raised text-body-sm text-foreground-muted">
-                {FIXED_DURATION} min
+                {selectedService.durationMinutes ?? DEFAULT_SERVICE_DURATION} min
               </div>
             </div>
           </div>

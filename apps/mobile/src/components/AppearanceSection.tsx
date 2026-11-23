@@ -44,7 +44,7 @@ const useStyles = themedStyles((colors) => ({
     backgroundColor: colors.surface,
     gap: 8,
   },
-  label: { fontSize: 12, color: colors.foregroundSubtle },
+  label: { fontSize: 13, fontWeight: "700", color: colors.foregroundSubtle },
   options: { flexDirection: "row", gap: 8 },
   option: {
     flex: 1,

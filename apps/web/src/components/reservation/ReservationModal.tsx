@@ -11,6 +11,7 @@ import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import { ThemeProvider } from "@mui/material/styles";
 import dayjs from "dayjs";
 import "dayjs/locale/es";
+import { serviceDuration } from "@businext/shared-core";
 import {
   detectReservationConflict,
   buildFinanceRecordFromReservation,
@@ -110,15 +111,20 @@ export const ReservationModal = ({
     setIsSubmitting(true);
     setValidationError("");
     try {
+      const duration =
+        operation === "Crear reserva" || data.service !== reservationData?.service
+          ? serviceDuration(productData, data.service)
+          : data.timePerReservation;
       const { reservationStartDate, reservationEndDate } = computeReservationWindow({
         startDateTimeISO: data.reservationStartDate,
-        durationMinutes: data.timePerReservation,
+        durationMinutes: duration,
       });
       if (operation === "Crear reserva") {
         data = {
           ...data,
           reservationStartDate,
           reservationEndDate,
+          timePerReservation: duration,
           status: "PENDING",
         };
       } else {
@@ -126,7 +132,13 @@ export const ReservationModal = ({
           createFinanceRecord(data);
         }
         const dataUpdated = getValues();
-        data = { ...dataUpdated, id, reservationStartDate, reservationEndDate };
+        data = {
+          ...dataUpdated,
+          id,
+          reservationStartDate,
+          reservationEndDate,
+          timePerReservation: duration,
+        };
       }
       await executeAction(data);
       showToast("success", operation === "Crear reserva" ? "Reserva creada correctamente." : "Reserva actualizada correctamente.");

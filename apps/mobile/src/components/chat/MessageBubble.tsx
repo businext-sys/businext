@@ -1,10 +1,10 @@
 import { View } from "react-native";
-import type { ChatMessage } from "@businext/shared-core/assistant";
+import { expandTextBlocks, type ChatMessage } from "@businext/shared-core/assistant";
 import { themedStyles } from "@/theme/ThemeContext";
 import { ChatBlockView } from "./ChatBlockView";
 
 function spokenText(message: ChatMessage): string {
-  const text = message.blocks
+  const text = expandTextBlocks(message.blocks)
     .map((block) => (block.type === "text" ? block.text : ""))
     .join(". ");
   return `${message.role === "user" ? "Tú" : "Asistente"}: ${text}`;
@@ -19,8 +19,9 @@ type Props = {
 export function MessageBubble({ message, onQuickReply, onConfirm }: Props) {
   const styles = useStyles();
   const isUser = message.role === "user";
-  if (message.blocks.length === 0) return null;
-  const textOnly = message.blocks.every((block) => block.type === "text");
+  const blocks = expandTextBlocks(message.blocks);
+  if (blocks.length === 0) return null;
+  const textOnly = blocks.every((block) => block.type === "text");
 
   return (
     <View
@@ -29,7 +30,7 @@ export function MessageBubble({ message, onQuickReply, onConfirm }: Props) {
       accessibilityLabel={textOnly ? spokenText(message) : undefined}
     >
       <View style={[styles.bubble, isUser ? styles.userBubble : styles.assistantBubble]}>
-        {message.blocks.map((block, index) => (
+        {blocks.map((block, index) => (
           <ChatBlockView
             key={index}
             block={block}

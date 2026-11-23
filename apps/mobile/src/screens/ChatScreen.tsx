@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -15,26 +15,24 @@ import {
   quickActionsFor,
   type ChatMessage,
 } from "@businext/shared-core/assistant";
-import { useAccessContext, useAssistantChat } from "@businext/shared-core/hooks";
+import { useAccessContext, useAssistantChat, useConfiguration } from "@businext/shared-core/hooks";
 import { ChatErrorBanner } from "@/components/chat/ChatErrorBanner";
 import { ChatHeader } from "@/components/chat/ChatHeader";
 import { ChatInput } from "@/components/chat/ChatInput";
 import { MessageBubble } from "@/components/chat/MessageBubble";
 import { QuickActions } from "@/components/chat/QuickActions";
 import { TypingIndicator } from "@/components/chat/TypingIndicator";
-import { useAuth } from "@/context/AuthContext";
 import { usePushRegistration } from "@/hooks/usePushRegistration";
 import { assistantClient } from "@/lib/assistantClient";
 import { themedStyles, useTheme } from "@/theme/ThemeContext";
 
 /**
- * Chat del asistente (issue #78), abierto desde la agenda (issue #86).
+ * Chat del asistente (issue #78), pantalla principal de la app (issue #218).
  */
 export default function ChatScreen() {
   const styles = useStyles();
   const { colors } = useTheme();
   const router = useRouter();
-  const { logout } = useAuth();
   const pushState = usePushRegistration();
   const chat = useAssistantChat({ client: assistantClient });
   const listRef = useRef<FlatList<ChatMessage>>(null);
@@ -42,28 +40,24 @@ export default function ChatScreen() {
     conversation?: string;
     bookingRequest?: string;
   }>();
-  const [loadingConversation, setLoadingConversation] = useState(false);
   const { reset } = chat;
 
   useEffect(() => {
     if (!conversation) return;
-    router.setParams({ conversation: undefined });
     if (conversation === "new") {
       reset();
+      router.setParams({ conversation: undefined });
       return;
     }
-    setLoadingConversation(true);
     assistantApi
       .getConversation(conversation, assistantClient)
       .then((loaded) => reset({ id: loaded.id, messages: loaded.messages }))
       .catch(() => Alert.alert("No se ha podido abrir la conversación."))
-      .finally(() => setLoadingConversation(false));
+      .finally(() => router.setParams({ conversation: undefined }));
   }, [conversation, reset, router]);
 
   useEffect(() => {
     if (!bookingRequest) return;
-    router.setParams({ bookingRequest: undefined });
-    setLoadingConversation(true);
     bookingRequestApi
       .list()
       .then((requests) => {
@@ -72,10 +66,14 @@ export default function ChatScreen() {
         reset({ messages: [bookingRequestContextMessage(request)] });
       })
       .catch(() => Alert.alert("No se ha podido abrir la solicitud de reserva."))
-      .finally(() => setLoadingConversation(false));
+      .finally(() => router.setParams({ bookingRequest: undefined }));
   }, [bookingRequest, reset, router]);
 
-  const { context, capabilities } = useAccessContext();
+  const loadingConversation = Boolean((conversation && conversation !== "new") || bookingRequest);
+
+  const { context } = useAccessContext();
+  const { configurationData } = useConfiguration();
+  const businessName = configurationData[0]?.businessName?.trim() || "Businext";
   const quickActions = quickActionsFor(context);
   const streaming = chat.status === "streaming";
   const lastAssistantId = [...chat.messages].reverse().find((m) => m.role === "assistant")?.id;
@@ -90,16 +88,9 @@ export default function ChatScreen() {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <ChatHeader
-        menuItems={[
-          { label: "Nueva conversación", onPress: () => chat.reset() },
-          { label: "Historial", onPress: () => router.push("/conversations") },
-          { label: "Agenda", onPress: () => router.navigate("/") },
-          ...(capabilities.canViewTrends
-            ? [{ label: "Tendencias", onPress: () => router.push("/trends") }]
-            : []),
-          { label: "Ajustes", onPress: () => router.push("/settings") },
-          { label: "Cerrar sesión", onPress: logout, destructive: true },
-        ]}
+        businessName={businessName}
+        onNewConversation={() => chat.reset()}
+        onOpenHistory={() => router.push("/conversations")}
       />
 
       {pushState.status === "denied" && (
