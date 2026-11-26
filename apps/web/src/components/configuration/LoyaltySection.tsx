@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Stamp } from "lucide-react";
-import { useLoyaltyProgram } from "@businext/shared-core/hooks";
+import { useEffect, useRef, useState } from "react";
+import { ImagePlus, Stamp } from "lucide-react";
+import { useLoyaltyProgram } from "@/hooks/useLoyalty";
 import { LoyaltyProgramSettingsSchema } from "@businext/shared-core/schemas";
 import type { LoyaltyProgramSettings } from "@businext/shared-core/loyalty";
 import { themeColors } from "@businext/shared-core/theme";
@@ -27,7 +27,7 @@ const DEFAULT_PASS = {
  * cada reserva completada suma uno. Solo el owner la cambia; el manager la ve.
  */
 export function LoyaltySection({ canEdit }: { canEdit: boolean }) {
-  const { program, loading, error, updateProgram } = useLoyaltyProgram();
+  const { program, loading, error, updateProgram, uploadLogo, deleteLogo } = useLoyaltyProgram();
   const { showToast } = useGlobalToast();
   const [draft, setDraft] = useState<LoyaltyProgramSettings | null>(null);
   const [saving, setSaving] = useState(false);
@@ -159,6 +159,12 @@ export function LoyaltySection({ canEdit }: { canEdit: boolean }) {
                 onChange={(backgroundColor) => setDraft({ ...draft, backgroundColor })}
               />
 
+              <LogoField
+                logoUrl={program.logoUrl}
+                onUpload={uploadLogo}
+                onDelete={deleteLogo}
+              />
+
               <MoreOptions label="Más opciones: colores del texto">
                 <ColorField
                   id="foregroundColor"
@@ -176,7 +182,7 @@ export function LoyaltySection({ canEdit }: { canEdit: boolean }) {
                 />
               </MoreOptions>
 
-              <PassPreview settings={draft} />
+              <PassPreview settings={draft} logoUrl={program.logoUrl} />
 
               <ul className="list-disc space-y-1 pl-5 text-caption text-foreground-subtle">
                 <li>Solo cuentan las visitas desde que la activas, y los sellos no caducan.</li>
@@ -239,7 +245,13 @@ function ColorField({
 }
 
 /** Boceto del frontal del pase con los colores elegidos (el de verdad lo genera el backend). */
-function PassPreview({ settings }: { settings: LoyaltyProgramSettings }) {
+function PassPreview({
+  settings,
+  logoUrl,
+}: {
+  settings: LoyaltyProgramSettings;
+  logoUrl: string | null;
+}) {
   const required = Number.isFinite(settings.stampsRequired)
     ? Math.min(Math.max(settings.stampsRequired, 1), 50)
     : 10;
@@ -255,9 +267,17 @@ function PassPreview({ settings }: { settings: LoyaltyProgramSettings }) {
         // Colores elegidos por el negocio para su pase: son datos, no tokens de la app.
         style={{ backgroundColor: background, color: foreground }}
       >
-        <p className="text-caption font-bold uppercase tracking-[0.1em]" style={{ color: label }}>
-          Sellos
-        </p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="text-caption font-bold uppercase tracking-[0.1em]" style={{ color: label }}>
+            Sellos
+          </p>
+          {logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt="" className="h-8 max-w-24 object-contain" />
+          ) : (
+            <span className="font-heading text-body font-black uppercase">Businext</span>
+          )}
+        </div>
         <p className="font-heading text-h3 font-extrabold">3/{required}</p>
         <div className="flex flex-wrap gap-1.5" aria-hidden>
           {Array.from({ length: shown }, (_, i) => (
@@ -275,6 +295,95 @@ function PassPreview({ settings }: { settings: LoyaltyProgramSettings }) {
           {settings.reward || "Corte gratis"}
         </p>
       </div>
+    </div>
+  );
+}
+
+const LOGO_TYPES = ["image/png", "image/jpeg", "image/webp"];
+const LOGO_MAX_BYTES = 2 * 1024 * 1024;
+
+/** Logo propio del pase (opcional). Sin él, el pase lleva el de Businext. */
+function LogoField({
+  logoUrl,
+  onUpload,
+  onDelete,
+}: {
+  logoUrl: string | null;
+  onUpload: (file: Blob) => Promise<unknown>;
+  onDelete: () => Promise<unknown>;
+}) {
+  const { showToast } = useGlobalToast();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+
+  const run = async (task: () => Promise<unknown>, message: string) => {
+    setBusy(true);
+    try {
+      await task();
+      showToast("success", message);
+    } catch (err) {
+      showToast("error", err instanceof Error ? err.message : "No se pudo cambiar el logo.");
+    } finally {
+      setBusy(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  const pick = (file: File | undefined) => {
+    if (!file) return;
+    if (!LOGO_TYPES.includes(file.type)) {
+      showToast("error", "El logo tiene que ser PNG, JPG o WebP.");
+      return;
+    }
+    if (file.size > LOGO_MAX_BYTES) {
+      showToast("error", "El logo pesa demasiado: hasta 2 MB.");
+      return;
+    }
+    run(() => onUpload(file), "Logo subido. Los pases se actualizan solos.");
+  };
+
+  return (
+    <div className="space-y-1.5">
+      <p className={LABEL}>Logo (opcional)</p>
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="flex h-14 w-20 items-center justify-center overflow-hidden rounded-md border border-border-subtle bg-surface-raised">
+          {logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={logoUrl} alt="Logo del pase" className="max-h-12 max-w-16 object-contain" />
+          ) : (
+            <ImagePlus className="h-5 w-5 text-foreground-subtle" aria-hidden />
+          )}
+        </div>
+        <input
+          ref={inputRef}
+          id="loyaltyLogo"
+          type="file"
+          accept={LOGO_TYPES.join(",")}
+          className="sr-only"
+          onChange={(e) => pick(e.target.files?.[0])}
+        />
+        <Button
+          type="button"
+          variant="secondary"
+          loading={busy}
+          onClick={() => inputRef.current?.click()}
+        >
+          {logoUrl ? "Cambiar logo" : "Subir logo"}
+        </Button>
+        {logoUrl && (
+          <Button
+            type="button"
+            variant="ghost"
+            disabled={busy}
+            onClick={() => run(onDelete, "Logo quitado: los pases llevan el de Businext.")}
+          >
+            Quitar
+          </Button>
+        )}
+      </div>
+      <p className="text-caption text-foreground-subtle">
+        PNG, JPG o WebP de hasta 2 MB. Si no subes ninguno, la tarjeta lleva el de Businext.
+      </p>
     </div>
   );
 }

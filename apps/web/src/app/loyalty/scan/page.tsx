@@ -33,7 +33,7 @@ export default function LoyaltyScanPage() {
             <EmptyState
               icon={<Stamp />}
               title="La tarjeta de fidelidad está desactivada"
-              description="Actívala en Configuración para sellar y canjear tarjetas."
+              description="Actívala en Configuración › Reservas y clientes para sellar y canjear tarjetas."
             />
           </CardContent>
         </Card>
