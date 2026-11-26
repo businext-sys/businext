@@ -15,3 +15,4 @@ export * from "./useAssistantConversations";
 export * from "./useVoiceAgentConfig";
 export * from "./useVoiceAgentCalls";
 export * from "./useTrends";
+export * from "./useLoyalty";

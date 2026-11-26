@@ -21,6 +21,7 @@
     "./assistant": "./src/assistant/index.ts",
     "./voice-agent": "./src/voice-agent/index.ts",
     "./trends": "./src/trends/index.ts",
+    "./loyalty": "./src/loyalty/index.ts",
     "./theme": "./src/theme/index.ts",
     "./schemas": "./src/schemas/index.ts",
     "./mappers": "./src/mappers/index.ts",

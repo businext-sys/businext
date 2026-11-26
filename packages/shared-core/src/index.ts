@@ -18,6 +18,7 @@ export * from "./google-reviews";
 export * from "./assistant";
 export * from "./voice-agent";
 export * from "./trends";
+export * from "./loyalty";
 export * from "./schemas";
 export * from "./mappers";
 export * from "./services";
