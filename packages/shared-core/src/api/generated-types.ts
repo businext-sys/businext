@@ -1343,6 +1343,94 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/loyalty/cards/{serial_number}/send-pass": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Pass
+         * @description (Re)envía al email del cliente el enlace «Añadir a Apple Wallet». El enlace solo
+         *     sale por email: así se demuestra que el email es suyo. Devuelve también el
+         *     enlace para enseñarlo en el local (el barbero ya ve la tarjeta).
+         */
+        post: operations["send_pass_loyalty_cards__serial_number__send_pass_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/loyalty/scan/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Scan Card
+         * @description Tarjeta del QR del pase: cliente, sellos, si tiene el premio, últimas visitas y si ya se selló hoy.
+         */
+        get: operations["scan_card_loyalty_scan__token__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/loyalty/scan/{token}/stamp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Stamp Scanned Card
+         * @description Sello manual para un walk-in (visita sin reserva). Idempotente por día: si la
+         *     tarjeta ya tiene un sello de hoy (manual o de reserva), no suma y
+         *     `stamp_added` es false.
+         */
+        post: operations["stamp_scanned_card_loyalty_scan__token__stamp_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/loyalty/program/logo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Upload Program Logo
+         * @description Sube el logo del negocio para el pase (PNG, JPG o WebP, hasta 2 MB). Se adapta a los tamaños de Apple.
+         */
+        put: operations["upload_program_logo_loyalty_program_logo_put"];
+        post?: never;
+        /**
+         * Delete Program Logo
+         * @description Quita el logo propio: los pases vuelven a llevar el de Businext.
+         */
+        delete: operations["delete_program_logo_loyalty_program_logo_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/public/loyalty/{business_id}": {
         parameters: {
             query?: never;
@@ -1468,6 +1556,14 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** Body_upload_program_logo_loyalty_program_logo_put */
+        Body_upload_program_logo_loyalty_program_logo_put: {
+            /**
+             * File
+             * Format: binary
+             */
+            file: string;
+        };
         /** BookingRequestCreate */
         BookingRequestCreate: {
             /** Client Name */
@@ -2124,6 +2220,13 @@ export interface components {
             /** Pass Url */
             pass_url: string | null;
         };
+        /** LoyaltyPassSent */
+        LoyaltyPassSent: {
+            /** Sent To */
+            sent_to: string;
+            /** Pass Url */
+            pass_url: string;
+        };
         /** LoyaltyProgramPublic */
         LoyaltyProgramPublic: {
             /**
@@ -2149,6 +2252,8 @@ export interface components {
             label_color?: string | null;
             /** Apple Wallet Available */
             apple_wallet_available: boolean;
+            /** Logo Url */
+            logo_url?: string | null;
         };
         /** LoyaltyProgramSettings */
         LoyaltyProgramSettings: {
@@ -2173,6 +2278,37 @@ export interface components {
             foreground_color?: string | null;
             /** Label Color */
             label_color?: string | null;
+        };
+        /**
+         * LoyaltyScanResult
+         * @description Lo que ve el barbero al escanear el QR del pase.
+         */
+        LoyaltyScanResult: {
+            /** Serial Number */
+            serial_number: string;
+            /** Customer Name */
+            customer_name: string;
+            /** Customer Email */
+            customer_email: string;
+            /** Stamps */
+            stamps: number;
+            /** Stamps Required */
+            stamps_required: number;
+            /** Reward */
+            reward: string;
+            /** Reward Ready */
+            reward_ready: boolean;
+            /** Visits */
+            visits: components["schemas"]["LoyaltyVisit"][];
+            /** Pass Url */
+            pass_url: string | null;
+            /** Stamped Today */
+            stamped_today: boolean;
+            /**
+             * Stamp Added
+             * @default false
+             */
+            stamp_added: boolean;
         };
         /** LoyaltyVisit */
         LoyaltyVisit: {
@@ -5909,6 +6045,171 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["LoyaltyCardPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    send_pass_loyalty_cards__serial_number__send_pass_post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                serial_number: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyPassSent"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scan_card_loyalty_scan__token__get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyScanResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    stamp_scanned_card_loyalty_scan__token__stamp_post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyScanResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_program_logo_loyalty_program_logo_put: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_program_logo_loyalty_program_logo_put"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyProgramPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_program_logo_loyalty_program_logo_delete: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyProgramPublic"];
                 };
             };
             /** @description Validation Error */
