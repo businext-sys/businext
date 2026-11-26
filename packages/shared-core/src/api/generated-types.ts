@@ -130,7 +130,7 @@ export interface paths {
         };
         /**
          * Get Reservations
-         * @description Return PENDING reservations from the last 7 days onward + COMPLETED from today.
+         * @description Return PENDING reservations from the last 7 days onward + COMPLETED and NO_SHOW from today.
          */
         get: operations["get_reservations_reservations__get"];
         put?: never;
@@ -172,7 +172,7 @@ export interface paths {
         put?: never;
         /**
          * Revert Reservation
-         * @description Revert a COMPLETED reservation back to PENDING and delete its linked finance.
+         * @description Revert a COMPLETED or NO_SHOW reservation back to PENDING and delete its linked finance.
          */
         post: operations["revert_reservation_reservations__reservation_id__revert_post"];
         delete?: never;
@@ -193,6 +193,24 @@ export interface paths {
         put?: never;
         /** Create Configuration */
         post: operations["create_configuration_configuration__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/configuration/reminders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Reminders Setting */
+        get: operations["get_reminders_setting_configuration_reminders_get"];
+        /** Update Reminders Setting */
+        put: operations["update_reminders_setting_configuration_reminders_put"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -527,7 +545,7 @@ export interface paths {
         };
         /**
          * Get Availability
-         * @description Returns available time slots for a given date and optional employee.
+         * @description Start times where the service (30 min without `service`) fits, for a date and optional employee.
          */
         get: operations["get_availability_public_book__business_id__availability_get"];
         put?: never;
@@ -698,6 +716,27 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/notification-preferences/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Notification Preferences
+         * @description Preferencias del usuario; sin fila, todo activado (15 min antes, resumen a las 9).
+         */
+        get: operations["get_notification_preferences_notification_preferences__get"];
+        /** Update Notification Preferences */
+        put: operations["update_notification_preferences_notification_preferences__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/assistant/chat": {
         parameters: {
             query?: never;
@@ -855,6 +894,7 @@ export interface paths {
         /**
          * Refresh Insight
          * @description Regenera el analisis de hoy y sus sugerencias pendientes. Una vez al dia.
+         *     Sin tendencias de hoy devuelve el ultimo analisis tal cual, sin gastar el refresco.
          */
         post: operations["refresh_insight_trends_insight_refresh_post"];
         delete?: never;
@@ -957,6 +997,26 @@ export interface paths {
          * @description Envia los avisos de las sugerencias que tocan; relanzarlo no reenvia ninguno.
          */
         post: operations["dispatch_internal_trends_dispatch_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/internal/reminders/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Run
+         * @description Envia los recordatorios de las citas de mañana; relanzarlo no reenvia ninguno.
+         */
+        post: operations["run_internal_reminders_run_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1111,10 +1171,399 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/customer-messages/draft": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Customer Message Draft
+         * @description Texto propuesto para escribir a un cliente del negocio.
+         */
+        get: operations["get_customer_message_draft_customer_messages_draft_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/customer-messages/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Customer Message
+         * @description Envía el email al cliente y lo registra; como mucho uno cada 7 días por cliente.
+         */
+        post: operations["send_customer_message_customer_messages__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/customers/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Find Customers
+         * @description Clientes de las reservas del negocio cuyo nombre, email o teléfono contiene `q`; el más reciente primero.
+         */
+        get: operations["find_customers_customers__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/customers/detail": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Customer Detail
+         * @description Ficha del cliente con ese nombre (sin mayúsculas ni espacios de más): visitas, «no vino», gasto y reservas.
+         */
+        get: operations["get_customer_detail_customers_detail_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/users/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Delete My Account
+         * @description Borra la cuenta del usuario autenticado.
+         *
+         *     No requiere suscripcion activa: un owner con la suscripcion vencida
+         *     tambien tiene que poder borrar su cuenta. Es idempotente; si responde
+         *     502 tras borrar los datos, la app puede reintentar.
+         */
+        delete: operations["delete_my_account_users_me_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/loyalty/program": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Program
+         * @description Regla de la tarjeta; sin configurar, desactivada con 10 sellos → «Corte gratis».
+         */
+        get: operations["get_program_loyalty_program_get"];
+        /**
+         * Update Program
+         * @description Activa la tarjeta y fija la regla y los colores. Los pases ya emitidos se actualizan.
+         */
+        put: operations["update_program_loyalty_program_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/loyalty/cards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Card
+         * @description Tarjeta del cliente por email o, en su defecto, por nombre (el email de sus reservas).
+         */
+        get: operations["get_card_loyalty_cards_get"];
+        put?: never;
+        /**
+         * Create Card
+         * @description Crea (o devuelve) la tarjeta de un cliente, p. ej. para enseñarle el enlace del pase en el local.
+         */
+        post: operations["create_card_loyalty_cards_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/loyalty/cards/{serial_number}/redeem": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Redeem Card
+         * @description Entrega el premio: gasta los sellos más antiguos que pide la regla.
+         */
+        post: operations["redeem_card_loyalty_cards__serial_number__redeem_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/loyalty/cards/{serial_number}/send-pass": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Send Pass
+         * @description (Re)envía al email del cliente el enlace «Añadir a Apple Wallet». El enlace solo
+         *     sale por email: así se demuestra que el email es suyo. Devuelve también el
+         *     enlace para enseñarlo en el local (el barbero ya ve la tarjeta).
+         */
+        post: operations["send_pass_loyalty_cards__serial_number__send_pass_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/loyalty/scan/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Scan Card
+         * @description Tarjeta del QR del pase: cliente, sellos, si tiene el premio, últimas visitas y si ya se selló hoy.
+         */
+        get: operations["scan_card_loyalty_scan__token__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/loyalty/scan/{token}/stamp": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Stamp Scanned Card
+         * @description Sello manual para un walk-in (visita sin reserva). Idempotente por día: si la
+         *     tarjeta ya tiene un sello de hoy (manual o de reserva), no suma y
+         *     `stamp_added` es false.
+         */
+        post: operations["stamp_scanned_card_loyalty_scan__token__stamp_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/loyalty/program/logo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Upload Program Logo
+         * @description Sube el logo del negocio para el pase (PNG, JPG o WebP, hasta 2 MB). Se adapta a los tamaños de Apple.
+         */
+        put: operations["upload_program_logo_loyalty_program_logo_put"];
+        post?: never;
+        /**
+         * Delete Program Logo
+         * @description Quita el logo propio: los pases vuelven a llevar el de Businext.
+         */
+        delete: operations["delete_program_logo_loyalty_program_logo_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/loyalty/{business_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get Public Program
+         * @description Para la página de reservas: si mostrar la tarjeta y el botón «Añadir a Apple Wallet».
+         */
+        get: operations["get_public_program_public_loyalty__business_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/loyalty/passes/{serial_number}.pkpass": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Download Pass
+         * @description Descarga del pase con el enlace que se da al cliente (serial + token del pase).
+         */
+        get: operations["download_pass_public_loyalty_passes__serial_number__pkpass_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/wallet/apple/v1/devices/{device_id}/registrations/{pass_type_id}/{serial_number}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Register Device
+         * @description 201 si el dispositivo se registra para este pase; 200 si ya lo estaba (se actualiza el push token).
+         */
+        post: operations["register_device_wallet_apple_v1_devices__device_id__registrations__pass_type_id___serial_number__post"];
+        /** Unregister Device */
+        delete: operations["unregister_device_wallet_apple_v1_devices__device_id__registrations__pass_type_id___serial_number__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/wallet/apple/v1/devices/{device_id}/registrations/{pass_type_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Updated Serials
+         * @description Seriales de los pases de este dispositivo cambiados desde la marca; 204 si ninguno.
+         */
+        get: operations["updated_serials_wallet_apple_v1_devices__device_id__registrations__pass_type_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/wallet/apple/v1/passes/{pass_type_id}/{serial_number}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Latest Pass
+         * @description El `.pkpass` actual; 304 si no ha cambiado desde `If-Modified-Since`.
+         */
+        get: operations["latest_pass_wallet_apple_v1_passes__pass_type_id___serial_number__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/wallet/apple/v1/log": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Wallet Log
+         * @description Errores que Wallet reporta del web service (p. ej. un pase mal firmado).
+         */
+        post: operations["wallet_log_wallet_apple_v1_log_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** Body_upload_program_logo_loyalty_program_logo_put */
+        Body_upload_program_logo_loyalty_program_logo_put: {
+            /**
+             * File
+             * Format: binary
+             */
+            file: string;
+        };
         /** BookingRequestCreate */
         BookingRequestCreate: {
             /** Client Name */
@@ -1367,6 +1816,88 @@ export interface components {
              */
             status: "opened" | "dismissed" | "published";
         };
+        /** CustomerDetail */
+        CustomerDetail: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string | null;
+            /** Email */
+            email: string | null;
+            /** Last Visit */
+            last_visit: string | null;
+            /** Visits */
+            visits: number;
+            /** No Shows */
+            no_shows: number;
+            /** Total Spent */
+            total_spent: number;
+            next_reservation: components["schemas"]["CustomerReservation"] | null;
+            /** Reservations */
+            reservations: components["schemas"]["CustomerReservation"][];
+        };
+        /** CustomerMessageCreate */
+        CustomerMessageCreate: {
+            /**
+             * Customer Email
+             * Format: email
+             */
+            customer_email: string;
+            /** Message */
+            message: string;
+        };
+        /** CustomerMessageDraft */
+        CustomerMessageDraft: {
+            /** Customer Email */
+            customer_email: string;
+            /** Customer Name */
+            customer_name: string;
+            /** Message */
+            message: string;
+        };
+        /** CustomerMessagePublic */
+        CustomerMessagePublic: {
+            /** Id */
+            id: number;
+            /** Customer Email */
+            customer_email: string;
+            /** Message */
+            message: string;
+            /** Sent By */
+            sent_by: string;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** CustomerPublic */
+        CustomerPublic: {
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string | null;
+            /** Email */
+            email: string | null;
+            /** Last Visit */
+            last_visit: string | null;
+        };
+        /** CustomerReservation */
+        CustomerReservation: {
+            /** Id */
+            id: number;
+            /**
+             * Start
+             * Format: date-time
+             */
+            start: string;
+            /** Service */
+            service: string;
+            /** In Charge */
+            in_charge: string | null;
+            /** Status */
+            status: string;
+        };
         /** EmployeePublic */
         EmployeePublic: {
             /** Id */
@@ -1613,6 +2144,10 @@ export interface components {
             phone?: string | null;
             /** Maps Link */
             maps_link?: string | null;
+            /** Latitude */
+            latitude?: number | null;
+            /** Longitude */
+            longitude?: number | null;
         };
         /** LocationPublic */
         LocationPublic: {
@@ -1624,6 +2159,10 @@ export interface components {
             phone?: string | null;
             /** Maps Link */
             maps_link?: string | null;
+            /** Latitude */
+            latitude?: number | null;
+            /** Longitude */
+            longitude?: number | null;
             /** Id */
             id: number;
             /** Business Id */
@@ -1646,8 +2185,175 @@ export interface components {
             phone?: string | null;
             /** Maps Link */
             maps_link?: string | null;
+            /** Latitude */
+            latitude?: number | null;
+            /** Longitude */
+            longitude?: number | null;
             /** Is Active */
             is_active?: boolean | null;
+        };
+        /** LoyaltyCardCreate */
+        LoyaltyCardCreate: {
+            /** Customer Name */
+            customer_name: string;
+            /** Customer Email */
+            customer_email: string;
+        };
+        /** LoyaltyCardPublic */
+        LoyaltyCardPublic: {
+            /** Serial Number */
+            serial_number: string;
+            /** Customer Name */
+            customer_name: string;
+            /** Customer Email */
+            customer_email: string;
+            /** Stamps */
+            stamps: number;
+            /** Stamps Required */
+            stamps_required: number;
+            /** Reward */
+            reward: string;
+            /** Reward Ready */
+            reward_ready: boolean;
+            /** Visits */
+            visits: components["schemas"]["LoyaltyVisit"][];
+            /** Pass Url */
+            pass_url: string | null;
+        };
+        /** LoyaltyPassSent */
+        LoyaltyPassSent: {
+            /** Sent To */
+            sent_to: string;
+            /** Pass Url */
+            pass_url: string;
+        };
+        /** LoyaltyProgramPublic */
+        LoyaltyProgramPublic: {
+            /**
+             * Enabled
+             * @default false
+             */
+            enabled: boolean;
+            /**
+             * Stamps Required
+             * @default 10
+             */
+            stamps_required: number;
+            /**
+             * Reward
+             * @default Corte gratis
+             */
+            reward: string;
+            /** Background Color */
+            background_color?: string | null;
+            /** Foreground Color */
+            foreground_color?: string | null;
+            /** Label Color */
+            label_color?: string | null;
+            /** Apple Wallet Available */
+            apple_wallet_available: boolean;
+            /** Logo Url */
+            logo_url?: string | null;
+        };
+        /** LoyaltyProgramSettings */
+        LoyaltyProgramSettings: {
+            /**
+             * Enabled
+             * @default false
+             */
+            enabled: boolean;
+            /**
+             * Stamps Required
+             * @default 10
+             */
+            stamps_required: number;
+            /**
+             * Reward
+             * @default Corte gratis
+             */
+            reward: string;
+            /** Background Color */
+            background_color?: string | null;
+            /** Foreground Color */
+            foreground_color?: string | null;
+            /** Label Color */
+            label_color?: string | null;
+        };
+        /**
+         * LoyaltyScanResult
+         * @description Lo que ve el barbero al escanear el QR del pase.
+         */
+        LoyaltyScanResult: {
+            /** Serial Number */
+            serial_number: string;
+            /** Customer Name */
+            customer_name: string;
+            /** Customer Email */
+            customer_email: string;
+            /** Stamps */
+            stamps: number;
+            /** Stamps Required */
+            stamps_required: number;
+            /** Reward */
+            reward: string;
+            /** Reward Ready */
+            reward_ready: boolean;
+            /** Visits */
+            visits: components["schemas"]["LoyaltyVisit"][];
+            /** Pass Url */
+            pass_url: string | null;
+            /** Stamped Today */
+            stamped_today: boolean;
+            /**
+             * Stamp Added
+             * @default false
+             */
+            stamp_added: boolean;
+        };
+        /** LoyaltyVisit */
+        LoyaltyVisit: {
+            /**
+             * Visit Date
+             * Format: date-time
+             */
+            visit_date: string;
+            /** Service */
+            service: string;
+            /** Redeemed */
+            redeemed: boolean;
+        };
+        /** NotificationPreferencesPublic */
+        NotificationPreferencesPublic: {
+            /**
+             * Upcoming
+             * @default true
+             */
+            upcoming: boolean;
+            /**
+             * Upcoming Minutes
+             * @default 15
+             */
+            upcoming_minutes: number;
+            /**
+             * Daily Summary
+             * @default true
+             */
+            daily_summary: boolean;
+            /**
+             * Daily Summary Hour
+             * @default 9
+             */
+            daily_summary_hour: number;
+            /**
+             * Reservation Changes
+             * @default true
+             */
+            reservation_changes: boolean;
+            /**
+             * Day Close
+             * @default true
+             */
+            day_close: boolean;
         };
         /** PaginatedReviewsResponse */
         PaginatedReviewsResponse: {
@@ -1674,6 +2380,11 @@ export interface components {
             image_url?: string | null;
             /** Seller */
             seller?: string | null;
+            /**
+             * Duration Minutes
+             * @default 30
+             */
+            duration_minutes: number | null;
         };
         /** ProductPublic */
         ProductPublic: {
@@ -1687,6 +2398,11 @@ export interface components {
             image_url?: string | null;
             /** Seller */
             seller?: string | null;
+            /**
+             * Duration Minutes
+             * @default 30
+             */
+            duration_minutes: number | null;
             /** Id */
             id: number;
         };
@@ -1702,6 +2418,19 @@ export interface components {
             image_url?: string | null;
             /** Seller */
             seller?: string | null;
+            /** Duration Minutes */
+            duration_minutes?: number | null;
+        };
+        /** PublicLoyaltyInfo */
+        PublicLoyaltyInfo: {
+            /** Enabled */
+            enabled: boolean;
+            /** Stamps Required */
+            stamps_required: number;
+            /** Reward */
+            reward: string;
+            /** Apple Wallet Available */
+            apple_wallet_available: boolean;
         };
         /** PushTokenCreate */
         PushTokenCreate: {
@@ -1722,6 +2451,16 @@ export interface components {
              */
             created_at: string;
         };
+        /** RegistrationBody */
+        RegistrationBody: {
+            /** Pushtoken */
+            pushToken: string;
+        };
+        /** RemindersSetting */
+        RemindersSetting: {
+            /** Reminders Enabled */
+            reminders_enabled: boolean;
+        };
         /** ReservationBase */
         ReservationBase: {
             /** Customer Name */
@@ -1733,13 +2472,10 @@ export interface components {
              * Format: date-time
              */
             reservation_start_date: string;
-            /**
-             * Reservation End Date
-             * Format: date-time
-             */
-            reservation_end_date: string;
+            /** Reservation End Date */
+            reservation_end_date?: string | null;
             /** Time Per Reservation */
-            time_per_reservation: number;
+            time_per_reservation?: number | null;
             /** Status */
             status: string;
             /** Service */
@@ -1789,7 +2525,7 @@ export interface components {
             /** Reservation End Date */
             reservation_end_date?: string | null;
             /** Time Per Reservation */
-            time_per_reservation: number;
+            time_per_reservation?: number | null;
             /** Status */
             status?: string | null;
             /** Service */
@@ -2653,6 +3389,86 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BusinessConfigurationPublic"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_reminders_setting_configuration_reminders_get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemindersSetting"];
+                };
+            };
+            /** @description Not found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_reminders_setting_configuration_reminders_put: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RemindersSetting"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemindersSetting"];
                 };
             };
             /** @description Not found */
@@ -3681,6 +4497,7 @@ export interface operations {
             query: {
                 date: string;
                 employee_name?: string | null;
+                service?: string | null;
             };
             header?: never;
             path: {
@@ -4042,6 +4859,72 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_notification_preferences_notification_preferences__get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferencesPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_notification_preferences_notification_preferences__put: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["NotificationPreferencesPublic"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NotificationPreferencesPublic"];
+                };
             };
             /** @description Validation Error */
             422: {
@@ -4545,6 +5428,37 @@ export interface operations {
             };
         };
     };
+    run_internal_reminders_run_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_voice_agent_config_voice_agent_config_get: {
         parameters: {
             query?: never;
@@ -4808,6 +5722,730 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_customer_message_draft_customer_messages_draft_get: {
+        parameters: {
+            query: {
+                email: string;
+            };
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerMessageDraft"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    send_customer_message_customer_messages__post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CustomerMessageCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerMessagePublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    find_customers_customers__get: {
+        parameters: {
+            query?: {
+                q?: string;
+                limit?: number;
+            };
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerPublic"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_customer_detail_customers_detail_get: {
+        parameters: {
+            query: {
+                name: string;
+            };
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CustomerDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_my_account_users_me_delete: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_program_loyalty_program_get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyProgramPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_program_loyalty_program_put: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoyaltyProgramSettings"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyProgramPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_card_loyalty_cards_get: {
+        parameters: {
+            query?: {
+                email?: string | null;
+                name?: string | null;
+            };
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyCardPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_card_loyalty_cards_post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LoyaltyCardCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyCardPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    redeem_card_loyalty_cards__serial_number__redeem_post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                serial_number: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyCardPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    send_pass_loyalty_cards__serial_number__send_pass_post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                serial_number: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyPassSent"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    scan_card_loyalty_scan__token__get: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyScanResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    stamp_scanned_card_loyalty_scan__token__stamp_post: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyScanResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_program_logo_loyalty_program_logo_put: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_upload_program_logo_loyalty_program_logo_put"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyProgramPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_program_logo_loyalty_program_logo_delete: {
+        parameters: {
+            query?: never;
+            header: {
+                authorization: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LoyaltyProgramPublic"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_public_program_public_loyalty__business_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                business_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublicLoyaltyInfo"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    download_pass_public_loyalty_passes__serial_number__pkpass_get: {
+        parameters: {
+            query: {
+                token: string;
+            };
+            header?: never;
+            path: {
+                serial_number: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    register_device_wallet_apple_v1_devices__device_id__registrations__pass_type_id___serial_number__post: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                device_id: string;
+                pass_type_id: string;
+                serial_number: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RegistrationBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    unregister_device_wallet_apple_v1_devices__device_id__registrations__pass_type_id___serial_number__delete: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+            };
+            path: {
+                device_id: string;
+                pass_type_id: string;
+                serial_number: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    updated_serials_wallet_apple_v1_devices__device_id__registrations__pass_type_id__get: {
+        parameters: {
+            query?: {
+                passesUpdatedSince?: string | null;
+            };
+            header?: never;
+            path: {
+                device_id: string;
+                pass_type_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    latest_pass_wallet_apple_v1_passes__pass_type_id___serial_number__get: {
+        parameters: {
+            query?: never;
+            header?: {
+                authorization?: string | null;
+                "if-modified-since"?: string | null;
+            };
+            path: {
+                pass_type_id: string;
+                serial_number: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    wallet_log_wallet_apple_v1_log_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
                 };
             };
         };

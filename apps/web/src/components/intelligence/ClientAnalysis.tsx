@@ -9,6 +9,7 @@ import { useProduct } from "@/hooks/useProduct";
 import { computeClientProfiles } from "@/lib/intelligence/client-scoring";
 import type { ClientProfile } from "@/lib/intelligence/types";
 import { CustomerMessageAction } from "@/components/intelligence/CustomerMessageAction";
+import { ClientLoyaltyAction } from "@/components/loyalty/ClientLoyaltyAction";
 import {
   Users,
   TrendingUp,
@@ -54,7 +55,10 @@ function ClientRow({ client }: { client: ClientProfile }) {
           {client.services.slice(0, 2).join(", ")}
           {client.services.length > 2 && ` +${client.services.length - 2}`}
         </p>
-        {client.loyaltyStatus === "en_riesgo" && <CustomerMessageAction client={client} />}
+        <div className="flex flex-wrap gap-x-2">
+          {client.loyaltyStatus === "en_riesgo" && <CustomerMessageAction client={client} />}
+          <ClientLoyaltyAction client={client} />
+        </div>
       </div>
 
       {/* Stats — desktop */}

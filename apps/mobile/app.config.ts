@@ -42,6 +42,14 @@ const config: ExpoConfig = {
     "expo-secure-store",
     "expo-font",
     [
+      "expo-camera",
+      {
+        cameraPermission:
+          "Businext usa la cámara para leer el QR de la tarjeta de fidelidad de tus clientes.",
+        recordAudioAndroid: false,
+      },
+    ],
+    [
       "expo-splash-screen",
       {
         image: "./assets/splash-icon.png",
