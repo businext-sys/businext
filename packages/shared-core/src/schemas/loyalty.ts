@@ -21,6 +21,8 @@ export const LoyaltyProgramSettingsSchema = z.object({
 export const LoyaltyProgramSchema = LoyaltyProgramSettingsSchema.extend({
   /** El servidor tiene los certificados para firmar pases de Apple Wallet. */
   appleWalletAvailable: z.boolean(),
+  /** Logo propio del pase (URL pública); `null` = el de Businext. */
+  logoUrl: z.string().nullable(),
 });
 
 export const LoyaltyVisitSchema = z.object({
@@ -43,6 +45,20 @@ export const LoyaltyCardSchema = z.object({
   passUrl: z.string().nullable(),
 });
 
+/** `GET /loyalty/scan/{token}`: la tarjeta del QR del pase, para sellar o canjear en el local. */
+export const LoyaltyScanResultSchema = LoyaltyCardSchema.extend({
+  /** La tarjeta ya tiene un sello de hoy (de reserva o manual): no se puede añadir otro. */
+  stampedToday: z.boolean(),
+  /** Solo tras `POST .../stamp`: si esta petición añadió el sello. */
+  stampAdded: z.boolean(),
+});
+
+/** `POST /loyalty/cards/{serial}/send-pass`. */
+export const LoyaltyPassSentSchema = z.object({
+  sentTo: z.string(),
+  passUrl: z.string(),
+});
+
 /** `GET /public/loyalty/{business_id}`: lo que ve la página pública de reservas. */
 export const PublicLoyaltyInfoSchema = z.object({
   enabled: z.boolean(),
@@ -55,4 +71,6 @@ export type LoyaltyProgramSettingsParsed = z.infer<typeof LoyaltyProgramSettings
 export type LoyaltyProgramParsed = z.infer<typeof LoyaltyProgramSchema>;
 export type LoyaltyVisitParsed = z.infer<typeof LoyaltyVisitSchema>;
 export type LoyaltyCardParsed = z.infer<typeof LoyaltyCardSchema>;
+export type LoyaltyScanResultParsed = z.infer<typeof LoyaltyScanResultSchema>;
+export type LoyaltyPassSentParsed = z.infer<typeof LoyaltyPassSentSchema>;
 export type PublicLoyaltyInfoParsed = z.infer<typeof PublicLoyaltyInfoSchema>;

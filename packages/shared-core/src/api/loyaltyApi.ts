@@ -3,14 +3,18 @@ import { apiClient } from "./client";
 import type {
   LoyaltyCard,
   LoyaltyCardLookup,
+  LoyaltyPassSent,
   LoyaltyProgram,
   LoyaltyProgramSettings,
+  LoyaltyScanResult,
   PublicLoyaltyInfo,
 } from "../loyalty";
 import {
   mapLoyaltyCardFromApi,
+  mapLoyaltyPassSentFromApi,
   mapLoyaltyProgramFromApi,
   mapLoyaltyProgramSettingsToApi,
+  mapLoyaltyScanResultFromApi,
   mapPublicLoyaltyInfoFromApi,
 } from "../mappers/loyalty";
 
@@ -41,13 +45,17 @@ async function send(
   client: ApiClient,
   path: string,
   fallback: string,
-  init: { method?: "GET" | "POST" | "PUT"; body?: unknown } = {}
+  init: { method?: "GET" | "POST" | "PUT" | "DELETE"; body?: unknown } = {}
 ): Promise<Record<string, unknown>> {
+  const { body } = init;
   const response = await client.raw(path, {
     method: init.method ?? "GET",
-    ...(init.body !== undefined
-      ? { body: JSON.stringify(init.body), headers: { "Content-Type": "application/json" } }
-      : {}),
+    // FormData lleva su propio Content-Type (multipart con boundary).
+    ...(body instanceof FormData
+      ? { body }
+      : body !== undefined
+        ? { body: JSON.stringify(body), headers: { "Content-Type": "application/json" } }
+        : {}),
   });
   if (!response.ok) throw await errorFrom(response, fallback);
   return response.json();
@@ -55,6 +63,12 @@ async function send(
 
 const cardPath = (serialNumber: string, action = "") =>
   `${PATH}/cards/${encodeURIComponent(serialNumber)}${action}`;
+
+const scanPath = (token: string, action = "") =>
+  `${PATH}/scan/${encodeURIComponent(token)}${action}`;
+
+/** Lo que acepta `uploadLogo`: el `File`/`Blob` de web o el `{ uri, name, type }` de React Native. */
+export type LoyaltyLogoFile = Blob | { uri: string; name: string; type: string };
 
 export function loyaltyLookupQuery(lookup: LoyaltyCardLookup): string | null {
   const email = lookup.email?.trim();
@@ -115,6 +129,53 @@ export const loyaltyApi = {
       await send(client, cardPath(serialNumber, "/redeem"), "No se pudo canjear el premio", {
         method: "POST",
       })
+    ),
+
+  /**
+   * (Re)envía al email del cliente el enlace para añadir el pase a Apple Wallet.
+   * 503 si Wallet no está configurado; 502 si el email no salió.
+   */
+  sendPass: async (serialNumber: string, client: ApiClient = apiClient): Promise<LoyaltyPassSent> =>
+    mapLoyaltyPassSentFromApi(
+      await send(client, cardPath(serialNumber, "/send-pass"), "No se pudo reenviar la tarjeta", {
+        method: "POST",
+      })
+    ),
+
+  /** Tarjeta del QR del pase (`token` = lo que lleva el QR). 404 si no es de este negocio. */
+  scan: async (token: string, client: ApiClient = apiClient): Promise<LoyaltyScanResult> =>
+    mapLoyaltyScanResultFromApi(
+      await send(client, scanPath(token), "No se pudo leer la tarjeta")
+    ),
+
+  /**
+   * Sello manual (visita sin reserva) a la tarjeta escaneada. Uno al día como
+   * mucho: si ya tenía sello de hoy, `stampAdded` es `false`. 409 si la tarjeta
+   * está desactivada.
+   */
+  stampScanned: async (token: string, client: ApiClient = apiClient): Promise<LoyaltyScanResult> =>
+    mapLoyaltyScanResultFromApi(
+      await send(client, scanPath(token, "/stamp"), "No se pudo añadir el sello", {
+        method: "POST",
+      })
+    ),
+
+  /** Sube el logo del pase (PNG, JPG o WebP, hasta 2 MB). Solo owner. 422 si no vale. */
+  uploadLogo: async (file: LoyaltyLogoFile, client: ApiClient = apiClient): Promise<LoyaltyProgram> => {
+    const form = new FormData();
+    form.append("file", file as Blob);
+    return mapLoyaltyProgramFromApi(
+      await send(client, `${PATH}/program/logo`, "No se pudo subir el logo", {
+        method: "PUT",
+        body: form,
+      })
+    );
+  },
+
+  /** Quita el logo propio: los pases vuelven a llevar el de Businext. Solo owner. */
+  deleteLogo: async (client: ApiClient = apiClient): Promise<LoyaltyProgram> =>
+    mapLoyaltyProgramFromApi(
+      await send(client, `${PATH}/program/logo`, "No se pudo quitar el logo", { method: "DELETE" })
     ),
 
   /** Para la página pública de reservas: si el negocio tiene la tarjeta activa. Sin auth. */

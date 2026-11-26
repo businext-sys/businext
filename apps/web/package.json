@@ -23,6 +23,7 @@
     "@stripe/stripe-js": "^8.1.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.75.0",
+    "barcode-detector": "3.2.3",
     "bcryptjs": "^3.0.2",
     "chart.js": "^4.5.0",
     "class-variance-authority": "^0.7.1",
