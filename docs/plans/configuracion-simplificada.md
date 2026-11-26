@@ -72,9 +72,9 @@ tarjetas; cada tarjeta dice en una línea para qué sirve. Lo que casi nadie toc
 Reglas:
 
 - **Mismos permisos que antes**, bloque a bloque (`canSeeSettingsBlock`): un empleado ve «Tu
-  negocio» (solo lectura) y «Cuenta y plan» sin suscripción; un manager ve además su equipo,
-  catálogo, recordatorios, fidelidad (solo lectura), ideas y reseñas. Un apartado sin bloques
-  visibles no sale.
+  negocio» (solo lectura) y «Cuenta y plan» sin suscripción; un manager ve además recordatorios y
+  fidelidad (solo lectura), y equipo, catálogo, ideas y reseñas según sus capacidades. Un
+  apartado sin bloques visibles no sale.
 - **Nada se borra ni cambia de endpoint.** Las tarjetas son los mismos componentes y hooks.
 - **Enlaces de antes:** `/configuration?section=<antiguo>` abre el apartado nuevo y baja hasta su
   tarjeta (`LEGACY_SETTINGS_SECTIONS` y `LEGACY_SETTINGS_BLOCKS`). `/products` va a «Servicios y
@@ -114,4 +114,19 @@ No se ha tocado `apps/mobile` (otra sesión trabaja ahí). Propuesta para cuando
 
 ## 4. Capturas
 
-Ver la sección «Capturas» al final de este documento.
+**Pendientes.** La configuración exige sesión iniciada y no había nadie para iniciarla
+(los agentes no escriben contraseñas). Para hacerlas: inicia sesión en `http://localhost:3000`
+(`main`, antes) — la cookie vale también para `:3100` (esta rama, `pnpm dev:web -- -p 3100`) — y
+guarda en `docs/plans/capturas-configuracion/`, en modo oscuro y claro:
+
+| Antes (`:3000`) | Después (`:3100`) |
+|-----------------|-------------------|
+| `antes-negocio.png` — `/configuration?section=business` | `despues-negocio.png` — `?section=negocio` |
+| `antes-productos.png` — `?section=products` (comisiones arriba) | `despues-equipo.png` — `?section=equipo` (comisiones aquí) |
+| `antes-reserva-online.png` — `?section=booking` | `despues-reservas.png` — `?section=reservas` (con la tarjeta de fidelidad abierta) |
+| `antes-contenido.png` — `?section=content` (9 campos) | `despues-asistente.png` — `?section=asistente` (con «Más opciones» plegado) |
+| `antes-agente-voz.png` — `/voice-agent`, pestaña Configuración | `despues-cuenta.png` — `?section=cuenta` |
+| `antes-empleado.png` — la misma página con un usuario empleado | `despues-empleado.png` — ídem |
+
+Revisar también que `?section=content` en `:3100` abre «Asistente y redes» y baja a «Ideas para
+tus redes».
