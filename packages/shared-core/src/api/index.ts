@@ -21,3 +21,4 @@ export * from "./accountApi";
 export * from "./customersApi";
 export * from "./notificationPreferencesApi";
 export * from "./availabilityApi";
+export * from "./loyaltyApi";

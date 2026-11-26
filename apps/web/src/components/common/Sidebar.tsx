@@ -23,11 +23,13 @@ import {
   TrendingUp,
   Bell,
   PhoneCall,
+  ScanLine,
 } from "lucide-react";
 import { useAccessContext } from "@/hooks/useAccessContext";
 import { useBookingRequests } from "@/hooks/useBookingRequests";
 import { countNewSuggestions } from "@businext/shared-core/services";
 import { useContentSuggestions } from "@/hooks/useTrends";
+import { useLoyaltyProgram } from "@/hooks/useLoyalty";
 import { logout } from "@/app/login/logout";
 import { cn } from "@/lib/utils";
 import { BrandMark } from "@/components/common/BrandMark";
@@ -57,6 +59,14 @@ const NAV_GROUPS = [
         label: "Notificaciones",
         icon: Bell,
         cap: "canManageReservations" as const,
+      },
+      {
+        // Cualquier rol puede sellar y canjear; solo con la tarjeta de fidelidad activa.
+        href: "/loyalty/scan",
+        label: "Escanear tarjeta",
+        icon: ScanLine,
+        cap: "canManageReservations" as const,
+        loyalty: true,
       },
     ],
   },
@@ -113,6 +123,7 @@ export function Sidebar() {
   const { context, capabilities } = useAccessContext();
   const { bookingRequests } = useBookingRequests();
   const { suggestions } = useContentSuggestions(undefined, capabilities.canViewTrends);
+  const { program: loyaltyProgram } = useLoyaltyProgram(capabilities.canManageReservations);
   const { showToast } = useGlobalToast();
   const [open, setOpen] = useState(false);
   const [showContact, setShowContact] = useState(false);
@@ -149,6 +160,7 @@ export function Sidebar() {
       if (!capabilities[link.cap]) return false;
       if ("ownerOnly" in link && context?.role !== "owner") return false;
       if ("ownerOrManager" in link && context?.role !== "owner" && context?.role !== "manager") return false;
+      if ("loyalty" in link && !loyaltyProgram?.enabled) return false;
       return true;
     }),
   })).filter((group) => group.links.length > 0);

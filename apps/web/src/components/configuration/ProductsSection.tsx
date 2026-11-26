@@ -5,7 +5,6 @@ import { PackageSearch, Plus, Pencil, Trash2, ImageIcon } from "lucide-react";
 import { ProductPlaceholder } from "@/components/common/ProductPlaceholder";
 import { useProduct } from "@/hooks/useProduct";
 import { useEmployee } from "@/hooks/useEmployee";
-import { useConfiguration } from "@/hooks/useConfiguration";
 import { useAccessContext } from "@/hooks/useAccessContext";
 import { useGlobalToast } from "@/context/ToastContext";
 import { convertToJpeg } from "@/lib/image-to-jpeg";
@@ -36,9 +35,7 @@ export function ProductsSection() {
     uploadProductImage,
   } = useProduct();
   const { activeEmployees } = useEmployee();
-  const { configurationData, updateConfiguration, createConfiguration } = useConfiguration();
   const { context } = useAccessContext();
-  const isOwner = context?.role === "owner";
   const { showToast } = useGlobalToast();
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -50,46 +47,6 @@ export function ProductsSection() {
   const [error, setError] = useState("");
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const nameRef = useRef<HTMLInputElement>(null);
-
-  // Commission state
-  const [commissionProduct, setCommissionProduct] = useState<number>(0);
-  const [commissionService, setCommissionService] = useState<number>(0);
-  const [savingCommission, setSavingCommission] = useState(false);
-
-  useEffect(() => {
-    if (configurationData.length > 0) {
-      setCommissionProduct(configurationData[0].commissionProduct ?? 0);
-      setCommissionService(configurationData[0].commissionService ?? 0);
-    }
-  }, [configurationData]);
-
-  const normalizeCommission = (value: number) => Math.min(100, Math.max(0, value));
-
-  const handleSaveCommission = async () => {
-    setSavingCommission(true);
-    try {
-      const payload = {
-        businessName: configurationData[0]?.businessName,
-        businessPhone: configurationData[0]?.businessPhone,
-        businessEmail: configurationData[0]?.businessEmail,
-        commissionProduct: normalizeCommission(commissionProduct),
-        commissionService: normalizeCommission(commissionService),
-      };
-
-      const result =
-        configurationData.length > 0
-          ? await updateConfiguration({ id: configurationData[0].id, ...payload })
-          : await createConfiguration(payload);
-
-      if (result !== null) {
-        showToast("success", "Comisiones guardadas correctamente.");
-      } else {
-        showToast("error", "No se pudo guardar. Intenta de nuevo.");
-      }
-    } finally {
-      setSavingCommission(false);
-    }
-  };
 
   useEffect(() => {
     if (modalOpen) {
@@ -184,7 +141,7 @@ export function ProductsSection() {
   };
 
   return (
-    <Card className="w-full">
+    <Card id="bloque-catalog" className="w-full scroll-mt-24">
       <CardContent className="p-4 sm:p-6 md:p-8 flex flex-col gap-6">
         {/* Header */}
         <div className="flex items-center gap-3">
@@ -193,65 +150,13 @@ export function ProductsSection() {
           </div>
           <div>
             <h2 className="font-heading text-h3 font-bold text-foreground">
-              Productos y Servicios
+              Servicios y productos
             </h2>
             <p className="text-body-sm text-foreground-muted">
-              Gestiona los productos o servicios de tu negocio.
+              Lo que ofreces: los servicios (con su duración) se reservan; los productos se venden.
             </p>
           </div>
         </div>
-
-        {/* Commission settings (owner only) */}
-        {isOwner && (
-          <div className="p-4 rounded-lg border border-border-subtle bg-surface-raised/40 space-y-4">
-            <div>
-              <h3 className="text-body font-semibold text-foreground">
-                Comisiones para empleados
-              </h3>
-              <p className="text-caption text-foreground-muted">
-                Porcentaje que gana el empleado por cada venta.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
-                <label className="text-label font-semibold text-foreground-muted">
-                  Comisión producto (%)
-                </label>
-                <Input
-                  type="number"
-                  min={0}
-                  max={100}
-                  step={0.01}
-                  value={commissionProduct}
-                  onChange={(e) => setCommissionProduct(parseFloat(e.target.value) || 0)}
-                  placeholder="0"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-label font-semibold text-foreground-muted">
-                  Comisión servicio (%)
-                </label>
-                <Input
-                  type="number"
-                  min={0}
-                  max={100}
-                  step={0.01}
-                  value={commissionService}
-                  onChange={(e) => setCommissionService(parseFloat(e.target.value) || 0)}
-                  placeholder="0"
-                />
-              </div>
-            </div>
-            <Button
-              variant="primary"
-              size="sm"
-              onClick={handleSaveCommission}
-              loading={savingCommission}
-            >
-              Guardar comisiones
-            </Button>
-          </div>
-        )}
 
         {/* Grid */}
         {loading ? (
@@ -270,7 +175,7 @@ export function ProductsSection() {
                 <Plus className="w-6 h-6 text-primary" />
               </div>
               <span className="text-caption font-semibold text-primary">
-                Nuevo producto
+                Añadir servicio o producto
               </span>
             </button>
 

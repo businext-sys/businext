@@ -13,6 +13,7 @@ import { Select } from "@/components/ui/select";
 import { SectionSkeleton } from "@/components/ui/skeleton";
 import { NETWORK_LABELS } from "@/components/trends/NetworkIcon";
 import { Megaphone } from "lucide-react";
+import { MoreOptions } from "@/components/configuration/SettingsCard";
 
 const NETWORKS: SocialNetwork[] = ["instagram", "tiktok"];
 
@@ -57,6 +58,10 @@ export function ContentPreferencesSection() {
     else showToast("error", "No se pudieron guardar las preferencias");
   };
 
+  const hasAdvancedError = Boolean(
+    errors.quietFrom || errors.quietTo || errors.niche || errors.timezone || errors.country
+  );
+
   if (loading || !preferences) return <SectionSkeleton />;
 
   return (
@@ -69,10 +74,10 @@ export function ContentPreferencesSection() {
             </div>
             <div>
               <h2 className="font-heading text-h4 font-semibold text-foreground">
-                Contenido y redes
+                Ideas para tus redes
               </h2>
               <p className="text-body-sm text-foreground-muted">
-                Tendencias de tus redes e ideas de contenido para tu negocio.
+                Qué está funcionando en Instagram y TikTok y qué podrías publicar tú.
               </p>
             </div>
           </div>
@@ -107,73 +112,78 @@ export function ContentPreferencesSection() {
             {errors.networks && <p className="text-caption text-danger">{errors.networks.message}</p>}
           </fieldset>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <label htmlFor="maxPerDay" className={LABEL}>Ideas al día</label>
-              <Select id="maxPerDay" {...register("maxPerDay", { valueAsNumber: true })}>
-                {[1, 2, 3].map((n) => (
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </Select>
+          <MoreOptions
+            label="Más opciones: cuántas ideas, horas sin avisos, idioma y país"
+            defaultOpen={hasAdvancedError}
+          >
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="maxPerDay" className={LABEL}>Ideas al día</label>
+                <Select id="maxPerDay" {...register("maxPerDay", { valueAsNumber: true })}>
+                  {[1, 2, 3].map((n) => (
+                    <option key={n} value={n}>{n}</option>
+                  ))}
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="quietFrom" className={LABEL}>Sin avisos desde</label>
+                <Input
+                  id="quietFrom"
+                  type="time"
+                  state={errors.quietFrom ? "error" : "default"}
+                  {...register("quietFrom")}
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="quietTo" className={LABEL}>Hasta</label>
+                <Input
+                  id="quietTo"
+                  type="time"
+                  state={errors.quietTo ? "error" : "default"}
+                  {...register("quietTo")}
+                />
+                {errors.quietTo && <p className="text-caption text-danger">{errors.quietTo.message}</p>}
+              </div>
             </div>
-            <div className="space-y-2">
-              <label htmlFor="quietFrom" className={LABEL}>Sin avisos desde</label>
-              <Input
-                id="quietFrom"
-                type="time"
-                state={errors.quietFrom ? "error" : "default"}
-                {...register("quietFrom")}
-              />
+  
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="niche" className={LABEL}>Tipo de negocio</label>
+                <Input
+                  id="niche"
+                  state={errors.niche ? "error" : "default"}
+                  {...register("niche")}
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="timezone" className={LABEL}>Zona horaria</label>
+                <Input
+                  id="timezone"
+                  placeholder="Europe/Madrid"
+                  state={errors.timezone ? "error" : "default"}
+                  {...register("timezone")}
+                />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="language" className={LABEL}>Idioma de las tendencias</label>
+                <Select id="language" {...register("language")}>
+                  {LANGUAGES.map((language) => (
+                    <option key={language.value} value={language.value}>{language.label}</option>
+                  ))}
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="country" className={LABEL}>País (código de 2 letras)</label>
+                <Input
+                  id="country"
+                  maxLength={2}
+                  placeholder="ES"
+                  state={errors.country ? "error" : "default"}
+                  {...register("country")}
+                />
+              </div>
             </div>
-            <div className="space-y-2">
-              <label htmlFor="quietTo" className={LABEL}>Hasta</label>
-              <Input
-                id="quietTo"
-                type="time"
-                state={errors.quietTo ? "error" : "default"}
-                {...register("quietTo")}
-              />
-              {errors.quietTo && <p className="text-caption text-danger">{errors.quietTo.message}</p>}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label htmlFor="niche" className={LABEL}>Tipo de negocio</label>
-              <Input
-                id="niche"
-                state={errors.niche ? "error" : "default"}
-                {...register("niche")}
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="timezone" className={LABEL}>Zona horaria</label>
-              <Input
-                id="timezone"
-                placeholder="Europe/Madrid"
-                state={errors.timezone ? "error" : "default"}
-                {...register("timezone")}
-              />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="language" className={LABEL}>Idioma de las tendencias</label>
-              <Select id="language" {...register("language")}>
-                {LANGUAGES.map((language) => (
-                  <option key={language.value} value={language.value}>{language.label}</option>
-                ))}
-              </Select>
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="country" className={LABEL}>País (código de 2 letras)</label>
-              <Input
-                id="country"
-                maxLength={2}
-                placeholder="ES"
-                state={errors.country ? "error" : "default"}
-                {...register("country")}
-              />
-            </div>
-          </div>
+          </MoreOptions>
 
           <div className="flex justify-end">
             <Button type="submit" variant="primary" loading={isSubmitting}>

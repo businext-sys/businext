@@ -91,6 +91,29 @@ reservas completadas por nombre y marca a cada cliente `fiel`, `en_riesgo` o
 
 En web pasa por el BFF `apps/web/src/app/api/customer-messages/`.
 
+## Tarjeta de fidelidad (ADR 0003 de `businext-backend`)
+
+`@businext/shared-core/loyalty` tiene los tipos (`LoyaltyProgram`,
+`LoyaltyProgramSettings`, `LoyaltyCard`, `PublicLoyaltyInfo`) y `stampsLeft`.
+`loyaltyApi` consume `/loyalty/*` y `/public/loyalty/*` con **las mismas rutas en
+web y en mobile**: en web, el BFF las sirve con un catch-all
+(`apps/web/src/app/api/loyalty/[...path]` y `api/public/loyalty/[...path]`).
+
+- `getProgram()` (cualquier rol) y `updateProgram(settings)` (solo owner, `PUT`
+  con la regla entera: `enabled`, `stampsRequired` 1–50, `reward` ≤ 40 y colores
+  `#RRGGBB` o `null`).
+- `getCard({ email | name })` → `null` si el cliente aún no tiene tarjeta (404).
+- `createCard`, `redeem(serial)` → la tarjeta actualizada.
+- `getPublicInfo(businessId)` para la página pública de reservas (sin auth).
+- Los errores son `LoyaltyError` con el `detail` del backend y su `status`
+  (409: tarjeta desactivada o sin sellos suficientes; 503: Wallet sin configurar).
+
+Hooks: `useLoyaltyProgram()` (`program`, `updateProgram`), `useLoyaltyCard(lookup)`
+(`card`, `redeem`, `createCard`) y `usePublicLoyalty(businessId)`.
+
+El enlace del pase (`passUrl`) solo se enseña al equipo: al cliente le llega por el
+email de confirmación, nunca en la respuesta de la reserva pública.
+
 ## Tema (issue #124)
 
 `@businext/shared-core/theme` exporta los tokens de [`DESIGN.md`](../../DESIGN.md):

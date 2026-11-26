@@ -16,7 +16,7 @@ import { TrendEmbed } from "@/components/trends/TrendEmbed";
 import { AssistantBubble, AssistantMessage } from "@/components/trends/AssistantMessage";
 import { CalendarClock, ExternalLink, Radar, RefreshCw, Sparkles } from "lucide-react";
 
-export const CONTENT_PREFERENCES_HREF = "/configuration?section=content";
+export const CONTENT_PREFERENCES_HREF = "/configuration?section=asistente#bloque-contentPreferences";
 
 function formatCapturedAt(insight: TrendInsight) {
   const date = new Date(insight.refreshedAt ?? insight.createdAt);
