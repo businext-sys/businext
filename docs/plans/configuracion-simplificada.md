@@ -99,18 +99,30 @@ Usa `useLoyaltyProgram` de `@businext/shared-core` (rama `feat/loyalty-web`) y `
   `apps/web/src/components/configuration/sections/`; tarjeta, «Más opciones» y fila de ajuste en
   `SettingsCard.tsx`; interruptor en `components/ui/switch.tsx`.
 
-## 3. Siguiente paso: móvil
+## 3. Móvil (implementado)
 
-No se ha tocado `apps/mobile` (otra sesión trabaja ahí). Propuesta para cuando se pueda:
+Solo cambia la pantalla de **Ajustes** (`apps/mobile/app/(tabs)/settings.tsx`): mismas filas y
+secciones que antes, agrupadas con `SETTINGS_SECTIONS` y filtradas con `canSeeSettingsBlock` de
+shared-core. No se ha reescrito ninguna pantalla ni componente.
 
-1. Agrupar la pantalla de Ajustes con los mismos nombres de `SETTINGS_SECTIONS`: «Reservas y
-   clientes» (compartir enlace, clientes, clientes en riesgo y la tarjeta de fidelidad),
-   «Asistente y redes» (agente de voz y las preferencias de Tendencias, que hoy están en otra
-   pantalla), «Cuenta y plan» (notificaciones, apariencia, privacidad, cerrar sesión, borrar
-   cuenta).
-2. Usar `visibleSettingsSections` para decidir qué grupos ve cada rol.
-3. Lo que solo existe en web (negocio, locales, catálogo, horarios, equipo) puede quedarse en web
-   con una fila «Más ajustes en la web» que abra `/configuration?section=…`.
+| Apartado | En el móvil |
+|----------|-------------|
+| Tu negocio | «Datos del negocio y locales» → abre la web en `?section=negocio` (owner) |
+| Equipo y horarios | «Horarios, equipo y comisiones» → web `?section=equipo` |
+| Servicios y productos | «Servicios y productos» → web `?section=servicios` |
+| Reservas y clientes | Clientes, Escanear tarjeta (con la fidelidad activa), Clientes en riesgo, Compartir enlace de reservas y «Recordatorios y tarjeta de fidelidad» → web `?section=reservas` |
+| Asistente y redes | Agente de voz (owner, la sección que ya había) · «Ideas para tus redes» → `/trends/settings` · «Reseñas de Google» → web `/reviews` |
+| Cuenta y plan | Notificaciones · Apariencia · Política de privacidad · Cerrar sesión (y Borrar cuenta al final) |
+
+- Clientes y Escanear tarjeta siguen visibles para los empleados, como antes: un apartado sale si
+  tiene alguna fila, aunque el empleado no vea sus bloques de la web.
+- Lo que aún no tiene pantalla móvil (negocio, horarios, equipo, catálogo, recordatorios, ajustes
+  de la tarjeta) se abre en la web, en su apartado. Siguiente paso, si se quiere: pantallas
+  nativas para la tarjeta de fidelidad y los recordatorios con `useLoyaltyProgram` y
+  `useRemindersSetting`, que ya están en shared-core.
+- `apps/mobile` no tiene configuración de ESLint versionada: `expo lint` la instala la primera
+  vez. Se pasó con esa configuración temporal (sin errores) y se deshizo para no meter
+  dependencias en este cambio.
 
 ## 4. Capturas
 
@@ -127,6 +139,7 @@ guarda en `docs/plans/capturas-configuracion/`, en modo oscuro y claro:
 | `antes-contenido.png` — `?section=content` (9 campos) | `despues-asistente.png` — `?section=asistente` (con «Más opciones» plegado) |
 | `antes-agente-voz.png` — `/voice-agent`, pestaña Configuración | `despues-cuenta.png` — `?section=cuenta` |
 | `antes-empleado.png` — la misma página con un usuario empleado | `despues-empleado.png` — ídem |
+| `antes-movil-ajustes.png` — pestaña Ajustes en `main` (Maestro o simulador) | `despues-movil-ajustes.png` — ídem en esta rama, owner y empleado |
 
 Revisar también que `?section=content` en `:3100` abre «Asistente y redes» y baja a «Ideas para
 tus redes».
