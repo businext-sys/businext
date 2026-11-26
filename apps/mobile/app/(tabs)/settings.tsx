@@ -2,7 +2,7 @@ import type { ComponentProps } from "react";
 import { Alert, Linking, Pressable, ScrollView, Text, View } from "react-native";
 import { useRouter } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useAccessContext, useConfiguration } from "@businext/shared-core/hooks";
+import { useAccessContext, useConfiguration, useLoyaltyProgram } from "@businext/shared-core/hooks";
 import { useAuth } from "@/context/AuthContext";
 import { VoiceAgentSection } from "@/components/VoiceAgentSection";
 import { AppearanceSection } from "@/components/AppearanceSection";
@@ -26,6 +26,7 @@ export default function SettingsScreen() {
   const { configurationData } = useConfiguration();
   const router = useRouter();
   const canManageClients = context?.role === "owner" || context?.role === "manager";
+  const { program: loyalty } = useLoyaltyProgram();
 
   const confirmLogout = () =>
     Alert.alert("Cerrar sesión", "¿Seguro que quieres salir?", [
@@ -53,6 +54,15 @@ export default function SettingsScreen() {
 
       <View style={styles.group}>
         <SettingsRow icon="people-outline" label="Clientes" onPress={() => router.push("/customers")} />
+        {loyalty?.enabled && (
+          <SettingsRow
+            icon="scan-outline"
+            label="Escanear tarjeta"
+            hint="Sella o canjea la tarjeta de fidelidad"
+            onPress={() => router.push("/loyalty-scan")}
+            last={!canManageClients}
+          />
+        )}
         {canManageClients && (
           <SettingsRow
             icon="heart-dislike-outline"
