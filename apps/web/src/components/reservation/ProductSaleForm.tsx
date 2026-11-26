@@ -80,7 +80,7 @@ export function ProductSaleForm({
         description="Añade los productos que vendes en el local para registrar sus ventas desde aquí."
         action={{
           label: "Añadir productos",
-          onClick: () => router.push("/configuration"),
+          onClick: () => router.push("/configuration?section=servicios"),
         }}
       />
     );

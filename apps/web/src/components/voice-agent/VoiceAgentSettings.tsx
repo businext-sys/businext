@@ -34,7 +34,7 @@ const BOOKING_MODES: {
 ];
 
 /**
- * Configuracion del agente de voz (issue #118), en la pestaña «Agente de voz»:
+ * Configuracion del agente de voz (issue #118), en Configuración › Asistente y redes:
  * numeros asignados, activarlo o desactivarlo y el modo de reserva. Solo para
  * owners: el backend (`/voice-agent/config`) rechaza al resto con 403.
  */
