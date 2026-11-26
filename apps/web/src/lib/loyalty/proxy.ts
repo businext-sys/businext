@@ -20,18 +20,21 @@ export async function proxyLoyalty(
   }
   const path = `${base}/${segments.map(encodeURIComponent).join("/")}${request.nextUrl.search}`;
   try {
-    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    // Se reenvía el Content-Type original: el logo del pase va en multipart.
+    const headers: Record<string, string> = {
+      "Content-Type": request.headers.get("content-type") ?? "application/json",
+    };
     if (authenticated) {
       const auth = await getVerifiedServerAccessToken();
       if ("error" in auth) return auth.error;
       headers.Authorization = `Bearer ${auth.jwt}`;
     }
     const hasBody = request.method !== "GET" && request.method !== "HEAD";
-    const body = hasBody ? await request.text() : "";
+    const body = hasBody ? await request.arrayBuffer() : null;
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}${path}`, {
       method: request.method,
       headers,
-      ...(body ? { body } : {}),
+      ...(body && body.byteLength > 0 ? { body } : {}),
       cache: "no-store",
     });
     const data = response.headers.get("content-type")?.includes("application/json")

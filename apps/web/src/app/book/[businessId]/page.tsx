@@ -1,6 +1,7 @@
 "use client";
 
 import { DEFAULT_SERVICE_DURATION } from "@businext/shared-core";
+import { usePublicLoyalty } from "@businext/shared-core/hooks";
 
 import React, { useState, useEffect, useMemo } from "react";
 import {
@@ -11,6 +12,7 @@ import {
   BookingLocation,
   BookingLocationsResponse,
 } from "@/lib/booking-request/types";
+import { Stamp } from "lucide-react";
 import { ProductPlaceholder } from "@/components/common/ProductPlaceholder";
 
 type Step = "location" | "service" | "employee" | "date" | "details" | "confirmation";
@@ -50,6 +52,7 @@ export default function PublicBookingPage({
   const [clientName, setClientName] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [clientPhone, setClientPhone] = useState("");
+  const { info: loyalty } = usePublicLoyalty(businessId || null);
 
   // Resolve params
   useEffect(() => {
@@ -723,6 +726,14 @@ export default function PublicBookingPage({
               <DetailRow label="Dirección" value={selectedLocation.address} />
             )}
           </div>
+
+          {loyalty?.enabled && loyalty.appleWalletAvailable && (
+            <p className="mt-4 flex items-start gap-2 text-sm text-foreground-muted">
+              <Stamp className="h-4 w-4 mt-0.5 shrink-0 text-secondary" aria-hidden />
+              Al confirmar te enviaremos tu tarjeta de fidelidad por email para añadirla a
+              Apple Wallet
+            </p>
+          )}
 
           <div className="flex items-center justify-between mt-6">
             <BackButton onClick={() => setStep("date")} />
